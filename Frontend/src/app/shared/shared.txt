@@ -1,0 +1,8 @@
+2. A pasta shared/ (As Peças de Lego)
+Aqui fica tudo aquilo que não tem regra de negócio pesada, mas que você vai usar em várias partes do sistema. Pense nesta pasta como a sua própria biblioteca de componentes (tipo um Bootstrap ou Material UI particular).
+
+Componentes visuais genéricos: Botões personalizados, modais, cards, tabelas, barra de carregamento.
+
+Pipes e Directives: Formatadores de moeda, máscaras de CPF.
+
+Atenção: Um componente dentro de shared/ não deve fazer requisições para APIs. Ele apenas recebe dados (@Input) e emite eventos (@Output).

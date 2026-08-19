@@ -1,0 +1,11 @@
+3. A pasta features/ (As Funcionalidades)
+É aqui que o seu aplicativo ganha vida. Em vez de agrupar por tipo, você agrupa pelo contexto do negócio. Se o seu sistema tem um módulo de "Produtos", tudo sobre produtos vive junto.
+
+Veja como fica a organização de uma Feature por dentro:
+
+Plaintext
+src/app/features/produtos/
+├── components/          # Componentes específicos só de produtos (ex: form-produto)
+├── pages/               # As telas completas roteáveis (ex: lista-produtos.page)
+├── services/            # Serviços que buscam dados APENAS de produtos
+└── models/              # As interfaces TypeScript (ex: produto.interface.ts)

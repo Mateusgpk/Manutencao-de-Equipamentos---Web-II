@@ -1,0 +1,8 @@
+1. A pasta core/ (O Motor)
+Aqui entram arquivos que são instanciados uma única vez quando o aplicativo abre. Nada aqui deve ser exportado para outras telas, apenas para a configuração principal do aplicativo.
+
+Serviços globais: Autenticação (auth.service.ts), temas (dark/light mode).
+
+Interceptors: Códigos que interceptam requisições HTTP (para colocar um Token de usuário em toda chamada à API, por exemplo).
+
+Guards: Regras de proteção de rotas (para impedir que usuários deslogados acessem o sistema).
