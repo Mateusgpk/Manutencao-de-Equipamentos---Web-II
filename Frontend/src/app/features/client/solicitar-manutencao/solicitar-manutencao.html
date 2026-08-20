@@ -1,38 +1,22 @@
-<section class="min-h-screen flex items-center justify-center p-4">
+<section class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
 
-    <div class="w-full max-w-lg bg-gray-100 p-8">
+    <div class="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Solicitar Manutenção</h1>
 
-        <h1 class="text-2xl font-bold text-center mb-4">Solicitar Manutenção</h1>
+        <form [formGroup]="formSolicitacao" class="flex flex-col gap-5">
 
-        <form id="form-solicitar-manutencao" class="flex flex-col gap-5">
+            <app-input-texto id="equipamento" label="Descrição do Equipamento" placeholder="Ex: PC Intel Pentium G4560 GTX1030"
+                [control]="formSolicitacao.controls.descricaoEquipamento"></app-input-texto>
 
-            <div class="flex flex-col">
-                <label for="descricaoEquipamento" class="text-sm font-medium mb-1">
-                    Descrição do Equipamento
-                </label>
-                <input type="text" id="descricaoEquipamento" name="descricaoEquipamento" required>
-            </div>
+            <app-input-texto id="categoria" label="Categoria do Equipamento" placeholder="Ex: Computadores / Desktop"
+                [control]="formSolicitacao.controls.categoriaEquipamento"></app-input-texto>
 
-            <div class="flex flex-col">
-                <label for="categoriaEquipamento" class="text-sm font-medium mb-1">
-                    Categoria do Equipamento
-                </label>
-                <input type="text" id="categoriaEquipamento" name="categoriaEquipamento" required>
-            </div>
-
-            <div class="flex flex-col">
-                <label for="descricaoDefeito" class="text-sm font-medium mb-1">
-                    Descrição do Defeito
-                </label>
-                <textarea id="descricaoDefeito" name="descricaoDefeito" required></textarea>
-            </div>
-
-            <button type="submit" class="mt-2 w-full">
+            <button type="submit"
+                class="mt-2 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">
                 Enviar Solicitação
             </button>
 
         </form>
-
     </div>
 
 </section>
