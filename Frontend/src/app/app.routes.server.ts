@@ -9,4 +9,8 @@ export const serverRoutes: ServerRoute[] = [
     path: 'orcamento/:id',
     renderMode: RenderMode.Server,
   },
+  { 
+    path: 'employee/orcamento/:id', 
+    renderMode: RenderMode.Server 
+  }, 
 ];

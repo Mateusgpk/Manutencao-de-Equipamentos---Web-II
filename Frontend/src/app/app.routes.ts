@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 import { ClientHomepage } from './features/client/homepage/client-homepage';
-import { EmployeeHomepage } from './features/employee/homepage/employee-homepage';
-import { Orcamento } from './features/client/orcamento/orcamento';
 import { SolicitarManutencao } from './features/client/solicitar-manutencao/solicitar-manutencao';
+import { Orcamento } from './features/client/orcamento/orcamento';
+import { EmployeeHomepage } from './features/employee/homepage/employee-homepage';
+import { EfetuarOrcamento } from './features/employee/efetuar-orcamento/efetuar-orcamento';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,10 @@ export const routes: Routes = [
   {
     path: 'employee/home',
     component: EmployeeHomepage,
+  },
+  { 
+    path: 'employee/orcamento/:id', 
+    component: EfetuarOrcamento 
   },
   {
     path: 'solicitar-manutencao',
