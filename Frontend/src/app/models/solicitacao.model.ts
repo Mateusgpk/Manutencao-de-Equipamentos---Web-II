@@ -31,6 +31,9 @@ export interface Solicitacao {
   estado: EstadoSolicitacao;
 
   clienteNome: string;
+  clienteCpf: string;
+  clienteTelefone: string;
+  clienteEndereco: string;
 
   // Preenchidos ao entrar no estado ORÇADA (RF012)
   valorOrcamento?: number;

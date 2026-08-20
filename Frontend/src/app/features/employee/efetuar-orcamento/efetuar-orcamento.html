@@ -1,0 +1,108 @@
+<!-- Tela de Efetuar Orçamento (RF012). -->
+<section class="max-w-3xl mx-auto px-4 py-10">
+  @switch (etapa()) {
+    @case ('carregando') {
+      <p class="text-center text-gray-500">Carregando solicitação...</p>
+    }
+
+    @case ('naoEncontrada') {
+      <!-- se o id da URL não existir, ou se a solicitação não estiver em ABERTA -->
+      <div class="border border-yellow-300 bg-yellow-50 p-4 text-center rounded">
+        <p class="text-yellow-800">
+          Não foi possível encontrar uma solicitação aberta com este id.
+        </p>
+        
+        <a 
+          routerLink="/employee/home"
+          class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Voltar para o início
+        </a>
+      </div>
+    }
+
+    @default {
+      @if (solicitacao(); as s) {
+        <div class="border border-gray-200 bg-white p-6 rounded">
+          <h1 class="text-xl font-bold text-gray-900 mb-6">
+            Efetuar Orçamento da Solicitação #{{ s.id }}
+          </h1>
+
+          <!-- dados da solicitação e do cliente -->
+          <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-gray-100 pb-6">
+            <div>
+              <dt class="text-xs uppercase text-gray-500">Data/Hora da Solicitação</dt>
+              <dd class="text-sm text-gray-900">{{ formatarDataHora(s.dataHoraAbertura) }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs uppercase text-gray-500">Categoria</dt>
+              <dd class="text-sm text-gray-900">{{ s.categoriaEquipamento }}</dd>
+            </div>
+            <div class="sm:col-span-2">
+              <dt class="text-xs uppercase text-gray-500">Equipamento</dt>
+              <dd class="text-sm text-gray-900">{{ s.descricaoEquipamento }}</dd>
+            </div>
+            <div class="sm:col-span-2">
+              <dt class="text-xs uppercase text-gray-500">Descrição do Defeito</dt>
+              <dd class="text-sm text-gray-900">{{ s.descricaoDefeito }}</dd>
+            </div>
+
+            <div class="sm:col-span-2">
+              <dt class="text-xs uppercase text-gray-500">Cliente</dt>
+              <dd class="text-sm text-gray-900">{{ s.clienteNome }} — CPF: {{ s.clienteCpf }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs uppercase text-gray-500">Telefone</dt>
+              <dd class="text-sm text-gray-900">{{ s.clienteTelefone }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs uppercase text-gray-500">Endereço</dt>
+              <dd class="text-sm text-gray-900">{{ s.clienteEndereco }}</dd>
+            </div>
+          </dl>
+
+          <form class="mt-6" (ngSubmit)="confirmarOrcamento()">
+            <app-input-texto
+              id="valor"
+              label="Valor do Orçamento (R$)"
+              type="number"
+              placeholder="0,00"
+              [control]="valorControl"
+            ></app-input-texto>
+
+            @if (valorControl.invalid && valorControl.touched) {
+              <p class="text-sm text-red-600 mt-1">
+                Informe um valor de orçamento maior que zero.
+              </p>
+            }
+
+            <div class="mt-6 flex justify-end">
+              <button
+                type="submit"
+                class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 disabled:opacity-60"
+                [disabled]="enviando()"
+              >
+                Confirmar Orçamento
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+    }
+  }
+
+  @if (etapa() === 'orcamentoRegistrado') {
+    <div class="fixed inset-0 bg-black/50 flex items-center justify-center px-4">
+      <div class="bg-white max-w-sm w-full p-6 rounded text-center">
+        <p class="text-gray-900 font-semibold">Orçamento registrado com sucesso!</p>
+        <button
+          type="button"
+          class="mt-6 w-full bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600"
+          (click)="voltarParaInicio()"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  }
+</section>

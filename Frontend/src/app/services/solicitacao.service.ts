@@ -16,6 +16,9 @@ export class SolicitacaoService {
       descricaoDefeito: 'Não liga mais, tela permanece preta mesmo conectado na energia.',
       estado: EstadoSolicitacao.ORCADA,
       clienteNome: 'João',
+      clienteCpf: '123.456.789-00',
+      clienteTelefone: '(41) 91234-5678',
+      clienteEndereco: 'Rua Dr. Alcides Vieira Arcoverde, 1225 - Curitiba/PR',
       valorOrcamento: 350.9,
       dataHoraOrcamento: new Date('2026-08-11T14:02:00'),
       funcionarioOrcamento: 'Maria',
@@ -29,6 +32,22 @@ export class SolicitacaoService {
           estado: EstadoSolicitacao.ORCADA,
           funcionario: 'Maria',
         },
+      ],
+    },
+    // Solicitação ABERTA para testes.
+    {
+      id: 2,
+      dataHoraAbertura: new Date('2026-08-20T09:15:00'),
+      descricaoEquipamento: 'Impressora HP LaserJet',
+      categoriaEquipamento: 'Impressora',
+      descricaoDefeito: 'Pifou :(',
+      estado: EstadoSolicitacao.ABERTA,
+      clienteNome: 'José',
+      clienteCpf: '987.654.321-00',
+      clienteTelefone: '(41) 98765-4321',
+      clienteEndereco: 'Av. Sete de Setembro, 456 - Curitiba/PR',
+      historico: [
+        { dataHora: new Date('2026-08-20T09:15:00'), estado: EstadoSolicitacao.ABERTA },
       ],
     },
   ]);
@@ -78,6 +97,39 @@ export class SolicitacaoService {
           : s,
       ),
     );
+    return this.getById(id);
+  }
+
+  /** RF012 - Efetuar Orçamento: solicitação ABERTA passa para ORÇADA*/
+  efetuarOrcamento(
+    id: number,
+    valorOrcamento: number,
+    funcionario: string,
+  ): Observable<Solicitacao | undefined> {
+    const agora = new Date();
+
+    this.solicitacoes.update((lista) =>
+      lista.map((s) =>
+        s.id === id
+          ? {
+              ...s,
+              estado: EstadoSolicitacao.ORCADA,
+              valorOrcamento : valorOrcamento,
+              dataHoraOrcamento: agora,
+              funcionarioOrcamento: funcionario,
+              historico: [
+                ...s.historico,
+                { 
+                  dataHora: agora, 
+                  estado: EstadoSolicitacao.ORCADA, 
+                  funcionario: funcionario
+                },
+              ],
+            }
+          : s,
+      ),
+    );
+
     return this.getById(id);
   }
 }
