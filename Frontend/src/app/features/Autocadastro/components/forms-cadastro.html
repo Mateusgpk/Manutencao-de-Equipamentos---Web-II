@@ -1,0 +1,33 @@
+<form [formGroup]="formCadastro" (ngSubmit)="aoEnviar()" class="space-y-4 flex flex-col gap-4">
+
+    <app-input-texto id="nome" label="Nome" placeholder="Peter Parker"
+        [control]="formCadastro.controls.nome"></app-input-texto>
+
+    <app-input-texto class="forms-control" id="email" label="Email" placeholder="miranhadasilva@yahoo.com"
+        [control]="formCadastro.controls.email"></app-input-texto>
+    <app-input-texto class="form-control" label="Nome"
+        id="nome" placeholder="Digite seu nome" [control]="formCadastro.controls.nome"></app-input-texto>
+    <app-input-texto class="form-control" label="Email" id="email" placeholder="Digite seu email"
+        [control]="formCadastro.controls.email"></app-input-texto>
+    <app-input-texto class="form-control" label="CPF" id="cpf" placeholder="Digite seu CPF"
+        [control]="formCadastro.controls.cpf"></app-input-texto>
+    <app-input-texto class="form-control" label="CEP" id="cep" placeholder="Digite seu CEP"
+        [control]="formCadastro.controls.cep"></app-input-texto>
+    <app-input-texto class="form-control" label="Endereço" id="endereco" placeholder="Digite seu endereço"
+        [control]="formCadastro.controls.endereco"></app-input-texto>
+    <app-input-texto class="form-control" label="Número" id="numero" placeholder="Digite o número"
+        [control]="formCadastro.controls.numero"></app-input-texto>
+    <app-input-texto class="form-control" label="Complemento" id="complemento" placeholder="Digite o complemento"
+        [control]="formCadastro.controls.complemento"></app-input-texto>
+    <app-input-texto class="form-control" label="Bairro" id="bairro" placeholder="Digite o bairro"
+        [control]="formCadastro.controls.bairro"></app-input-texto>
+    <app-input-texto class="form-control" label="Cidade" id="cidade" placeholder="Digite a cidade"
+        [control]="formCadastro.controls.cidade"></app-input-texto>
+    <app-input-texto class="form-control" label="Estado" id="estado" placeholder="Digite o estado"
+        [control]="formCadastro.controls.estado"></app-input-texto>
+
+    <button type="submit" class="mt-2 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">
+        Enviar Solicitação
+    </button>
+
+</form>
