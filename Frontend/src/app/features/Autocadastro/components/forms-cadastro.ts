@@ -1,12 +1,31 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InputTexto } from '../../../shared/component/input-texto/input-texto';
+  import { InputTexto } from '../../../shared/component/input-texto/input-texto';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'input-cadastro',
+  selector: 'forms-cadastro',
   standalone: true,
-  imports: [CommonModule, InputTexto],
-  template:``,
-  styles: [``]
+  imports: [CommonModule, ReactiveFormsModule, InputTexto],
+  templateUrl:`./forms-cadastro.html`,
 })
-export class Inputs {}
+export class FormsCadastroComponent {
+  formCadastro = new FormGroup({
+    nome: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.required),
+    cpf: new FormControl('', Validators.required),
+    cep: new FormControl('', Validators.required),
+    endereco: new FormControl('', Validators.required),
+    numero: new FormControl('', Validators.required),
+    complemento: new FormControl(''),
+    bairro: new FormControl('', Validators.required),
+    cidade: new FormControl('', Validators.required),
+    estado: new FormControl('', Validators.required),
+    
+  });
+  aoEnviar() {
+    if (this.formCadastro.valid) {
+      console.log('Dados enviados:', this.formCadastro.value);
+    }
+  }
+}
