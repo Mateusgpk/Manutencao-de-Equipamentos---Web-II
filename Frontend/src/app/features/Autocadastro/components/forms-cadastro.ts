@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-  import { InputTexto } from '../../../shared/component/input-texto/input-texto';
+import { InputTexto } from './inputs/input-texto';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -23,6 +23,12 @@ export class FormsCadastroComponent {
     estado: new FormControl('', Validators.required),
     
   });
+  abaAtiva: 'login' | 'cadastro' = 'login'; 
+
+  trocarAba(aba: 'login' | 'cadastro') {
+    this.abaAtiva = aba;
+  }
+
   aoEnviar() {
     if (this.formCadastro.valid) {
       console.log('Dados enviados:', this.formCadastro.value);

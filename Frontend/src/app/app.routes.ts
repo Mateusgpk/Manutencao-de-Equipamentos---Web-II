@@ -4,15 +4,20 @@ import { SolicitarManutencao } from './features/client/solicitar-manutencao/soli
 import { Orcamento } from './features/client/orcamento/orcamento';
 import { EmployeeHomepage } from './features/employee/homepage/employee-homepage';
 import { EfetuarOrcamento } from './features/employee/efetuar-orcamento/efetuar-orcamento';
-import { FormsCadastroComponent } from './features/Autocadastro/components/forms-cadastro';
+import { CadastroComponent } from './features/Autocadastro/pages/cadastro';
 
 export const routes: Routes = [
-    {
-    path: 'login',
-    component: FormsCadastroComponent,
-  },
   {
     path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+    {
+    path: 'login',
+    component: CadastroComponent,
+  },
+  {
+    path: 'home',
     component: ClientHomepage,
   },
   {
