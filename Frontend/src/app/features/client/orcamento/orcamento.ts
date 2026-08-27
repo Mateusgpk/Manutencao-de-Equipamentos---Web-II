@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import {
@@ -15,12 +15,13 @@ type Etapa =
   | 'naoEncontrada'
   | 'orcamento'
   | 'motivoRejeicao'
+  | 'confirmandoRejeicao'
   | 'servicoAprovado'
   | 'servicoRejeitado';
 
 @Component({
   selector: 'app-orcamento',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, FormsModule, RouterLink],
   templateUrl: './orcamento.html',
   styleUrl: './orcamento.css',
 })
@@ -86,14 +87,32 @@ export class Orcamento implements OnInit {
     this.etapa.set('orcamento');
   }
 
-  /** RF007 - Rejeitar Serviço, após o usuário informar o motivo. */
+  /** RF007 - Valida o motivo e pede confirmação antes de rejeitar de fato. */
   protected confirmarRejeicaoServico(): void {
     this.motivoRejeicaoControl.markAsTouched();
-
+    
     if (this.motivoRejeicaoControl.invalid) {
       return;
     }
+        this.etapa.set('confirmandoRejeicao');
+  
+  }
 
+  /** Permite fechar a confirmação de rejeição apertando Esc, sem precisar do mouse. */
+  @HostListener('document:keydown.escape')
+  protected aoPressionarEsc(): void {
+    if (this.etapa() === 'confirmandoRejeicao' && !this.enviandoRejeicao()) {
+      this.voltarParaMotivo();
+    }
+  }
+
+  /** Volta para o formulário de motivo, caso o usuário queira revisar o texto. */
+  protected voltarParaMotivo(): void {
+    this.etapa.set('motivoRejeicao');
+  }
+
+  /** RF007 - Rejeitar Serviço, após o usuário confirmar a ação. */
+  protected confirmarRejeicaoDefinitiva(): void {
     const atual = this.solicitacao();
     if (!atual) {
       return;

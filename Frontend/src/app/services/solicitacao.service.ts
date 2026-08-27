@@ -52,6 +52,8 @@ export class SolicitacaoService {
     },
   ]);
 
+  listarTodas(): Observable<Solicitacao[]> { return of([...this.solicitacoes()]); }
+
   /** Busca uma solicitação pelo id (RF005 / RF008). */
   getById(id: number): Observable<Solicitacao | undefined> {
     return of(this.solicitacoes().find((s) => s.id === id));
