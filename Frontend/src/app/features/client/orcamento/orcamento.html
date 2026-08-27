@@ -130,6 +130,41 @@
       }
     }
   }
+  @if (etapa() === 'confirmandoRejeicao') {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
+      (click)="!enviandoRejeicao() && voltarParaMotivo()"
+    >
+      <div
+        class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl"
+        (click)="$event.stopPropagation()"
+      >
+        <p class="text-lg font-semibold text-slate-900">
+          Tem certeza que deseja rejeitar este orçamento?
+        </p>
+        <p class="mt-2 text-sm text-slate-500">Essa ação não pode ser desfeita.</p>
+
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
+          <button
+            type="button"
+            class="flex-1 rounded-md bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="enviandoRejeicao()"
+            (click)="confirmarRejeicaoDefinitiva()"
+          >
+            Sim, rejeitar
+          </button>
+          <button
+            type="button"
+            class="flex-1 rounded-md border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            [disabled]="enviandoRejeicao()"
+            (click)="voltarParaMotivo()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 
   @if (etapa() === 'servicoAprovado' || etapa() === 'servicoRejeitado') {
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
