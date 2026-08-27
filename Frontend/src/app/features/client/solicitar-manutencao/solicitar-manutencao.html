@@ -5,14 +5,18 @@
 
         <form [formGroup]="formSolicitacao" class="flex flex-col gap-5">
 
-            <app-input-texto id="equipamento" label="Descrição do Equipamento" placeholder="Ex: PC Intel Pentium G4560 GTX1030"
+            <app-input-texto id="equipamento" label="Descrição do Equipamento"
+                placeholder="Ex: PC Intel Pentium G4560 GTX1030"
                 [control]="formSolicitacao.controls.descricaoEquipamento"></app-input-texto>
 
             <app-input-texto id="categoria" label="Categoria do Equipamento" placeholder="Ex: Computadores / Desktop"
                 [control]="formSolicitacao.controls.categoriaEquipamento"></app-input-texto>
 
-            <button type="submit"
-                class="mt-2 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">
+            <app-text-area id="descricaoProblema" label="Descrição do Problema"
+                placeholder="Desliga quando tem alto processamento"
+                [control]="formSolicitacao.controls.descricaoProblema"></app-text-area>
+
+            <button type="submit" class="mt-2 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">
                 Enviar Solicitação
             </button>
 
