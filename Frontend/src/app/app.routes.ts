@@ -6,6 +6,10 @@ import { EmployeeHomepage } from './features/employee/homepage/employee-homepage
 import { EfetuarOrcamento } from './features/employee/efetuar-orcamento/efetuar-orcamento';
 
 export const routes: Routes = [
+    {
+    path: 'login',
+    component: FormsCadastroComponent,
+  },
   {
     path: '',
     component: ClientHomepage,
