@@ -60,6 +60,6 @@ export class ClientHomepage implements OnInit {
       ? 'valor ainda não informado'
       : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(s.valorOrcamento);
 
-    alert(`Pagamento da Solicitação #${s.id}\nValor: ${valor}\nConfirme o pagamento na tela do RF010.`);
+    alert(`Pagamento da Solicitação #${s.id}\nValor: ${valor}`);
   }
 }
