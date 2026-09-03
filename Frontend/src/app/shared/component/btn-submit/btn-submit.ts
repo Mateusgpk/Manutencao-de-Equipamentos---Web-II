@@ -11,10 +11,6 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 })
 export class BtnSubmit {
 
-  meubutao(element: HTMLElement) {
-    element.style.opacity = '0.5';
-  }
-  
   @Input() id: string = "";
   @Input() class: string = "";
   @Input() value: string = "";
