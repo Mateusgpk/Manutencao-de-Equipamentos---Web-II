@@ -5,6 +5,7 @@ import { SolicitarManutencao } from './features/client/solicitar-manutencao/soli
 import { Orcamento } from './features/client/orcamento/orcamento';
 import { EmployeeHomepage } from './features/employee/homepage/employee-homepage';
 import { EfetuarOrcamento } from './features/employee/efetuar-orcamento/efetuar-orcamento';
+import { CategoriesComponent } from './features/employee/categories/categories';
 import { CadastroComponent } from './features/Autocadastro/pages/cadastro';
 
 export const routes: Routes = [
@@ -40,6 +41,10 @@ export const routes: Routes = [
   {
     path: 'solicitar-manutencao',
     component: SolicitarManutencao,
+  },
+  {
+    path: 'employee/categories',
+    component: CategoriesComponent,
   },
   {
     path: '**',
