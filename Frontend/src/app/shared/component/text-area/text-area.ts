@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input, inject } from '@angular/core';
+import { FormControl, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 
 @Component({
   selector: 'app-text-area',
@@ -11,8 +11,9 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 export class TextArea {
   @Input({ required: true }) label!: string;
   @Input({ required: true }) control!: FormControl;
-
   @Input() placeholder: string = '';
   @Input() id: string = '';
   @Input() class: string = '';
+
+  formDir = inject(FormGroupDirective, { optional: true });
 }

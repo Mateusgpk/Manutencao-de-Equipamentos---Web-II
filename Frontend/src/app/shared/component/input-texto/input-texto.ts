@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input, inject } from '@angular/core';
+import { FormControl, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 
 @Component({
   selector: 'app-input-texto',
@@ -10,12 +10,13 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 })
 
 
-export class InputTexto {
+export class InputTexto { // (E Textarea no outro)
   @Input({ required: true }) label!: string;
-  @Input({ required: true }) control!: FormControl;
-
+  @Input({ required: true }) control!: FormControl; 
   @Input() type: string = 'text';
   @Input() placeholder: string = '';
   @Input() id: string = '';
   @Input() class: string = '';
+
+  formDir = inject(FormGroupDirective, { optional: true });
 }
