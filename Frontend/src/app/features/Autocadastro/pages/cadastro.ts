@@ -5,7 +5,7 @@ import {FormsCadastroComponent} from '../components/forms-cadastro';
     selector: 'cadastro',
     standalone: true,
     imports: [CommonModule, FormsCadastroComponent],
-    template: `<forms-cadastro></forms-cadastro>`
+    templateUrl: `./cadastro.html`,
 })
 
 export class CadastroComponent {
