@@ -1,0 +1,7 @@
+
+<form [formGroup]="formCadastro" (ngSubmit)="aoEnviar()" class="space-y-2 flex flex-col ">
+<app-input-texto class="forms-control" id="email" label="Email" placeholder="miranhadasilva@yahoo.com" class=""
+    [control]="formCadastro.controls.email"></app-input-texto>
+    <app-input-texto class="forms-control" id="senha" label="Senha" placeholder="••••••••" class=""
+    [control]="formCadastro.controls.senha"></app-input-texto>
+</form>

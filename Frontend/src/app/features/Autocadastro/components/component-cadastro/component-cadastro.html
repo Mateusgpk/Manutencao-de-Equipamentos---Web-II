@@ -1,0 +1,31 @@
+<p class="text-gray-600">Preencha o formulário abaixo para se cadastrar.</p>
+<form [formGroup]="formCadastro" (ngSubmit)="aoEnviar()" class="space-y-2 flex flex-col ">
+
+    <app-input-texto id="nome" label="Nome" placeholder="Peter Parker"
+        [control]="formCadastro.controls.nome"></app-input-texto>
+    <app-input-texto class="forms-control" id="email" label="Email" placeholder="miranhadasilva@yahoo.com" class=""
+        [control]="formCadastro.controls.email"></app-input-texto>
+    <app-input-texto class="form-control" label="CPF" id="cpf" placeholder="Digite seu CPF"
+        [control]="formCadastro.controls.cpf"></app-input-texto>
+        <div class="grid grid-cols-10 gap-4 w-full">
+    <app-input-texto class="form-control col-span-3" label="CEP" id="cep" placeholder="Digite seu CEP" 
+        [control]="formCadastro.controls.cep"></app-input-texto>
+    <app-input-texto class="form-control col-span-7" label="Endereço" id="endereco" placeholder="Digite seu endereço"
+        [control]="formCadastro.controls.endereco"></app-input-texto>  
+    <app-input-texto class="form-control col-span-5" label="Estado" id="estado" placeholder="Digite o estado"
+        [control]="formCadastro.controls.estado"></app-input-texto>
+    <app-input-texto class="form-control col-span-5" label="Cidade" id="cidade" placeholder="Digite a cidade"
+        [control]="formCadastro.controls.cidade"></app-input-texto>
+        </div>
+        <div class=" grid grid-cols-10 gap-4 w-full">
+    <app-input-texto class="form-control col-span-3" label="Bairro" id="bairro" placeholder="Digite o bairro"
+        [control]="formCadastro.controls.bairro"></app-input-texto>
+    <app-input-texto class="form-control col-span-2" label="Número" id="numero" placeholder="431..."
+        [control]="formCadastro.controls.numero"></app-input-texto>
+    <app-input-texto class="form-control col-span-5" label="Complemento" id="complemento" placeholder="Digite o complemento"
+        [control]="formCadastro.controls.complemento"></app-input-texto>
+        </div>
+
+<app-btn-submit  (onclick)="aoEnviar()" class="{{corfundo}}" value="Cadastrar"  type="submit">Cadastrar</app-btn-submit>
+  
+</form>
