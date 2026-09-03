@@ -1,11 +1,10 @@
-import { escape } from "node:querystring";
-
 /** Estados possíveis de uma solicitacao */
 export enum EstadoSolicitacao{
     ABERTA = 'ABERTA',
     ORCADA = 'ORCADA',
     APROVADA = 'APROVADA',
     REJEITADA = 'REJEITADA',
+    ARRUMADA = 'ARRUMADA',
 }
 
 export const ESTADO_SOLICITACAO_LABEL: Record<EstadoSolicitacao, string> = {
@@ -13,6 +12,7 @@ export const ESTADO_SOLICITACAO_LABEL: Record<EstadoSolicitacao, string> = {
     [EstadoSolicitacao.ORCADA]: 'Orçada',
     [EstadoSolicitacao.APROVADA]: 'Aprovada',
     [EstadoSolicitacao.REJEITADA]: 'Rejeitada',
+    [EstadoSolicitacao.ARRUMADA]: 'Arrumada',
 }
 
 export interface HistoricoSolicitacao {

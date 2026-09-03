@@ -17,9 +17,11 @@ export class ClientHomepage implements OnInit {
   solicitacoes: Solicitacao[] = [];
 
   ngOnInit(): void {
-    this.service.listarTodas().subscribe((lista) => {
-      this.solicitacoes = [...lista].sort((a, b) => a.dataHoraAbertura.getTime() - b.dataHoraAbertura.getTime());
-    });
+    this.service.listarTodas().subscribe((lista) => this.atualizarSolicitacoes(lista));
+  }
+
+  private atualizarSolicitacoes(lista: Solicitacao[]): void {
+    this.solicitacoes = [...lista].sort((a, b) => a.dataHoraAbertura.getTime() - b.dataHoraAbertura.getTime());
   }
 
   limitar(descricao: string): string {
@@ -33,5 +35,31 @@ export class ClientHomepage implements OnInit {
   visualizar(s: Solicitacao): void {
     const historico = s.historico.map((h) => `${this.dataHora(h.dataHora)} - ${this.estadoLabel[h.estado]}`).join('\n');
     alert(`Solicitação #${s.id}\nEquipamento: ${s.descricaoEquipamento}\nDefeito: ${s.descricaoDefeito}\nEstado: ${this.estadoLabel[s.estado]}\nHistórico:\n${historico}`);
+  }
+
+  resgatar(s: Solicitacao): void {
+    const confirmou = confirm(`Resgatar a solicitação #${s.id} e aprovar o serviço novamente?`);
+
+    if (!confirmou) {
+      return;
+    }
+
+    this.service.resgatarServico(s.id).subscribe((atualizada) => {
+      if (!atualizada) {
+        return;
+      }
+
+      this.atualizarSolicitacoes(
+        this.solicitacoes.map((item) => item.id === atualizada.id ? atualizada : item),
+      );
+    });
+  }
+
+  pagar(s: Solicitacao): void {
+    const valor = s.valorOrcamento === undefined
+      ? 'valor ainda não informado'
+      : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(s.valorOrcamento);
+
+    alert(`Pagamento da Solicitação #${s.id}\nValor: ${valor}\nConfirme o pagamento na tela do RF010.`);
   }
 }
