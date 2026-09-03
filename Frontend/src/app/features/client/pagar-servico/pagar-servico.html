@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagar Serviço </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50">
+
+  <section class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
+    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+
+      <header class="mb-6 flex items-center justify-between">
+        <h1 class="text-xl font-bold text-slate-900">Pagamento da Solicitação #1</h1>
+        <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800">
+          Arrumada
+        </span>
+      </header>
+
+      <dl class="grid grid-cols-1 gap-4 border-b border-slate-100 pb-6 sm:grid-cols-2">
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">
+            Data/Hora da Solicitação
+          </dt>
+          <dd class="mt-1 text-sm text-slate-900">10/08/2026 09:15</dd>
+        </div>
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Categoria</dt>
+          <dd class="mt-1 text-sm text-slate-900">Notebook</dd>
+        </div>
+        <div class="sm:col-span-2">
+          <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Equipamento</dt>
+          <dd class="mt-1 text-sm text-slate-900">Notebook Dell Inspiron 15</dd>
+        </div>
+        <div class="sm:col-span-2">
+          <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">
+            Descrição do Defeito
+          </dt>
+          <dd class="mt-1 text-sm text-slate-900">
+            Não liga mais, tela permanece preta mesmo conectado na energia.
+          </dd>
+        </div>
+        <div class="sm:col-span-2">
+          <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">
+            Manutenção realizada por
+          </dt>
+          <dd class="mt-1 text-sm text-slate-900">
+            Mário em 12/08/2026 16:40
+          </dd>
+        </div>
+        <div class="sm:col-span-2">
+          <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">
+            Orientações para o Cliente
+          </dt>
+          <dd class="mt-1 text-sm text-slate-900">
+            Troca de placa-mãe realizada. Evite deixar o notebook ligado na tomada por
+            longos períodos sem uso.
+          </dd>
+        </div>
+      </dl>
+
+      <div class="mt-6 rounded-lg bg-blue-50 p-5 text-center">
+        <p class="text-xs font-medium uppercase tracking-wide text-blue-700">Valor a Pagar</p>
+        <p class="mt-1 text-3xl font-extrabold text-blue-900">R$ 350,90</p>
+      </div>
+
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          class="rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white"
+        >
+          Confirmar Pagamento
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+</body>
+</html>
