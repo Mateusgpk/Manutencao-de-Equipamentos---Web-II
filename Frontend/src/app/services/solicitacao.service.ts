@@ -102,6 +102,29 @@ export class SolicitacaoService {
     return this.getById(id);
   }
 
+  /** RF009 - Resgatar Serviço: solicitação REJEITADA volta para APROVADA. */
+  resgatarServico(id: number): Observable<Solicitacao | undefined> {
+    this.solicitacoes.update((lista) =>
+      lista.map((s) =>
+        s.id === id && s.estado === EstadoSolicitacao.REJEITADA
+          ? {
+              ...s,
+              estado: EstadoSolicitacao.APROVADA,
+              historico: [
+                ...s.historico,
+                {
+                  dataHora: new Date(),
+                  estado: EstadoSolicitacao.APROVADA,
+                  observacao: 'Serviço resgatado pelo cliente',
+                },
+              ],
+            }
+          : s,
+      ),
+    );
+    return this.getById(id);
+  }
+
   /** RF012 - Efetuar Orçamento: solicitação ABERTA passa para ORÇADA*/
   efetuarOrcamento(
     id: number,
