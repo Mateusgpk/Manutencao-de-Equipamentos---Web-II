@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { InputTexto } from '../../../shared/component/input-texto/input-texto';
 import { TextArea } from '../../../shared/component/text-area/text-area';
 
@@ -11,11 +11,22 @@ import { TextArea } from '../../../shared/component/text-area/text-area';
   styleUrl: './solicitar-manutencao.css',
 })
 export class SolicitarManutencao {
+  
+  private formBuilder = inject(FormBuilder);
 
-  formSolicitacao = new FormGroup({
-    descricaoEquipamento: new FormControl(''),
-    categoriaEquipamento: new FormControl(''),
-    descricaoProblema: new FormControl(''),
+  formSolicitacao = this.formBuilder.nonNullable.group({
+    descricaoEquipamento: ['', [Validators.required, Validators.minLength(5)]],
+    categoriaEquipamento: ['', [Validators.required]],
+    descricaoProblema: ['', [Validators.required, Validators.minLength(10)]]
   });
 
+  enviarSolicitacao() {
+    if (this.formSolicitacao.valid) {
+      const payload = this.formSolicitacao.getRawValue();
+      console.log('Dados Validados com Sucesso!', payload);
+    } else {
+      console.warn("Formulário Inválido, revise os Dados Informados");
+      this.formSolicitacao.markAllAsTouched();
+    }
+  }
 }
