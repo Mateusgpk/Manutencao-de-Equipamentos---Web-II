@@ -48,7 +48,34 @@ export class EfetuarOrcamento implements OnInit {
   }
 
   protected confirmarOrcamento(): void {
-    // implementar
+    if (this.valorControl.invalid) {
+      this.valorControl.markAsTouched();
+      return;
+    }
+
+    const s = this.solicitacao();
+    if (!s || this.enviando()) {
+      return;
+    }
+
+    const valor = this.valorControl.value!;
+    this.enviando.set(true);
+
+    this.solicitacaoService
+      .efetuarOrcamento(s.id, valor, this.funcionarioLogado)
+      .subscribe({
+        next: (atualizada) => {
+          this.enviando.set(false);
+          if (atualizada) {
+            this.solicitacao.set(atualizada);
+          }
+          this.etapa.set('orcamentoRegistrado');
+        },
+        error: () => {
+          this.enviando.set(false);
+          alert('Ocorreu um erro ao registrar o orçamento.');
+        },
+      });
   }
 
   protected voltarParaInicio(): void {
