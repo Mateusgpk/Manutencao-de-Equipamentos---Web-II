@@ -14,6 +14,7 @@ type Etapa =
   | 'carregando'
   | 'naoEncontrada'
   | 'orcamento'
+  | 'confirmandoAprovacao'
   | 'motivoRejeicao'
   | 'confirmandoRejeicao'
   | 'servicoAprovado'
@@ -36,7 +37,8 @@ export class Orcamento implements OnInit {
   protected readonly etapa = signal<Etapa>('carregando');
   protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
   protected readonly enviandoRejeicao = signal(false);
-
+  protected readonly enviandoAprovacao = signal(false);
+  
   /** RF007 - motivo da rejeição, validado como obrigatório. */
   protected readonly motivoRejeicaoControl = new FormControl('', {
     nonNullable: true,
@@ -63,13 +65,26 @@ export class Orcamento implements OnInit {
   }
 
   /** RF006 - Aprovar Serviço. */
-  protected aprovarServico(): void {
+  /** Abre a mini revisão antes de aprovar de fato o serviço (RF006). */
+  protected abrirConfirmacaoAprovacao(): void {
+    this.etapa.set('confirmandoAprovacao');
+
+  }
+
+  /** Fecha a mini revisão e volta para a tela de orçamento, sem aprovar nada. */
+  protected cancelarAprovacao(): void {
+    this.etapa.set('orcamento');
+  }
+  
+  /** RF006 - Aprovar Serviço, executado somente após a confirmação da mini revisão. */
+  protected confirmarAprovacaoDefinitiva(): void {
     const atual = this.solicitacao();
     if (!atual) {
       return;
     }
-
+    this.enviandoAprovacao.set(true);
     this.solicitacaoService.aprovarServico(atual.id).subscribe((atualizada) => {
+      this.enviandoAprovacao.set(false);
       if (atualizada) {
         this.solicitacao.set(atualizada);
       }

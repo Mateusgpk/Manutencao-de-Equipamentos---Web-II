@@ -82,7 +82,7 @@
               <button
                 type="button"
                 class="rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600"
-                (click)="aprovarServico()"
+                (click)="abrirConfirmacaoAprovacao()"
               >
                 Aprovar Serviço
               </button>
@@ -130,6 +130,61 @@
       }
     }
   }
+  @if (etapa() === 'confirmandoAprovacao') {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
+      (click)="!enviandoAprovacao() && cancelarAprovacao()"
+    >
+      <div
+        class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl"
+        (click)="$event.stopPropagation()"
+      >
+        <p class="text-lg font-semibold text-slate-900">Revise antes de confirmar</p>
+        <p class="mt-2 text-sm text-slate-500">
+          Você está aprovando o serviço para a solicitação #{{ solicitacao()?.id }}.
+        </p>
+
+        <div class="mt-4 rounded-lg bg-blue-50 p-4 text-left">
+          <dl class="space-y-2 text-sm">
+            <div class="flex justify-between gap-4">
+              <dt class="text-slate-500">Equipamento</dt>
+              <dd class="text-right font-medium text-slate-900">
+                {{ solicitacao()?.descricaoEquipamento }}
+              </dd>
+            </div>
+            <div class="flex justify-between gap-4">
+              <dt class="text-slate-500">Valor Orçado</dt>
+              <dd class="text-right text-lg font-bold text-blue-900">
+                {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <p class="mt-3 text-xs text-slate-500">Essa ação não pode ser desfeita.</p>
+
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
+          <button
+            type="button"
+            class="flex-1 rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="enviandoAprovacao()"
+            (click)="confirmarAprovacaoDefinitiva()"
+          >
+            Sim, aprovar
+          </button>
+          <button
+            type="button"
+            class="flex-1 rounded-md border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            [disabled]="enviandoAprovacao()"
+            (click)="cancelarAprovacao()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+  
   @if (etapa() === 'confirmandoRejeicao') {
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
