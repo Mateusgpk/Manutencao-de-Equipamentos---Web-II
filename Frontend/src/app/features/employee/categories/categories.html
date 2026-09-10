@@ -46,16 +46,22 @@
       </div>
     }
 
+    @if (erroDuplicado) {
+      <div class="text-sm text-red-600 mb-4">
+        <div>A categoria já existe.</div>
+      </div>
+    }
+
     <ul class="divide-y divide-gray-100 mt-4">
       @for (cat of categorias; track cat.id) {
         <li class="py-3 flex items-center justify-between">
           <span class="text-gray-900">{{ cat.name }}</span>
           <div class="flex gap-3">
             <button (click)="editarCategoria(cat)" class="text-sm text-blue-600 hover:underline">
-              <i class="fa fa-edit" aria-hidden="true"></i> Editar
+              <i class="fa fa-edit" aria-hidden="true"></i> 
             </button>
             <button (click)="removerCategoria(cat)" class="text-sm text-red-600 hover:underline">
-              <i class="fa fa-times" aria-hidden="true"></i> Remover
+              <i class="fa fa-times" aria-hidden="true"></i> 
             </button>
           </div>
         </li>

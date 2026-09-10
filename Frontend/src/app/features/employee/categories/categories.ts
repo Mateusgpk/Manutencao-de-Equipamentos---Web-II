@@ -19,6 +19,7 @@ export class CategoriesComponent implements OnInit {
   categorias: Category[] = [];
   categoria: Category = new Category();
   emEdicao = false;
+  erroDuplicado = false;
 
   ngOnInit(): void {
     this.listarTodos();
@@ -38,6 +39,18 @@ export class CategoriesComponent implements OnInit {
       return;
     }
 
+    const nomeTrim = this.categoria.name.trim();
+    const duplicado = this.categorias.find(
+      (cat) => cat.name.toLowerCase() === nomeTrim.toLowerCase() && cat.id !== this.categoria.id);
+
+    if (duplicado) {
+      this.erroDuplicado = true;
+      return;
+    }
+
+    this.erroDuplicado = false;
+    this.categoria.name = nomeTrim;
+
     if (this.emEdicao) {
       this.categoryService.atualizar(this.categoria);
     } else {
@@ -52,6 +65,7 @@ export class CategoriesComponent implements OnInit {
     this.categoria = new Category();
     this.emEdicao = false;
     this.formulario.resetForm();
+    this.erroDuplicado = false;
   }
 
   removerCategoria(categoria: Category): void {
