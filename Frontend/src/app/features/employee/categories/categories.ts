@@ -61,6 +61,10 @@ export class CategoriesComponent implements OnInit {
     this.listarTodos();
   }
 
+  get TotalCategorias(): number {
+    return this.categorias.length;
+  }
+
   cancelarEdicao(): void {
     this.categoria = new Category();
     this.emEdicao = false;
