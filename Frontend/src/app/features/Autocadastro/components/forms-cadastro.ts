@@ -15,9 +15,11 @@ import { ComponentLogin } from './component-login/component-login';
   templateUrl:`./forms-cadastro.html`,
 })
 export class FormsCadastroComponent  {
+  tamanho="h-150";
   abaAtiva: 'login' | 'cadastro' = 'cadastro'; 
 
   trocarAba(aba: 'login' | 'cadastro') {
     this.abaAtiva = aba;
+    this.tamanho = aba === 'login' ? 'h-70' : 'h-150';
   }
 }
