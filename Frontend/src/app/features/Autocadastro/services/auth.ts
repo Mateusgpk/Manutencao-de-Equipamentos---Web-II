@@ -12,7 +12,8 @@ export class User {
 
 export const auth = {
     registerUser(user: User): boolean{
-        localStorage.setItem( "user" , JSON.stringify(user) )
+        const atual=localStorage.getItem("user")
+        localStorage.setItem( "user" , atual+JSON.stringify(user) )
         return true
     }
 }

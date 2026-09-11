@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { EstadoSolicitacao, Solicitacao } from '../../../models/solicitacao.model';
-import { SolicitacaoService } from '../../../services/solicitacao.service';
+import { EstadoSolicitacao, Solicitacao } from '../../../shared/models/solicitacao.model';
+import { SolicitacaoService } from '../../../shared/services/solicitacao.service';
 
 @Component({
   selector: 'app-homepage',
