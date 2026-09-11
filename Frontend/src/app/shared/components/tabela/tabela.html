@@ -1,0 +1,37 @@
+<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm w-full bg-white">
+    <table class="min-w-full divide-y-2 divide-gray-200 text-sm">
+
+        <thead class="bg-gray-50 text-left">
+            <tr>
+                @for (col of columns; track col.key) {
+                <th class="whitespace-nowrap px-4 py-3 font-semibold text-gray-800">
+                    {{ col.label }}
+                </th>
+                }
+            </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-100">
+            @for (row of data; track $index) {
+            <tr class="hover:bg-gray-50 transition-colors">
+
+                @for (col of columns; track col.key) {
+                <td class="whitespace-nowrap px-4 py-3 text-gray-700">
+                    {{ row[col.key] }}
+                </td>
+                }
+
+            </tr>
+            }
+
+            @if (data.length === 0) {
+            <tr>
+                <td [colSpan]="columns.length" class="px-4 py-8 text-center text-gray-500">
+                    Nenhum registro encontrado.
+                </td>
+            </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
