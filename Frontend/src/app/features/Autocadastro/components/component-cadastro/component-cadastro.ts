@@ -8,6 +8,8 @@ import { Subject } from 'rxjs/internal/Subject';
 import { BtnSubmit } from '../../../../shared/component/btn-submit/btn-submit';
 import { InputTexto } from '../inputs/input-texto';
 import { CommonModule } from '@angular/common';
+import { auth, User } from '../../services/auth'
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-component-cadastro',
@@ -78,6 +80,12 @@ export class ComponentCadastro implements OnInit{
     this.corfundo = 'bg-blue-600';
     if (this.formCadastro.valid) {
       console.log('Dados enviados:', this.formCadastro.value);
+      const nome=this.formCadastro.controls.nome.value ?? ""
+      const email=this.formCadastro.controls.email.value ?? ""
+      const user = new User( nome , email)
+      auth.registerUser(user)
+      const savedUserJson = localStorage.getItem("user");
+      console.log(savedUserJson)
     }
   }
 }
