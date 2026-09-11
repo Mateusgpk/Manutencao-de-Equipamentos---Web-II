@@ -12,8 +12,22 @@ export class User {
 
 export const auth = {
     registerUser(user: User): boolean{
+
+
         const atual=localStorage.getItem("user")
-        localStorage.setItem( "user" , atual+JSON.stringify(user) )
+        const users: User[]= atual? JSON.parse(atual) :[]
+        const emailemuso= users.some(u=>u.email===user.email)
+        if (emailemuso){
+            return false;
+        }
+        users.push(user)
+        localStorage.setItem( "user" ,JSON.stringify(users) )
         return true
+    },
+
+    loginuser (user:User):boolean{
+        const atual=localStorage.getItem("user")
+        const users:User[] = atual ? JSON.parse(atual) : [];
+        return users.some(us => us.email === user.email && us.name === user.name)
     }
 }

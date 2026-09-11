@@ -83,7 +83,9 @@ export class ComponentCadastro implements OnInit{
       const nome=this.formCadastro.controls.nome.value ?? ""
       const email=this.formCadastro.controls.email.value ?? ""
       const user = new User( nome , email)
-      auth.registerUser(user)
+      if (auth.registerUser(user)){
+        alert("usuario salvo")
+      }
       const savedUserJson = localStorage.getItem("user");
       console.log(savedUserJson)
     }
