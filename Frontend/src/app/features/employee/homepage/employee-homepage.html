@@ -10,36 +10,22 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>19/08/2026 14:30</td>
-        <td>Cliente 1</td>
-        <td>Descrição com até 30 caracteres</td>
-        <td>
-          <button type="button">
-            Efetuar Orçamento
-          </button>
-        </td>
-      </tr>
-      <tr>
-        <td>19/08/2026 15:00</td>
-        <td>Cliente 2</td>
-        <td>Descrição com até 30 caracteres</td>
-        <td>
-          <button type="button">
-            Efetuar Orçamento
-          </button>
-        </td>
-      </tr>
-      <tr>
-        <td>19/08/2026 15:45</td>
-        <td>Cliente 3</td>
-        <td>Descrição com até 30 caracteres</td>
-        <td>
-          <button type="button">
-            Efetuar Orçamento
-          </button>
-        </td>
-      </tr>
+      @for (solicitacao of solicitacoesAbertas; track solicitacao.id) {
+        <tr>
+          <td>{{ dataHora(solicitacao.dataHoraAbertura) }}</td>
+          <td>{{ solicitacao.clienteNome }}</td>
+          <td [title]="solicitacao.descricaoEquipamento">{{ limitar(solicitacao.descricaoEquipamento) }}</td>
+          <td>
+            <a [routerLink]="['/employee/orcamento', solicitacao.id]">
+              Efetuar Orçamento
+            </a>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4">Nenhuma solicitação aberta.</td>
+        </tr>
+      }
     </tbody>
   </table>
 </div>
