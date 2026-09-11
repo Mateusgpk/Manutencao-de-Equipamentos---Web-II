@@ -12,12 +12,15 @@ import { SolicitacaoService } from '../../../shared/services/solicitacao.service
 })
 export class ClientHomepage implements OnInit {
   private readonly service = inject(SolicitacaoService);
+  private readonly cpfClienteLogado = '123.456.789-00';
   readonly estadoLabel = ESTADO_SOLICITACAO_LABEL;
   readonly EstadoSolicitacao = EstadoSolicitacao;
   solicitacoes: Solicitacao[] = [];
 
   ngOnInit(): void {
-    this.service.listarTodas().subscribe((lista) => this.atualizarSolicitacoes(lista));
+    this.service.listarTodas().subscribe((lista) => {
+      this.atualizarSolicitacoes(lista.filter((s) => s.clienteCpf === this.cpfClienteLogado));
+    });
   }
 
   private atualizarSolicitacoes(lista: Solicitacao[]): void {
@@ -33,8 +36,28 @@ export class ClientHomepage implements OnInit {
   }
 
   visualizar(s: Solicitacao): void {
-    const historico = s.historico.map((h) => `${this.dataHora(h.dataHora)} - ${this.estadoLabel[h.estado]}`).join('\n');
-    alert(`Solicitação #${s.id}\nEquipamento: ${s.descricaoEquipamento}\nDefeito: ${s.descricaoDefeito}\nEstado: ${this.estadoLabel[s.estado]}\nHistórico:\n${historico}`);
+    const valor = s.valorOrcamento === undefined ? 'Não informado' : this.formatarMoeda(s.valorOrcamento);
+    const historico = s.historico
+      .map((h) => {
+        const funcionario = h.funcionario ? ` | Funcionário: ${h.funcionario}` : '';
+        const observacao = h.observacao ? ` | Obs.: ${h.observacao}` : '';
+        return `${this.dataHora(h.dataHora)} - ${this.estadoLabel[h.estado]}${funcionario}${observacao}`;
+      })
+      .join('\n');
+
+    alert(
+      `Solicitação #${s.id}\n` +
+      `Data/Hora: ${this.dataHora(s.dataHoraAbertura)}\n` +
+      `Equipamento: ${s.descricaoEquipamento}\n` +
+      `Categoria: ${s.categoriaEquipamento}\n` +
+      `Defeito: ${s.descricaoDefeito}\n` +
+      `Estado: ${this.estadoLabel[s.estado]}\n` +
+      `Cliente: ${s.clienteNome} - ${s.clienteCpf}\n` +
+      `Telefone: ${s.clienteTelefone}\n` +
+      `Endereço: ${s.clienteEndereco}\n` +
+      `Valor Orçado: ${valor}\n` +
+      `Histórico:\n${historico}`,
+    );
   }
 
   resgatar(s: Solicitacao): void {
@@ -58,8 +81,12 @@ export class ClientHomepage implements OnInit {
   pagar(s: Solicitacao): void {
     const valor = s.valorOrcamento === undefined
       ? 'valor ainda não informado'
-      : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(s.valorOrcamento);
+      : this.formatarMoeda(s.valorOrcamento);
 
     alert(`Pagamento da Solicitação #${s.id}\nValor: ${valor}`);
+  }
+
+  private formatarMoeda(valor: number): string {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
   }
 }
