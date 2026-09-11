@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { InputTexto } from '../../../shared/component/input-texto/input-texto';
-import { TextArea } from '../../../shared/component/text-area/text-area';
+import { InputTexto } from '../../../shared/components/input-texto/input-texto';
+import { TextArea } from '../../../shared/components/text-area/text-area';
 import { SolicitacaoService } from '../services/solicitacao';
 
 @Component({

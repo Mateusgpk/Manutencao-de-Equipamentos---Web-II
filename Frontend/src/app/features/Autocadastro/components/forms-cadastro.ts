@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputTexto } from './inputs/input-texto';
-import { BtnSubmit } from '../../../shared/component/btn-submit/btn-submit';
+import { BtnSubmit } from '../../../shared/components/btn-submit/btn-submit';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';

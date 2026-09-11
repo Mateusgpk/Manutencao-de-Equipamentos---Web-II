@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { Subject } from 'rxjs/internal/Subject';
-import { BtnSubmit } from '../../../../shared/component/btn-submit/btn-submit';
+import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../inputs/input-texto';
 import { CommonModule } from '@angular/common';
 
