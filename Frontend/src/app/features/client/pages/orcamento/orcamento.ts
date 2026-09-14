@@ -7,7 +7,7 @@ import {
   EstadoSolicitacao,
   Solicitacao,
 } from '../../../../shared/models/solicitacao.model';
-import { SolicitacaoService } from '../../../../core/solicitacao.service';
+import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
 
 /** Passos pelos quais a tela pode passar (RF005 -> RF006 / RF007). */
 type Etapa =
