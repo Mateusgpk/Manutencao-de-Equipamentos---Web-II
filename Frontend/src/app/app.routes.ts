@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 import { ClientHomepage } from './features/client/homepage/client-homepage';
-import { FormsCadastroComponent } from './features/Autocadastro/components/forms-cadastro';
+import { FormsCadastroComponent } from './features/autenticacao/components/forms-cadastro';
 import { SolicitarManutencao } from './features/client/solicitar-manutencao/solicitar-manutencao';
 import { Orcamento } from './features/client/orcamento/orcamento';
 import { EmployeeHomepage } from './features/employee/homepage/employee-homepage';
 import { EfetuarOrcamento } from './features/employee/efetuar-orcamento/efetuar-orcamento';
 import { CategoriesComponent } from './features/employee/categories/categories';
-import { CadastroComponent } from './features/Autocadastro/pages/cadastro';
+import { CadastroComponent } from './features/autenticacao/pages/cadastro';
 
 export const routes: Routes = [
   {
