@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EstadoSolicitacao, Solicitacao } from '../../../shared/models/solicitacao.model';
-import { SolicitacaoService } from '../../../shared/services/solicitacao.service';
+import { SolicitacaoService } from '../../../core/solicitacao.service';
 import { InputTexto } from '../../../shared/components/input-texto/input-texto';
 
 type Etapa = 'carregando' | 'naoEncontrada' | 'formulario' | 'orcamentoRegistrado';

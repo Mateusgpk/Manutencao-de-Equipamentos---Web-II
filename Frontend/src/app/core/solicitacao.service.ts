@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import {
   EstadoSolicitacao,
   Solicitacao,
-} from '../models/solicitacao.model';
+} from '../shared/models/solicitacao.model';
 
 @Injectable({ providedIn: 'root' })
 export class SolicitacaoService {
