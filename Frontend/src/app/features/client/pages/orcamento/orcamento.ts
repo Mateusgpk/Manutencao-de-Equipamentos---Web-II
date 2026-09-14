@@ -6,8 +6,8 @@ import {
   ESTADO_SOLICITACAO_LABEL,
   EstadoSolicitacao,
   Solicitacao,
-} from '../../../shared/models/solicitacao.model';
-import { SolicitacaoService } from '../../../core/solicitacao.service';
+} from '../../../../shared/models/solicitacao.model';
+import { SolicitacaoService } from '../../../../core/solicitacao.service';
 
 /** Passos pelos quais a tela pode passar (RF005 -> RF006 / RF007). */
 type Etapa =

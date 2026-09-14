@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { InputTexto } from '../../../shared/components/input-texto/input-texto';
-import { TextArea } from '../../../shared/components/text-area/text-area';
-import { SolicitacaoService } from '../services/solicitacao';
+import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
+import { TextArea } from '../../../../shared/components/text-area/text-area';
+import { SolicitacaoService } from '../../services/solicitacao';
 
 @Component({
   selector: 'app-solicitar-manutencao',
