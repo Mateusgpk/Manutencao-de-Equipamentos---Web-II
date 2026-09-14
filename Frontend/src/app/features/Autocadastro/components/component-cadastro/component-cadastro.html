@@ -7,6 +7,8 @@
         [control]="formCadastro.controls.email"></app-input-texto>
     <app-input-texto class="form-control" label="CPF" id="cpf" placeholder="Digite seu CPF"
         [control]="formCadastro.controls.cpf"></app-input-texto>
+    <app-input-texto class="form-control" label="Senha" id="senha" placeholder="Digite sua senha"
+        [control]="formCadastro.controls.senha"></app-input-texto>
         <div class="grid grid-cols-10 gap-4 w-full">
     <app-input-texto class="form-control col-span-3" label="CEP" id="cep" placeholder="Digite seu CEP" 
         [control]="formCadastro.controls.cep"></app-input-texto>
@@ -26,6 +28,6 @@
         [control]="formCadastro.controls.complemento"></app-input-texto>
         </div>
 
-<app-btn-submit  (onclick)="aoEnviar()" class="{{corfundo}} mt-5" value="Cadastrar"  type="submit">Cadastrar</app-btn-submit>
+<app-btn-submit  (onclick)="aoEnviar()"  class="{{corfundo}} btn-cadastro mt-5" value="Cadastrar"  type="submit">Cadastrar</app-btn-submit>
   
 </form>

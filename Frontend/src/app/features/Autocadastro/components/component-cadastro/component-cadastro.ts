@@ -17,10 +17,13 @@ import { stringify } from 'querystring';
   templateUrl: './component-cadastro.html',
   styleUrl: './component-cadastro.css',
 })
+
+
 export class ComponentCadastro implements OnInit{
   formCadastro = new FormGroup({
     nome: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required),
+    senha: new FormControl('', Validators.required),
     cpf: new FormControl('', Validators.required),
     cep: new FormControl('', Validators.required),
     endereco: new FormControl('', Validators.required),
@@ -75,19 +78,33 @@ export class ComponentCadastro implements OnInit{
   }
 
  corfundo: string = 'bg-blue-800';
+ piscar: string=''
 
-  aoEnviar() {
-    this.corfundo = 'bg-blue-600';
+ async aoEnviar() {
+    this.piscar = 'piscando'
     if (this.formCadastro.valid) {
       console.log('Dados enviados:', this.formCadastro.value);
       const nome=this.formCadastro.controls.nome.value ?? ""
       const email=this.formCadastro.controls.email.value ?? ""
-      const user = new User( nome , email)
+      const cpf=this.formCadastro.controls.cpf.value ?? ""
+      const cep=this.formCadastro.controls.cep.value ?? ""
+      const endereco=this.formCadastro.controls.endereco.value ?? ""
+      const estado=this.formCadastro.controls.estado.value ?? ""
+      const cidade=this.formCadastro.controls.cidade.value ?? ""
+      const bairro=this.formCadastro.controls.bairro.value ?? ""
+      const numero=this.formCadastro.controls.numero.value ?? ""
+      const complemento=this.formCadastro.controls.complemento.value ?? ""
+      const senha=this.formCadastro.controls.senha.value ?? ""
+
+      const user = new User( nome , email, cpf, cep, endereco, estado, cidade, bairro, numero, complemento, senha)
       if (auth.registerUser(user)){
         alert("usuario salvo")
       }
+      
       const savedUserJson = localStorage.getItem("user");
       console.log(savedUserJson)
+
+
     }
   }
 }

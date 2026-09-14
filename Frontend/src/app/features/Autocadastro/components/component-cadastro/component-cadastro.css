@@ -1,0 +1,11 @@
+/* O ::ng-deep quebra o isolamento do Angular e força o efeito no botão de dentro */
+.btn-cadastro::ng-deep button:active,
+.btn-cadastro::ng-deep input[type="submit"]:active {
+  opacity: 0.6 !important;
+}
+
+/* Opcional: deixa a transição suave */
+.btn-cadastro::ng-deep button,
+.btn-cadastro::ng-deep input[type="submit"] {
+  transition: opacity 0.1s ease-in-out;
+}

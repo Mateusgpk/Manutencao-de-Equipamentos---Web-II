@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../inputs/input-texto';
 import { CommonModule } from '@angular/common';
+import { auth, Login } from '../../services/auth'
 
 @Component({
   selector: 'app-component-login',
@@ -20,6 +21,12 @@ export class ComponentLogin {
     this.corfundo = 'bg-blue-600';
     if (this.formCadastro.valid) {
       console.log('Dados enviados:', this.formCadastro.value);
+
+      if (auth.loginuser(new Login(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? ""))) {
+       alert('Login realizado com sucesso!');
+      } else {
+        console.log('Email ou senha incorretos.');
+      }
     }
   }
 }
