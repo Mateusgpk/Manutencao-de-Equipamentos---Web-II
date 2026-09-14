@@ -87,6 +87,22 @@ export class SolicitacaoService {
         { dataHora: new Date('2026-08-16T11:05:00'), estado: EstadoSolicitacao.PAGA },
       ],
     },
+    {
+      id: 5,
+      dataHoraAbertura: new Date('2026-09-14T20:15:00'),
+      descricaoEquipamento: 'Mouse logitech',
+      categoriaEquipamento: 'Mouse',
+      descricaoDefeito: 'Mouse está falhando constantemente no botão direito.',
+      estado: EstadoSolicitacao.ABERTA,
+      clienteNome: 'Miles',
+      clienteCpf: '453.564.232-56',
+      clienteTelefone: '(41) 98763-9763',
+      clienteEndereco: 'Rua Homem Aranha, 453 - Nova York',
+      historico: [
+        {dataHora: new Date('2026-09-14T20:15:00'), estado:
+          EstadoSolicitacao.ABERTA },
+      ],
+    }
   ]);
 
   listarTodas(): Observable<Solicitacao[]> { return of([...this.solicitacoes()]); }
