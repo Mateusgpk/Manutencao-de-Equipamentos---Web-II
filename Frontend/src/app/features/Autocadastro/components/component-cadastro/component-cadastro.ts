@@ -9,7 +9,7 @@ import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../inputs/input-texto';
 import { CommonModule } from '@angular/common';
 import { auth, User } from '../../services/auth'
-import { stringify } from 'querystring';
+
 
 @Component({
   selector: 'app-component-cadastro',
@@ -21,11 +21,11 @@ import { stringify } from 'querystring';
 
 export class ComponentCadastro implements OnInit{
   formCadastro = new FormGroup({
-    nome: new FormControl('', Validators.required),
-    email: new FormControl('', Validators.required),
-    senha: new FormControl('', Validators.required),
-    cpf: new FormControl('', Validators.required),
-    cep: new FormControl('', Validators.required),
+    nome: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    senha: new FormControl('', [Validators.required, Validators.min(5)]),
+    cpf: new FormControl('', [Validators.required, Validators.maxLength(11), Validators.minLength(11)]),
+    cep: new FormControl('', [Validators.required,Validators.maxLength(8), Validators.minLength(8)]),
     endereco: new FormControl('', Validators.required),
     numero: new FormControl('', Validators.required),
     complemento: new FormControl(''),
@@ -80,23 +80,13 @@ export class ComponentCadastro implements OnInit{
  corfundo: string = 'bg-blue-800';
  piscar: string=''
 
+
  async aoEnviar() {
     this.piscar = 'piscando'
     if (this.formCadastro.valid) {
+      
       console.log('Dados enviados:', this.formCadastro.value);
-      const nome=this.formCadastro.controls.nome.value ?? ""
-      const email=this.formCadastro.controls.email.value ?? ""
-      const cpf=this.formCadastro.controls.cpf.value ?? ""
-      const cep=this.formCadastro.controls.cep.value ?? ""
-      const endereco=this.formCadastro.controls.endereco.value ?? ""
-      const estado=this.formCadastro.controls.estado.value ?? ""
-      const cidade=this.formCadastro.controls.cidade.value ?? ""
-      const bairro=this.formCadastro.controls.bairro.value ?? ""
-      const numero=this.formCadastro.controls.numero.value ?? ""
-      const complemento=this.formCadastro.controls.complemento.value ?? ""
-      const senha=this.formCadastro.controls.senha.value ?? ""
-
-      const user = new User( nome , email, cpf, cep, endereco, estado, cidade, bairro, numero, complemento, senha)
+      const user = new User(this.formCadastro.value as Partial<User>)
       if (auth.registerUser(user)){
         alert("usuario salvo")
       }

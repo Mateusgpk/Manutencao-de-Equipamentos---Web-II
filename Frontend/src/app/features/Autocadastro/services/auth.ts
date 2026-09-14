@@ -1,28 +1,20 @@
 
 export class User {
-    name: string;
-    email: string;
-    cpf: string;
-    cep: string;
-    endereco: string;
-    estado: string;
-    cidade: string;
-    bairro: string;
-    numero: string;
-    complemento: string;
-    senha: string;
-    constructor (name:string,email:string,cpf:string,cep:string,endereco:string,estado:string,cidade:string,bairro:string,numero:string,complemento:string,senha:string){
-        this.name=name
-        this.email=email
-        this.cpf=cpf
-        this.cep=cep
-        this.endereco=endereco
-        this.estado=estado
-        this.cidade=cidade
-        this.bairro=bairro
-        this.numero=numero
-        this.complemento=complemento
-        this.senha=senha
+    name!: string;
+    email!: string;
+    cpf!: string;
+    cep!: string;
+    endereco!: string;
+    estado!: string;
+    cidade!: string;
+    bairro!: string;
+    numero!: string;
+    complemento!: string;
+    senha!: string;
+    role: string = 'USER';
+
+    constructor(dados: Partial<User>) {
+        Object.assign(this, dados);
     }
 
 }
@@ -48,13 +40,23 @@ export const auth = {
             return false;
         }
         users.push(user)
-        localStorage.setItem( "user" ,JSON.stringify(users) )
+        localStorage.setItem("user", JSON.stringify(users) )
         return true
     },
 
-    loginuser (login:Login):boolean{
+    loginuser (login:Login):{ sucesso: boolean; role?: string }{
         const atual=localStorage.getItem("user")
         const users:User[] = atual ? JSON.parse(atual) : [];
-        return users.some(us => us.email === login.email && us.senha === login.senha)
+        const usuario = users.find(us => us.email === login.email && us.senha === login.senha)
+        if (usuario){
+            return{
+                sucesso:true,
+                role:usuario.role
+            };
+        }
+
+        return{
+            sucesso:false
+        };
     }
 }
