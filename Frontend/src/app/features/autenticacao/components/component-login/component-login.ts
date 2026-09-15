@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
-import { InputTexto } from '../inputs/input-texto';
+import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { CommonModule } from '@angular/common';
 import { auth, Login } from '../../services/auth'
 import { Router } from '@angular/router';
