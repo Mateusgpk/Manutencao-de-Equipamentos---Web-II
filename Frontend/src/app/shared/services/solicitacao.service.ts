@@ -102,7 +102,42 @@ export class SolicitacaoService {
         {dataHora: new Date('2026-09-14T20:15:00'), estado:
           EstadoSolicitacao.ABERTA },
       ],
-    }
+    },
+    {
+      id: 6,
+      dataHoraAbertura: new Date('2026-08-10T09:15:00'),
+      descricaoEquipamento: 'Notebook Lenovo ThinkPad',
+      categoriaEquipamento: 'Notebook',
+      descricaoDefeito: 'O botão CTRL não está mais funcionando.',
+      estado: EstadoSolicitacao.FINALIZADA,
+      clienteNome: 'Jonas',
+      clienteCpf: '167.908.435-12',
+      clienteTelefone: '(41) 99866-8909',
+      clienteEndereco: 'Rua João Besciak, 305 - Araucária/PR',
+      valorOrcamento: 75.9,
+      dataHoraOrcamento: new Date('2026-09-15T19:59:00'),
+      funcionarioOrcamento: 'Maria',
+      historico: [
+        {
+          dataHora: new Date('2026-09-10T09:15:00'),
+          estado: EstadoSolicitacao.ABERTA,
+        },
+        {
+          dataHora: new Date('2026-09-11T14:02:00'),
+          estado: EstadoSolicitacao.ORCADA,
+          funcionario: 'Maria',
+        },
+        { dataHora: new Date('2026-09-13T16:09:00'),
+          estado: EstadoSolicitacao.PAGA,
+        },
+        { dataHora: new Date('2026-09-14T14:26:00'),
+          estado: EstadoSolicitacao.ARRUMADA,
+        },
+        { dataHora: new Date('2026-09-15T12:45:00'),
+          estado: EstadoSolicitacao.FINALIZADA,
+        }
+      ],
+    },
   ]);
 
   listarTodas(): Observable<Solicitacao[]> { return of([...this.solicitacoes()]); }
