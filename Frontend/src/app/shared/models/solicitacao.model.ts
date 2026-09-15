@@ -4,8 +4,10 @@ export enum EstadoSolicitacao{
     ORCADA = 'ORCADA',
     APROVADA = 'APROVADA',
     REJEITADA = 'REJEITADA',
+    REDIRECIONADA = 'REDIRECIONADA',
     ARRUMADA = 'ARRUMADA',
     PAGA = 'PAGA',
+    FINALIZADA = 'FINALIZADA',
 }
 
 export const ESTADO_SOLICITACAO_LABEL: Record<EstadoSolicitacao, string> = {
@@ -13,8 +15,10 @@ export const ESTADO_SOLICITACAO_LABEL: Record<EstadoSolicitacao, string> = {
     [EstadoSolicitacao.ORCADA]: 'Orçada',
     [EstadoSolicitacao.APROVADA]: 'Aprovada',
     [EstadoSolicitacao.REJEITADA]: 'Rejeitada',
+    [EstadoSolicitacao.REDIRECIONADA]: 'Redirecionada',
     [EstadoSolicitacao.ARRUMADA]: 'Arrumada',
     [EstadoSolicitacao.PAGA]: 'Paga',
+    [EstadoSolicitacao.FINALIZADA]: 'Finalizada',
 }
 
 export interface HistoricoSolicitacao {
@@ -45,6 +49,7 @@ export interface Solicitacao {
   // Preenchido ao entrar no estado REJEITADA (RF007)
   motivoRejeicao?: string;
   dataHoraPagamento?: Date;
+  funcionarioDestino?: string;
 
   historico: HistoricoSolicitacao[];
 }
