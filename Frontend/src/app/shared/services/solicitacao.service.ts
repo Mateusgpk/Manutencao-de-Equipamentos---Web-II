@@ -105,7 +105,7 @@ export class SolicitacaoService {
     },
     {
       id: 6,
-      dataHoraAbertura: new Date('2026-08-10T09:15:00'),
+      dataHoraAbertura: new Date('2026-09-05T09:15:00'),
       descricaoEquipamento: 'Notebook Lenovo ThinkPad',
       categoriaEquipamento: 'Notebook',
       descricaoDefeito: 'O botão CTRL não está mais funcionando.',
@@ -119,7 +119,7 @@ export class SolicitacaoService {
       funcionarioOrcamento: 'Maria',
       historico: [
         {
-          dataHora: new Date('2026-09-10T09:15:00'),
+          dataHora: new Date('2026-09-05T09:15:00'),
           estado: EstadoSolicitacao.ABERTA,
         },
         {
@@ -127,13 +127,13 @@ export class SolicitacaoService {
           estado: EstadoSolicitacao.ORCADA,
           funcionario: 'Maria',
         },
-        { dataHora: new Date('2026-09-13T16:09:00'),
+        { dataHora: new Date('2026-09-12T16:09:00'),
           estado: EstadoSolicitacao.PAGA,
         },
-        { dataHora: new Date('2026-09-14T14:26:00'),
+        { dataHora: new Date('2026-09-13T14:26:00'),
           estado: EstadoSolicitacao.ARRUMADA,
         },
-        { dataHora: new Date('2026-09-15T12:45:00'),
+        { dataHora: new Date('2026-09-14T12:45:00'),
           estado: EstadoSolicitacao.FINALIZADA,
         }
       ],

@@ -31,6 +31,8 @@
                 <a class="rounded bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white" [routerLink]="['/employee/orcamento', solicitacao.id]">Efetuar Orçamento</a>
               } @else if (solicitacao.estado === EstadoSolicitacao.APROVADA || solicitacao.estado === EstadoSolicitacao.REDIRECIONADA || solicitacao.estado === EstadoSolicitacao.PAGA) {
                 <button class="rounded bg-slate-700 px-3 py-1.5 text-xs font-semibold text-white" type="button">{{ solicitacao.estado === EstadoSolicitacao.PAGA ? 'Finalizar Solicitação' : 'Efetuar Manutenção' }}</button>
+              } @else if (solicitacao.estado === EstadoSolicitacao.FINALIZADA) {
+                <button class="rounded border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700" type="button" (click)="visualizarHistorico(solicitacao)">Ver Histórico</button>
               } @else { <span class="text-xs text-slate-500">Sem ação</span> }
             </td>
           </tr>
