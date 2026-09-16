@@ -26,6 +26,7 @@ constructor(private router: Router) {}
 
   trocarAba(aba: 'login' | 'cadastro') {
     this.abaAtiva = aba;
-    this.tamanho = aba === 'login' ? 'h-70' : 'h-150';
+    this.tamanho = aba === 'login' ? 'h-70' : 'h-165';
+     this.router.navigate([`/${aba}`]);
   }
 }
