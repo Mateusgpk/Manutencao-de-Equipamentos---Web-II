@@ -32,7 +32,7 @@ export class PagarServico implements OnInit {
   protected readonly etapa = signal<Etapa>('carregando');
   protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
   protected readonly enviandoPagamento = signal(false);
- 
+  oi(){}
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
  
