@@ -1,151 +1,133 @@
 <section class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
   @switch (etapa()) {
-    @case ('carregando') {
-      <p class="text-center text-slate-500">Carregando dados do pagamento...</p>
-    }
+  @case ('carregando') {
+  <p class="text-center text-slate-500">Carregando dados do pagamento...</p>
+  }
 
-    @case ('naoEncontrada') {
-      <div class="rounded-lg border border-amber-200 bg-amber-50 p-6 text-center">
-        <p class="font-medium text-amber-800">
-          Não foi possível encontrar um pagamento pendente para esta solicitação.
-        </p>
-        
-          routerLink="/home"
-          class="mt-4 inline-block rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600"
-        >
-          Voltar para o início
-        </a>
+  @case ('naoEncontrada') {
+  <div class="rounded-lg border border-amber-200 bg-amber-50 p-6 text-center">
+    <p class="font-medium text-amber-800">
+      Não foi possível encontrar um pagamento pendente para esta solicitação.
+    </p>
+
+    <a routerLink="/home"
+      class="mt-4 inline-block rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600">
+      Voltar para o início
+    </a>
+  </div>
+  }
+
+  @default {
+  @if (solicitacao(); as s) {
+  <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <header class="mb-6 flex items-center justify-between">
+      <h1 class="text-xl font-bold text-slate-900">Pagamento da Solicitação #{{ s.id }}</h1>
+      <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800">
+        {{ estadoLabel[s.estado] }}
+      </span>
+    </header>
+
+    <dl class="grid grid-cols-1 gap-4 border-b border-slate-100 pb-6 sm:grid-cols-2">
+      <div>
+        <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">
+          Data/Hora da Solicitação
+        </dt>
+        <dd class="mt-1 text-sm text-slate-900">{{ formatarDataHora(s.dataHoraAbertura) }}</dd>
       </div>
+      <div>
+        <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Categoria</dt>
+        <dd class="mt-1 text-sm text-slate-900">{{ s.categoriaEquipamento }}</dd>
+      </div>
+      <div class="sm:col-span-2">
+        <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Equipamento</dt>
+        <dd class="mt-1 text-sm text-slate-900">{{ s.descricaoEquipamento }}</dd>
+      </div>
+      <div class="sm:col-span-2">
+        <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">
+          Descrição do Defeito
+        </dt>
+        <dd class="mt-1 text-sm text-slate-900">{{ s.descricaoDefeito }}</dd>
+      </div>
+    </dl>
+
+    <div class="mt-6 rounded-lg bg-blue-50 p-5 text-center">
+      <p class="text-xs font-medium uppercase tracking-wide text-blue-700">Valor a Pagar</p>
+      <p class="mt-1 text-3xl font-extrabold text-blue-900">
+        {{ formatarMoeda(s.valorOrcamento) }}
+      </p>
+    </div>
+
+    @if (etapa() === 'pagamento') {
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
+      <button type="button"
+        class="rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600"
+        (click)="abrirConfirmacaoPagamento()">
+        Confirmar Pagamento
+      </button>
+    </div>
     }
-
-    @default {
-      @if (solicitacao(); as s) {
-        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <header class="mb-6 flex items-center justify-between">
-            <h1 class="text-xl font-bold text-slate-900">Pagamento da Solicitação #{{ s.id }}</h1>
-            <span
-              class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800"
-            >
-              {{ estadoLabel[s.estado] }}
-            </span>
-          </header>
-
-          <dl class="grid grid-cols-1 gap-4 border-b border-slate-100 pb-6 sm:grid-cols-2">
-            <div>
-              <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">
-                Data/Hora da Solicitação
-              </dt>
-              <dd class="mt-1 text-sm text-slate-900">{{ formatarDataHora(s.dataHoraAbertura) }}</dd>
-            </div>
-            <div>
-              <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Categoria</dt>
-              <dd class="mt-1 text-sm text-slate-900">{{ s.categoriaEquipamento }}</dd>
-            </div>
-            <div class="sm:col-span-2">
-              <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Equipamento</dt>
-              <dd class="mt-1 text-sm text-slate-900">{{ s.descricaoEquipamento }}</dd>
-            </div>
-            <div class="sm:col-span-2">
-              <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">
-                Descrição do Defeito
-              </dt>
-              <dd class="mt-1 text-sm text-slate-900">{{ s.descricaoDefeito }}</dd>
-            </div>
-          </dl>
-
-          <div class="mt-6 rounded-lg bg-blue-50 p-5 text-center">
-            <p class="text-xs font-medium uppercase tracking-wide text-blue-700">Valor a Pagar</p>
-            <p class="mt-1 text-3xl font-extrabold text-blue-900">
-              {{ formatarMoeda(s.valorOrcamento) }}
-            </p>
-          </div>
-
-          @if (etapa() === 'pagamento') {
-            <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                class="rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600"
-                (click)="abrirConfirmacaoPagamento()"
-              >
-                Confirmar Pagamento
-              </button>
-            </div>
-          }
-        </div>
-      }
-    }
+  </div>
+  }
+  }
   }
 
   @if (etapa() === 'confirmandoPagamento') {
-    <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
-      (click)="!enviandoPagamento() && cancelarConfirmacao()"
-    >
-      <div
-        class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl"
-        (click)="$event.stopPropagation()"
-      >
-        <p class="text-lg font-semibold text-slate-900">Confirmar pagamento</p>
-        <p class="mt-2 text-sm text-slate-500">
-          Revise os dados antes de confirmar o pagamento da solicitação #{{ solicitacao()?.id }}.
-        </p>
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
+    (click)="!enviandoPagamento() && cancelarConfirmacao()">
+    <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl" (click)="$event.stopPropagation()">
+      <p class="text-lg font-semibold text-slate-900">Confirmar pagamento</p>
+      <p class="mt-2 text-sm text-slate-500">
+        Revise os dados antes de confirmar o pagamento da solicitação #{{ solicitacao()?.id }}.
+      </p>
 
-        <div class="mt-4 rounded-lg bg-blue-50 p-4 text-left">
-          <dl class="space-y-2 text-sm">
-            <div class="flex justify-between gap-4">
-              <dt class="text-slate-500">Equipamento</dt>
-              <dd class="text-right font-medium text-slate-900">
-                {{ solicitacao()?.descricaoEquipamento }}
-              </dd>
-            </div>
-            <div class="flex justify-between gap-4">
-              <dt class="text-slate-500">Valor a Pagar</dt>
-              <dd class="text-right text-lg font-bold text-blue-900">
-                {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
-              </dd>
-            </div>
-          </dl>
-        </div>
-
-        <p class="mt-3 text-xs text-slate-500">Essa ação não pode ser desfeita.</p>
-
-        <div class="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
-          <button
-            type="button"
-            class="flex-1 rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
-            [disabled]="enviandoPagamento()"
-            (click)="confirmarPagamentoDefinitivo()"
-          >
-            Sim, pagar
-          </button>
-          <button
-            type="button"
-            class="flex-1 rounded-md border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-            [disabled]="enviandoPagamento()"
-            (click)="cancelarConfirmacao()"
-          >
-            Cancelar
-          </button>
-        </div>
+      <div class="mt-4 rounded-lg bg-blue-50 p-4 text-left">
+        <dl class="space-y-2 text-sm">
+          <div class="flex justify-between gap-4">
+            <dt class="text-slate-500">Equipamento</dt>
+            <dd class="text-right font-medium text-slate-900">
+              {{ solicitacao()?.descricaoEquipamento }}
+            </dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt class="text-slate-500">Valor a Pagar</dt>
+            <dd class="text-right text-lg font-bold text-blue-900">
+              {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
+            </dd>
+          </div>
+        </dl>
       </div>
-    </div>
-  }
 
-  @if (etapa() === 'pagamentoConfirmado') {
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
-      <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl">
-        <p class="text-lg font-semibold text-slate-900">
-          Pagamento confirmado no valor {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
-        </p>
+      <p class="mt-3 text-xs text-slate-500">Essa ação não pode ser desfeita.</p>
 
-        <button
-          type="button"
-          class="mt-6 w-full rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600"
-          (click)="voltarParaInicio()"
-        >
-          OK
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
+        <button type="button"
+          class="flex-1 rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+          [disabled]="enviandoPagamento()" (click)="confirmarPagamentoDefinitivo()">
+          Sim, pagar
+        </button>
+        <button type="button"
+          class="flex-1 rounded-md border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          [disabled]="enviandoPagamento()" (click)="cancelarConfirmacao()">
+          Cancelar
         </button>
       </div>
     </div>
+  </div>
+  }
+
+  @if (etapa() === 'pagamentoConfirmado') {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
+    <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl">
+      <p class="text-lg font-semibold text-slate-900">
+        Pagamento confirmado no valor {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
+      </p>
+
+      <button type="button"
+        class="mt-6 w-full rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600"
+        (click)="voltarParaInicio()">
+        OK
+      </button>
+    </div>
+  </div>
   }
 </section>
