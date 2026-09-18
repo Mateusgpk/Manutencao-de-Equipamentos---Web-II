@@ -1,0 +1,47 @@
+<section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+  <header class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-900">Solicitações</h1>
+    <p class="mt-1 text-sm text-slate-500">Visualização geral do funcionário.</p>
+  </header>
+  <div class="mb-4 flex flex-wrap gap-3">
+    <select class="rounded border px-3 py-2 text-sm" [value]="filtro" (change)="filtro = $any($event.target).value; aplicarFiltros()"><option value="todas">Todas</option><option value="hoje">Hoje</option><option value="periodo">Período</option></select>
+    @if (filtro === 'periodo') { <input class="rounded border px-3 py-2 text-sm" type="date" [value]="inicio" (change)="inicio = $any($event.target).value; aplicarFiltros()" /> <input class="rounded border px-3 py-2 text-sm" type="date" [value]="fim" (change)="fim = $any($event.target).value; aplicarFiltros()" /> }
+  </div>
+
+  <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
+    <table class="min-w-full divide-y divide-slate-200 text-sm">
+      <thead class="bg-slate-100 text-left text-xs font-semibold uppercase text-slate-600">
+        <tr>
+          <th class="px-4 py-3">Data/Hora</th>
+          <th class="px-4 py-3">Cliente</th>
+          <th class="px-4 py-3">Descrição</th>
+          <th class="px-4 py-3">Estado</th>
+          <th class="px-4 py-3 text-right">Ação</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        @for (solicitacao of solicitacoesAbertas; track solicitacao.id) {
+          <tr [class]="corEstado(solicitacao.estado)">
+            <td class="whitespace-nowrap px-4 py-3 text-slate-700">{{ dataHora(solicitacao.dataHoraAbertura) }}</td>
+            <td class="px-4 py-3 font-medium text-slate-900">{{ solicitacao.clienteNome }}</td>
+            <td class="px-4 py-3 text-slate-700" [title]="solicitacao.descricaoEquipamento">{{ limitar(solicitacao.descricaoEquipamento) }}</td>
+            <td class="whitespace-nowrap px-4 py-3">{{ estadoLabel[solicitacao.estado] }}</td>
+            <td class="whitespace-nowrap px-4 py-3 text-right">
+              @if (solicitacao.estado === EstadoSolicitacao.ABERTA) {
+                <a class="rounded bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white" [routerLink]="['/employee/orcamento', solicitacao.id]">Efetuar Orçamento</a>
+              } @else if (solicitacao.estado === EstadoSolicitacao.APROVADA || solicitacao.estado === EstadoSolicitacao.REDIRECIONADA || solicitacao.estado === EstadoSolicitacao.PAGA) {
+                <button class="rounded bg-slate-700 px-3 py-1.5 text-xs font-semibold text-white" type="button">{{ solicitacao.estado === EstadoSolicitacao.PAGA ? 'Finalizar Solicitação' : 'Efetuar Manutenção' }}</button>
+              } @else if (solicitacao.estado === EstadoSolicitacao.FINALIZADA) {
+                <button class="rounded border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700" type="button" (click)="visualizarHistorico(solicitacao)">Ver Histórico</button>
+              } @else { <span class="text-xs text-slate-500">Sem ação</span> }
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td class="px-4 py-6 text-center text-slate-500" colspan="5">Nenhuma solicitação encontrada.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

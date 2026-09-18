@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
-import { ClientHomepage } from './features/client/homepage/client-homepage';
-import { FormsCadastroComponent } from './features/Autocadastro/components/forms-cadastro';
-import { SolicitarManutencao } from './features/client/solicitar-manutencao/solicitar-manutencao';
-import { Orcamento } from './features/client/orcamento/orcamento';
-import { EmployeeHomepage } from './features/employee/homepage/employee-homepage';
-import { EfetuarOrcamento } from './features/employee/efetuar-orcamento/efetuar-orcamento';
-import { CategoriesComponent } from './features/employee/categories/categories';
-import { CadastroComponent } from './features/Autocadastro/pages/cadastro';
+import { ClientHomepage } from './features/client/pages/homepage/client-homepage';
+import { FormsCadastroComponent } from './features/autenticacao/pages/forms-cadastro';
+import { SolicitarManutencao } from './features/client/pages/solicitar-manutencao/solicitar-manutencao';
+import { Orcamento } from './features/client/pages/orcamento/orcamento';
+import { EmployeeHomepage } from './features/employee/pages/homepage/employee-homepage';
+import { EfetuarOrcamento } from './features/employee/pages/efetuar-orcamento/efetuar-orcamento';
+import { CategoriesComponent } from './features/employee/pages/categories/categories';
 
 export const routes: Routes = [
   {
@@ -16,7 +15,7 @@ export const routes: Routes = [
   },
     {
     path: 'login',
-    component: CadastroComponent,
+    component: FormsCadastroComponent,
   },
   {
     path: 'home',
