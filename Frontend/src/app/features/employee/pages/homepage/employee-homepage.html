@@ -44,4 +44,80 @@
       </tbody>
     </table>
   </div>
+
+  @if (solicitacaoSelecionada; as solicitacao) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+      (click)="fecharHistorico()"
+    >
+      <div
+        class="w-full max-w-3xl rounded bg-white p-6 shadow-lg"
+        (click)="$event.stopPropagation()"
+      >
+        <h2 class="mb-6 text-xl font-bold text-gray-900">
+          Histórico da Solicitação #{{ solicitacao.id }}
+        </h2>
+
+        <dl class="grid grid-cols-1 gap-4 border-b border-gray-100 pb-6 sm:grid-cols-2">
+          <div>
+            <dt class="text-xs uppercase text-gray-500">Cliente</dt>
+            <dd class="text-sm text-gray-900">{{ solicitacao.clienteNome }}</dd>
+          </div>
+
+          <div>
+            <dt class="text-xs uppercase text-gray-500">Estado atual</dt>
+            <dd class="text-sm text-gray-900">{{ estadoLabel[solicitacao.estado] }}</dd>
+          </div>
+
+          <div>
+            <dt class="text-xs uppercase text-gray-500">Data/Hora da Solicitação</dt>
+            <dd class="text-sm text-gray-900">{{ dataHora(solicitacao.dataHoraAbertura) }}</dd>
+          </div>
+
+          <div>
+            <dt class="text-xs uppercase text-gray-500">Categoria</dt>
+            <dd class="text-sm text-gray-900">{{ solicitacao.categoriaEquipamento }}</dd>
+          </div>
+
+          <div class="sm:col-span-2">
+            <dt class="text-xs uppercase text-gray-500">Equipamento</dt>
+            <dd class="text-sm text-gray-900">{{ solicitacao.descricaoEquipamento }}</dd>
+          </div>
+
+          <div class="sm:col-span-2">
+            <dt class="text-xs uppercase text-gray-500">Descrição do Defeito</dt>
+            <dd class="text-sm text-gray-900">{{ solicitacao.descricaoDefeito }}</dd>
+          </div>
+        </dl>
+
+        <div class="mt-6">
+          <h3 class="mb-3 text-sm font-semibold text-gray-900">Histórico</h3>
+
+          <ul class="space-y-2">
+            @for (h of solicitacao.historico; track h.dataHora) {
+              <li class="text-sm text-gray-700">
+                {{ dataHora(h.dataHora) }} - {{ estadoLabel[h.estado] }}
+                @if (h.funcionario) {
+                  <span>| Funcionário: {{ h.funcionario }}</span>
+                }
+                @if (h.observacao) {
+                  <span>| Obs.: {{ h.observacao }}</span>
+                }
+              </li>
+            }
+          </ul>
+        </div>
+
+        <div class="mt-6 flex justify-end">
+          <button
+            type="button"
+            class="rounded bg-blue-500 px-5 py-2 text-white hover:bg-blue-600"
+            (click)="fecharHistorico()"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </section>

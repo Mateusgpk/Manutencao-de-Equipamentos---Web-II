@@ -16,6 +16,7 @@ export class EmployeeHomepage implements OnInit {
   filtro: 'hoje' | 'periodo' | 'todas' = 'todas';
   inicio = ''; fim = '';
   solicitacoesAbertas: Solicitacao[] = [];
+  solicitacaoSelecionada?: Solicitacao;
 
   ngOnInit(): void {
     this.solicitacaoService.listarTodas().subscribe((solicitacoes) => {
@@ -43,21 +44,11 @@ export class EmployeeHomepage implements OnInit {
   }
 
   visualizarHistorico(solicitacao: Solicitacao): void {
-    const historico = solicitacao.historico
-      .map((h) => {
-        const funcionario = h.funcionario ? ` | Funcionário: ${h.funcionario}` : '';
-        const observacao = h.observacao ? ` | Obs.: ${h.observacao}` : '';
-        return `${this.dataHora(h.dataHora)} - ${this.estadoLabel[h.estado]}${funcionario}${observacao}`;
-      })
-      .join('\n');
+    this.solicitacaoSelecionada = solicitacao;
+  }
 
-    alert(
-      `Histórico da Solicitação #${solicitacao.id}\n` +
-      `Cliente: ${solicitacao.clienteNome}\n` +
-      `Equipamento: ${solicitacao.descricaoEquipamento}\n` +
-      `Estado atual: ${this.estadoLabel[solicitacao.estado]}\n\n` +
-      `${historico}`,
-    );
+  fecharHistorico(): void {
+    this.solicitacaoSelecionada = undefined;
   }
 
   corEstado(estado: EstadoSolicitacao): string { return ({ ABERTA: 'bg-slate-100', ORCADA: 'bg-amber-900/10', REJEITADA: 'bg-red-100', APROVADA: 'bg-yellow-100', REDIRECIONADA: 'bg-purple-100', ARRUMADA: 'bg-blue-100', PAGA: 'bg-orange-100', FINALIZADA: 'bg-green-100' } as Record<EstadoSolicitacao, string>)[estado]; }
