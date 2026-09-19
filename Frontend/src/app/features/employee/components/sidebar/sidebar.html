@@ -1,0 +1,10 @@
+<div class="layout">
+<aside class="sidebar" [class.aberto]="menuAberto">
+  <button class="botao-menu" [class.aberto]="menuAberto" (click)="alternarMenu()">☰</button>
+  <nav >
+    <a class="texto" routerLink="home">Home</a>
+    <a class="texto" routerLink="categories">Categorias</a>
+    <a class="texto" routerLink="crud-funcionario">CRUD Funcionário</a>
+  </nav>
+</aside>
+</div>

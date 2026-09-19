@@ -1,0 +1,10 @@
+.layout {
+  display: flex;
+  min-height: 100vh; /* Garante que ocupe a tela toda */
+}
+
+.conteudo {
+  flex: 1; /* Faz o conteúdo ocupar todo o espaço restante ao lado da sidebar */
+  padding: 30px;
+  overflow-y: auto; /* Adiciona rolagem apenas no conteúdo se a página for longa */
+}

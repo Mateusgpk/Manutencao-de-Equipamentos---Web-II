@@ -1,0 +1,71 @@
+.layout {
+  display: flex;
+}
+
+.sidebar {
+  width: 50px;
+  height: 100vh;
+  background-color: #222;
+  color: white;
+
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebar.aberto {
+  width: 250px;
+}
+
+.botao-menu {
+  width: 100%;
+  height: 60px;
+  border: none;
+  background: none;
+  color: white;
+  display: flex;
+    align-items: center;
+    margin-left: 10px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+
+
+nav {
+  display: flex;
+  flex-direction: column;
+}
+
+nav a {
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+  padding: 15px 20px;
+
+  color: white;
+  text-decoration: none;
+}
+
+nav a:hover {
+  background-color: #444;
+}
+
+.texto {
+  white-space: nowrap;
+}
+
+main {
+  flex: 1;
+  padding: 30px;
+}
+
+.texto {
+  opacity: 0;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.sidebar.aberto .texto {
+  opacity: 1;
+}

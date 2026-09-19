@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './crud-funcionario.html',
   styleUrl: './crud-funcionario.css',
 })
-export class CrudFuncionario {}
+export class CrudFuncionario {
+  
+}
