@@ -10,7 +10,7 @@ import { CategoriesComponent } from './features/employee/pages/categories/catego
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'cadastro',
     pathMatch: 'full'
   },
     {

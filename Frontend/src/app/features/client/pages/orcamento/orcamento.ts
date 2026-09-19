@@ -148,7 +148,7 @@ export class Orcamento implements OnInit {
 
   /** Ao clicar OK nas mensagens de sucesso, volta para a Página Inicial do Cliente (RF003). */
   protected voltarParaInicio(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 
   protected formatarMoeda(valor: number | undefined): string {
