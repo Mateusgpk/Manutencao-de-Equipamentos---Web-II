@@ -1,0 +1,24 @@
+<div class="flex w-150 {{tamanho}} justify-center content-center rounded-xl m-10 bg-gray-200 justify-self-center items-center flex-col gap-4">
+    <div class="flex border-b border-gray-300 border-solid w-full">
+        <button 
+        (click)="trocarAba('cadastro')"
+        [class]="abaAtiva === 'cadastro' ? 'border-blue-500 text-blue-600 border-b-2 font-bold' : 'text-gray-500 hover:text-gray-700'"
+        class="flex-1 py-3 text-center transition-colors">
+        Cadastro
+        </button>
+
+        <button 
+        (click)="trocarAba('login')"
+        [class]="abaAtiva === 'login' ? 'border-blue-500 text-blue-600 border-b-2 font-bold' : 'text-gray-500 hover:text-gray-700'"
+        class="flex-1 py-3 text-center transition-colors">
+        Login
+        </button>
+    </div>
+  @if (abaAtiva === 'cadastro'){
+    <app-form-cadastro></app-form-cadastro>
+  }
+
+  @if (abaAtiva === 'login'){
+    <app-form-login></app-form-login>
+  }
+</div>
