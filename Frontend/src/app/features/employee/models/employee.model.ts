@@ -1,9 +1,7 @@
+import { User } from "../../../shared/models/user.model"
 export class Employee {
-  constructor(
-    public id: number = 0,
-    public name: string = '',
-    public email: string = '',
-    public birthDate: string = '',
-    public password: string = '',
-  ) {}
+  id!: number ;
+  name!: string ;
+  birthDate!: string ;
+  user!: User;
 }

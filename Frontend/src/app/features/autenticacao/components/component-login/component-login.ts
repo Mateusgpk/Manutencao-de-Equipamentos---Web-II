@@ -3,7 +3,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { CommonModule } from '@angular/common';
-import { auth, Login } from '../../services/auth'
+import { auth } from '../../../../shared/services/auth/auth'
+import { User } from '../../../../shared/models/user.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -33,7 +34,7 @@ export class ComponentLogin {
     if (this.formCadastro.valid) {
       console.log('Dados enviados:', this.formCadastro.value);
       
-      const login=auth.loginuser(new Login(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? ""))
+      const login=auth.loginuser(new User(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? ""))
 
       if (login.sucesso) {
 

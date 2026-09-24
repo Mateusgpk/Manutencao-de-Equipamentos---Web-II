@@ -8,7 +8,7 @@ import { Subject } from 'rxjs/internal/Subject';
 import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { CommonModule } from '@angular/common';
-import { auth, User } from '../../services/auth'
+import { auth, User } from '../../../../shared/services/auth/auth'
 
 
 @Component({
