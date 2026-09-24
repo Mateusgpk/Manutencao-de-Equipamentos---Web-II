@@ -51,4 +51,65 @@ export class PagarServico implements OnInit {
       this.etapa.set('pagamento');
     });
   }
+
+  /** Abre a confirmacao, primeiro passo do RF010. */
+  protected abrirConfirmacaoPagamento(): void {
+    this.etapa.set('confirmandoPagamento');
+  }
+
+  /** Permite fechar a confirmacao de pagamento apertando Esc, sem precisar do mouse. */
+  @HostListener('document:keydown.escape')
+  protected aoPressionarEsc(): void {
+    if (this.etapa() === 'confirmandoPagamento' && !this.enviandoPagamento()) {
+      this.cancelarConfirmacao();
+    }
+  }
+
+  /** Volta para a tela de pagamento, caso o usuario desista de confirmar. */
+  protected cancelarConfirmacao(): void {
+    this.etapa.set('pagamento');
+  }
+
+  /** RF010 - Pagar Servico, apos o usuario confirmar a acao. */
+  protected confirmarPagamento(): void {
+    const atual = this.solicitacao();
+    if (!atual) {
+      return;
+    }
+
+    this.enviandoPagamento.set(true);
+
+    this.solicitacaoService.pagarServico(atual.id).subscribe((atualizada) => {
+      this.enviandoPagamento.set(false);
+      if (atualizada) {
+        this.solicitacao.set(atualizada);
+      }
+      this.etapa.set('pagamentoConfirmado');
+    });
+  }
+
+  /** Ao clicar OK na mensagem de sucesso, volta para a Pagina Inicial do Cliente. */
+  protected voltarParaInicio(): void {
+    this.router.navigate(['/home']);
+  }
+
+  protected formatarMoeda(valor: number | undefined): string {
+    if (valor === undefined) {
+      return '';
+    }
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(valor);
+  }
+
+  protected formatarDataHora(data: Date | undefined): string {
+    if (!data) {
+      return '';
+    }
+    return new Intl.DateTimeFormat('pt-BR', {
+      dateStyle: 'short',
+      timeStyle: 'short',
+    }).format(data);
+  }
 }

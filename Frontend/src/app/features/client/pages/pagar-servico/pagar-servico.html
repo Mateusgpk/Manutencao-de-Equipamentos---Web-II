@@ -32,7 +32,7 @@
         <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">
           Data/Hora da Solicitação
         </dt>
-        <dd class="mt-1 text-sm text-slate-900">{{ s.dataHoraAbertura }}</dd>
+        <dd class="mt-1 text-sm text-slate-900">{{ formatarDataHora(s.dataHoraAbertura) }}</dd>
       </div>
       <div>
         <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Categoria</dt>
@@ -53,7 +53,7 @@
     <div class="mt-6 rounded-lg bg-blue-50 p-5 text-center">
       <p class="text-xs font-medium uppercase tracking-wide text-blue-700">Valor a Pagar</p>
       <p class="mt-1 text-3xl font-extrabold text-blue-900">
-        {{ s.valorOrcamento }}
+        {{ formatarMoeda(s.valorOrcamento) }}
       </p>
     </div>
 
@@ -61,7 +61,7 @@
     <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
       <button type="button"
         class="rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600"
-        (click)="oi()">
+        (click)="abrirConfirmacaoPagamento()">
         Confirmar Pagamento
       </button>
     </div>
@@ -73,7 +73,7 @@
 
   @if (etapa() === 'confirmandoPagamento') {
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
-    (click)="!enviandoPagamento() && oi()">
+    (click)="!enviandoPagamento() && cancelarConfirmacao()">
     <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl" (click)="$event.stopPropagation()">
       <p class="text-lg font-semibold text-slate-900">Confirmar pagamento</p>
       <p class="mt-2 text-sm text-slate-500">
@@ -91,7 +91,7 @@
           <div class="flex justify-between gap-4">
             <dt class="text-slate-500">Valor a Pagar</dt>
             <dd class="text-right text-lg font-bold text-blue-900">
-              {{solicitacao()?.valorOrcamento}}
+              {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
             </dd>
           </div>
         </dl>
@@ -102,12 +102,12 @@
       <div class="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
         <button type="button"
           class="flex-1 rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
-          [disabled]="enviandoPagamento()" (click)="oi()">
+          [disabled]="enviandoPagamento()" (click)="confirmarPagamento()">
           Sim, pagar
         </button>
         <button type="button"
           class="flex-1 rounded-md border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-          [disabled]="enviandoPagamento()" (click)="oi()">
+          [disabled]="enviandoPagamento()" (click)="cancelarConfirmacao()">
           Cancelar
         </button>
       </div>
@@ -119,12 +119,12 @@
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
     <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl">
       <p class="text-lg font-semibold text-slate-900">
-        Pagamento confirmado no valor {{ solicitacao()?.valorOrcamento }}
+        Pagamento confirmado no valor {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
       </p>
 
       <button type="button"
         class="mt-6 w-full rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600"
-        (click)="oi()">
+        (click)="voltarParaInicio()">
         OK
       </button>
     </div>

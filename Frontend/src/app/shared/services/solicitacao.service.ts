@@ -138,6 +138,41 @@ export class SolicitacaoService {
         }
       ],
     },
+    {
+      id: 7,
+      dataHoraAbertura: new Date('2026-09-18T08:30:00'),
+      descricaoEquipamento: 'Impressora HP DeskJet',
+      categoriaEquipamento: 'Impressora',
+      descricaoDefeito: 'Não puxa o papel corretamente.',
+      estado: EstadoSolicitacao.ARRUMADA,
+      clienteNome: 'João',
+      clienteCpf: '123.456.789-00',
+      clienteTelefone: '(41) 91234-5678',
+      clienteEndereco: 'Rua das Flores, 45 - Curitiba/PR',
+      valorOrcamento: 180.5,
+      dataHoraOrcamento: new Date('2026-09-19T10:00:00'),
+      funcionarioOrcamento: 'Mário',
+      historico: [
+        {
+          dataHora: new Date('2026-09-18T08:30:00'),
+          estado: EstadoSolicitacao.ABERTA,
+        },
+        {
+          dataHora: new Date('2026-09-19T10:00:00'),
+          estado: EstadoSolicitacao.ORCADA,
+          funcionario: 'Mário',
+        },
+        {
+          dataHora: new Date('2026-09-20T09:15:00'),
+          estado: EstadoSolicitacao.APROVADA,
+        },
+        {
+          dataHora: new Date('2026-09-21T14:40:00'),
+          estado: EstadoSolicitacao.ARRUMADA,
+          funcionario: 'Mário',
+        },
+      ],
+    },
   ]);
 
   listarTodas(): Observable<Solicitacao[]> { return of([...this.solicitacoes()]); }
@@ -237,6 +272,29 @@ export class SolicitacaoService {
                   estado: EstadoSolicitacao.ORCADA,
                   funcionario: funcionario
                 },
+              ],
+            }
+          : s,
+      ),
+    );
+
+    return this.getById(id);
+  }
+
+  /** RF010 - Pagar Serviço: solicitação ARRUMADA passa para PAGA, registrando data/hora do pagamento. */
+  pagarServico(id: number): Observable<Solicitacao | undefined> {
+    const agora = new Date();
+
+    this.solicitacoes.update((lista) =>
+      lista.map((s) =>
+        s.id === id && s.estado === EstadoSolicitacao.ARRUMADA
+          ? {
+              ...s,
+              estado: EstadoSolicitacao.PAGA,
+              dataHoraPagamento: agora,
+              historico: [
+                ...s.historico,
+                { dataHora: agora, estado: EstadoSolicitacao.PAGA },
               ],
             }
           : s,
