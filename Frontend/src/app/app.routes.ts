@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
-import { ClientHomepage } from './features/client/pages/homepage/client-homepage';
-import { FormsCadastroComponent } from './features/autenticacao/pages/forms-cadastro';
-import { SolicitarManutencao } from './features/client/pages/solicitar-manutencao/solicitar-manutencao';
-import { Orcamento } from './features/client/pages/orcamento/orcamento';
-import { PagarServico } from './features/client/pages/pagar-servico/pagar-servico';
-import { EmployeeHomepage } from './features/employee/pages/homepage/employee-homepage';
-import { EfetuarOrcamento } from './features/employee/pages/efetuar-orcamento/efetuar-orcamento';
-import { CategoriesComponent } from './features/employee/pages/categories/categories';
-import { LayoutEmployee } from './features/employee/layout-employee/layout-employee';
-import { CrudFuncionario } from './features/employee/pages/crud-funcionario/crud-funcionario';
+import { ClienteHome } from './features/cliente/pages/cliente-home/ClienteHome';
+import { Cadastro } from './features/auth/pages/cadastro/cadastro';
+import { SolicitarManutencao } from './features/cliente/pages/solicitar-manutencao/SolicitarManutencao';
+import { Orcamento } from './features/cliente/pages/orcamento/orcamento';
+import { PagarManuntencao } from './features/cliente/pages/pagar-manuntencao/PagarManuntencao';
+import { FuncionarioHome } from './features/funcionario/pages/funcionario-home/FuncionarioHome';
+import { EfetuarOrcamento } from './features/funcionario/pages/efetuar-orcamento/EfetuarOrcamento';
+import { Categorias } from './features/funcionario/pages/categorias/categorias';
+import { Layout } from './features/funcionario/components/layout/layout';
+import { Funcionarios } from './features/funcionario/pages/funcionarios/funcionarios';
 
 export const routes: Routes = [
   {
@@ -18,15 +18,15 @@ export const routes: Routes = [
   },
     {
     path: 'login',
-    component: FormsCadastroComponent,
+    component: Cadastro,
   },
   {
     path: 'home',
-    component: ClientHomepage,
+    component: ClienteHome,
   },
   {
     path: 'cadastro',
-    component: FormsCadastroComponent,
+    component: Cadastro,
   },
   {
     path: 'orcamento/:id',
@@ -34,13 +34,13 @@ export const routes: Routes = [
   },
   {
     path: 'pagar-servico/:id',
-    component: PagarServico,
+    component: PagarManuntencao,
   },
 
-  {path: 'employee', component: LayoutEmployee, children: [
+  {path: 'employee', component: Layout, children: [
       {
         path: 'home',
-        component: EmployeeHomepage,
+        component: ClienteHome,
       },
       { 
         path: 'orcamento/:id', 
@@ -48,11 +48,11 @@ export const routes: Routes = [
       },
       {
         path: 'categories',
-        component: CategoriesComponent,
+        component: Categorias,
       },
       {
         path: 'crud-funcionario',
-        component: CrudFuncionario,
+        component: Funcionarios,
       }
     ]
   },
