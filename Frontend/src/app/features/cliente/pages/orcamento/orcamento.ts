@@ -1,6 +1,7 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { DatePipe, CurrencyPipe } from '@angular/common';
 
 import {
   ESTADO_SOLICITACAO_LABEL,
@@ -22,7 +23,7 @@ type Etapa =
 
 @Component({
   selector: 'app-orcamento',
-  imports: [ReactiveFormsModule, FormsModule, RouterLink],
+  imports: [ReactiveFormsModule, FormsModule, RouterLink, DatePipe, CurrencyPipe],
   templateUrl: './orcamento.html',
   styleUrl: './orcamento.css',
 })
@@ -38,7 +39,7 @@ export class Orcamento implements OnInit {
   protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
   protected readonly enviandoRejeicao = signal(false);
   protected readonly enviandoAprovacao = signal(false);
-  
+
   /** RF007 - motivo da rejeição, validado como obrigatório. */
   protected readonly motivoRejeicaoControl = new FormControl('', {
     nonNullable: true,
@@ -75,7 +76,7 @@ export class Orcamento implements OnInit {
   protected cancelarAprovacao(): void {
     this.etapa.set('orcamento');
   }
-  
+
   /** RF006 - Aprovar Serviço, executado somente após a confirmação da mini revisão. */
   protected confirmarAprovacaoDefinitiva(): void {
     const atual = this.solicitacao();
@@ -105,12 +106,12 @@ export class Orcamento implements OnInit {
   /** RF007 - Valida o motivo e pede confirmação antes de rejeitar de fato. */
   protected confirmarRejeicaoServico(): void {
     this.motivoRejeicaoControl.markAsTouched();
-    
+
     if (this.motivoRejeicaoControl.invalid) {
       return;
     }
-        this.etapa.set('confirmandoRejeicao');
-  
+    this.etapa.set('confirmandoRejeicao');
+
   }
 
   /** Permite fechar a confirmação de rejeição apertando Esc, sem precisar do mouse. */
@@ -151,23 +152,4 @@ export class Orcamento implements OnInit {
     this.router.navigate(['/home']);
   }
 
-  protected formatarMoeda(valor: number | undefined): string {
-    if (valor === undefined) {
-      return '';
-    }
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(valor);
-  }
-
-  protected formatarDataHora(data: Date | undefined): string {
-    if (!data) {
-      return '';
-    }
-    return new Intl.DateTimeFormat('pt-BR', {
-      dateStyle: 'short',
-      timeStyle: 'short',
-    }).format(data);
-  }
 }

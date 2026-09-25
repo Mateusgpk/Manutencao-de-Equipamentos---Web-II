@@ -32,7 +32,7 @@
         <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">
           Data/Hora da Solicitação
         </dt>
-        <dd class="mt-1 text-sm text-slate-900">{{ formatarDataHora(s.dataHoraAbertura) }}</dd>
+        <dd class="mt-1 text-sm text-slate-900">{{ s.dataHoraAbertura | date:'short' }}</dd>
       </div>
       <div>
         <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Categoria</dt>
@@ -53,7 +53,7 @@
     <div class="mt-6 rounded-lg bg-blue-50 p-5 text-center">
       <p class="text-xs font-medium uppercase tracking-wide text-blue-700">Valor a Pagar</p>
       <p class="mt-1 text-3xl font-extrabold text-blue-900">
-        {{ formatarMoeda(s.valorOrcamento) }}
+        {{ s.valorOrcamento | currency:'BRL' }}
       </p>
     </div>
 
@@ -91,7 +91,7 @@
           <div class="flex justify-between gap-4">
             <dt class="text-slate-500">Valor a Pagar</dt>
             <dd class="text-right text-lg font-bold text-blue-900">
-              {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
+              {{ solicitacao()?.valorOrcamento | currency:'BRL' }}
             </dd>
           </div>
         </dl>
@@ -119,7 +119,7 @@
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
     <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl">
       <p class="text-lg font-semibold text-slate-900">
-        Pagamento confirmado no valor {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
+        Pagamento confirmado no valor {{ solicitacao()?.valorOrcamento | currency:'BRL' }}
       </p>
 
       <button type="button"

@@ -8,13 +8,16 @@ import { Subject } from 'rxjs/internal/Subject';
 import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { CommonModule } from '@angular/common';
-import { auth } from '../../../../shared/services/auth/auth';
-import { Client } from '../../../cliente/models/client.model';
+import { auth } from '../../../../shared/services/auth/auth'
+import { User } from '../../../../shared/models/user.model';
+import { Client } from '../../../../features/cliente/models/client.model';
+
+import { MascaraCPFDirective } from '../../../../shared/directives/mascara-cpf';
 
 
 @Component({
   selector: 'app-form-cadastro',
-  imports: [CommonModule, ReactiveFormsModule, InputTexto, BtnSubmit],
+  imports: [CommonModule, ReactiveFormsModule, InputTexto, BtnSubmit, MascaraCPFDirective],
   templateUrl: './FormCadastro.html',
   styleUrl: './FormCadastro.css',
 })
@@ -24,9 +27,12 @@ export class FormCadastro implements OnInit{
   formCadastro = new FormGroup({
     nome: new FormControl('', [Validators.required, Validators.minLength(3)]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    senha: new FormControl('', [Validators.required, Validators.min(5)]),
+    /* TODO: de acordo com documentação, a senha seria mandada por email, não cadastrada
+    Logo, tirar daqui depois de implementar */
+    senha: new FormControl('', [Validators.required, Validators.minLength(5)]),
     cpf: new FormControl('', [Validators.required, Validators.maxLength(11), Validators.minLength(11)]),
-    cep: new FormControl('', [Validators.required,Validators.maxLength(8), Validators.minLength(8)]),
+    telefone: new FormControl('', [Validators.required, Validators.pattern(/^\(?\d{2}\)?\s?(9\d{4}|[2-8]\d{3})\-?\d{4}$/)]),
+    cep: new FormControl('', [Validators.required,Validators.maxLength(14), Validators.minLength(14)]),
     endereco: new FormControl('', Validators.required),
     numero: new FormControl('', Validators.required),
     complemento: new FormControl(''),

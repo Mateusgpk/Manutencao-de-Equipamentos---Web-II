@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
@@ -9,7 +10,7 @@ type Etapa = 'carregando' | 'naoEncontrada' | 'formulario' | 'orcamentoRegistrad
 
 @Component({
   selector: 'app-efetuar-orcamento',
-  imports: [ReactiveFormsModule, RouterLink, InputTexto],
+  imports: [ReactiveFormsModule, RouterLink, InputTexto, DatePipe],
   templateUrl: './EfetuarOrcamento.html',
   styleUrl: './EfetuarOrcamento.css',
 })
@@ -80,10 +81,5 @@ export class EfetuarOrcamento implements OnInit {
 
   protected voltarParaInicio(): void {
     this.router.navigate(['/employee/home']);
-  }
-
-  protected formatarDataHora(data: Date | undefined): string {
-    if (!data) return '';
-    return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(data);
   }
 }

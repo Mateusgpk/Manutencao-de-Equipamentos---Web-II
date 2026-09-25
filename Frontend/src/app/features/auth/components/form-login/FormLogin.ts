@@ -38,10 +38,10 @@ export class FormLogin {
       if (login.sucesso) {
 
         alert('Login realizado com sucesso!');
-        if (login.role === 'FUNC') {
+        if (login.role === 'FUNCIONARIO') {
           this.router.navigate(['employee/home']);
         }
-        else if (login.role === 'USER') {
+        else if (login.role === 'CLIENTE') {
           this.router.navigate(['/home']);
         }
         else {

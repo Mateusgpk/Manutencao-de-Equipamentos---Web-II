@@ -1,0 +1,20 @@
+<div class="flex flex-col w-full">
+    @if (label) {
+    <label class="mb-1 text-sm font-semibold text-slate-900">
+        {{ label }}
+    </label>
+    }
+
+    <select [formControl]="control"
+        class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 disabled:bg-slate-50 disabled:text-slate-500">
+        <option value="" disabled selected>Selecione uma opção...</option>
+
+        @for (opcao of options; track opcao.value) {
+        <option [value]="opcao.value">{{ opcao.label }}</option>
+        }
+    </select>
+
+    @if (control.invalid && control.touched) {
+    <span class="mt-1 text-xs text-red-600">Este campo é obrigatório.</span>
+    }
+</div>

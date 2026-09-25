@@ -18,6 +18,9 @@
             Digite ao menos {{ control.errors?.['minlength'].requiredLength }} caracteres.
         </span>
         }
+        @if (control.errors?.['pattern']) {
+        <span>Formato inválido.</span>
+        }
     </div>
     }
 </div>

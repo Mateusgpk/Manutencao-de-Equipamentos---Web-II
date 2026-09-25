@@ -9,8 +9,9 @@
                 placeholder="Ex: PC Intel Pentium G4560 GTX1030"
                 [control]="formSolicitacao.controls.descricaoEquipamento"></app-input-texto>
 
-            <app-input-texto id="categoria" label="Categoria do Equipamento" placeholder="Ex: Computadores / Desktop"
-                [control]="formSolicitacao.controls.categoriaEquipamento"></app-input-texto>
+            <app-select label="Categoria do Equipamento" [options]="opcoesCategoriaEquipamento"
+                [control]="formSolicitacao.controls.categoriaEquipamento">
+            </app-select>
 
             <app-text-area id="descricaoProblema" label="Descrição do Problema"
                 placeholder="Desliga quando tem alto processamento"

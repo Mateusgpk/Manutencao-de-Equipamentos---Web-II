@@ -23,18 +23,10 @@ export class SolicitacaoService {
       dataHoraOrcamento: new Date('2026-08-11T14:02:00'),
       funcionarioOrcamento: 'Maria',
       historico: [
-        {
-          dataHora: new Date('2026-08-10T09:15:00'),
-          estado: EstadoSolicitacao.ABERTA,
-        },
-        {
-          dataHora: new Date('2026-08-11T14:02:00'),
-          estado: EstadoSolicitacao.ORCADA,
-          funcionario: 'Maria',
-        },
+        { dataHora: new Date('2026-08-10T09:15:00'), estado: EstadoSolicitacao.ABERTA, },
+        { dataHora: new Date('2026-08-11T14:02:00'), estado: EstadoSolicitacao.ORCADA, funcionario: 'Maria', },
       ],
     },
-    // Solicitação ABERTA para testes.
     {
       id: 2,
       dataHoraAbertura: new Date('2026-08-20T09:15:00'),
@@ -99,8 +91,7 @@ export class SolicitacaoService {
       clienteTelefone: '(41) 98763-9763',
       clienteEndereco: 'Rua Homem Aranha, 453 - Nova York',
       historico: [
-        {dataHora: new Date('2026-09-14T20:15:00'), estado:
-          EstadoSolicitacao.ABERTA },
+        { dataHora: new Date('2026-09-14T20:15:00'), estado: EstadoSolicitacao.ABERTA },
       ],
     },
     {
@@ -118,24 +109,11 @@ export class SolicitacaoService {
       dataHoraOrcamento: new Date('2026-09-15T19:59:00'),
       funcionarioOrcamento: 'Maria',
       historico: [
-        {
-          dataHora: new Date('2026-09-05T09:15:00'),
-          estado: EstadoSolicitacao.ABERTA,
-        },
-        {
-          dataHora: new Date('2026-09-11T14:02:00'),
-          estado: EstadoSolicitacao.ORCADA,
-          funcionario: 'Maria',
-        },
-        { dataHora: new Date('2026-09-12T16:09:00'),
-          estado: EstadoSolicitacao.PAGA,
-        },
-        { dataHora: new Date('2026-09-13T14:26:00'),
-          estado: EstadoSolicitacao.ARRUMADA,
-        },
-        { dataHora: new Date('2026-09-14T12:45:00'),
-          estado: EstadoSolicitacao.FINALIZADA,
-        }
+        { dataHora: new Date('2026-09-05T09:15:00'), estado: EstadoSolicitacao.ABERTA, },
+        { dataHora: new Date('2026-09-11T14:02:00'), estado: EstadoSolicitacao.ORCADA, funcionario: 'Maria',},
+        { dataHora: new Date('2026-09-12T16:09:00'), estado: EstadoSolicitacao.PAGA, },
+        { dataHora: new Date('2026-09-13T14:26:00'), estado: EstadoSolicitacao.ARRUMADA, funcionario: 'Maria', },
+        { dataHora: new Date('2026-09-14T12:45:00'), estado: EstadoSolicitacao.FINALIZADA, }
       ],
     },
     {
@@ -153,23 +131,56 @@ export class SolicitacaoService {
       dataHoraOrcamento: new Date('2026-09-19T10:00:00'),
       funcionarioOrcamento: 'Mário',
       historico: [
+        { dataHora: new Date('2026-09-18T08:30:00'), estado: EstadoSolicitacao.ABERTA, },
+        { dataHora: new Date('2026-09-19T10:00:00'),estado: EstadoSolicitacao.ORCADA, funcionario: 'Mário',},
+        { dataHora: new Date('2026-09-20T09:15:00'), estado: EstadoSolicitacao.APROVADA, },
+        { dataHora: new Date('2026-09-21T14:40:00'), estado: EstadoSolicitacao.ARRUMADA, funcionario: 'Mário',},
+      ],
+    },
+    {
+      id: 8,
+      dataHoraAbertura: new Date('2026-09-16T10:00:00'),
+      descricaoEquipamento: 'Microfone Redragon Seyfert GM300',
+      categoriaEquipamento: 'Microfone',
+      descricaoDefeito: 'Microfone está com muito chiado.',
+      estado: EstadoSolicitacao.APROVADA,
+      clienteNome: 'Joaquina',
+      clienteCpf: '404.119.570-58',
+      clienteTelefone: '(41) 99111-2233',
+      clienteEndereco: 'Avenida Paraná, 346 - Acrelândia/AC',
+      valorOrcamento: 60,
+      dataHoraOrcamento: new Date('2026-09-16T15:00:00'),
+      funcionarioOrcamento: 'Mário',
+      historico: [
+        { dataHora: new Date('2026-09-16T10:00:00'), estado: EstadoSolicitacao.ABERTA },
+        { dataHora: new Date('2026-09-16T15:00:00'), estado: EstadoSolicitacao.ORCADA, funcionario: 'Mário' },
+        { dataHora: new Date('2026-09-17T09:00:00'), estado: EstadoSolicitacao.APROVADA },
+      ],
+    },
+    {
+      id: 9,
+      dataHoraAbertura: new Date('2026-09-20T11:00:00'),
+      descricaoEquipamento: 'Notebook Acer Aspire A515-45',
+      categoriaEquipamento: 'Notebook',
+      descricaoDefeito: 'Superaquecendo e desligando sozinho após alguns minutos de uso.',
+      estado: EstadoSolicitacao.REDIRECIONADA,
+      clienteNome: 'João',
+      clienteCpf: '123.456.789-00',
+      clienteTelefone: '(41) 91234-5678',
+      clienteEndereco: 'Rua Dr. Alcides Vieira Arcoverde, 1225 - Curitiba/PR',
+      valorOrcamento: 250.0,
+      dataHoraOrcamento: new Date('2026-09-21T09:30:00'),
+      funcionarioOrcamento: 'Mário',
+      funcionarioDestino: 'Maria',
+      historico: [
+        { dataHora: new Date('2026-09-20T11:00:00'), estado: EstadoSolicitacao.ABERTA },
+        { dataHora: new Date('2026-09-21T09:30:00'), estado: EstadoSolicitacao.ORCADA, funcionario: 'Mário' },
+        { dataHora: new Date('2026-09-21T15:00:00'), estado: EstadoSolicitacao.APROVADA },
         {
-          dataHora: new Date('2026-09-18T08:30:00'),
-          estado: EstadoSolicitacao.ABERTA,
-        },
-        {
-          dataHora: new Date('2026-09-19T10:00:00'),
-          estado: EstadoSolicitacao.ORCADA,
-          funcionario: 'Mário',
-        },
-        {
-          dataHora: new Date('2026-09-20T09:15:00'),
-          estado: EstadoSolicitacao.APROVADA,
-        },
-        {
-          dataHora: new Date('2026-09-21T14:40:00'),
-          estado: EstadoSolicitacao.ARRUMADA,
-          funcionario: 'Mário',
+          dataHora: new Date('2026-09-22T10:00:00'),
+          estado: EstadoSolicitacao.REDIRECIONADA,
+          funcionario: 'Mário', funcionarioDestino: 'Maria',
+          observacao: 'Redirecionado para Maria devido a especialidade no modelo.'
         },
       ],
     },
@@ -301,6 +312,41 @@ export class SolicitacaoService {
       ),
     );
 
+    return this.getById(id);
+  }
+
+    /** RF014 - Efetuar Manutenção: solicitação APROVADA/REDIRECIONADA passa para ARRUMADA. */
+    efetuarManutencao(
+    id: number,
+    descricaoManutencao: string,
+    orientacoesCliente: string,
+    funcionario: string,
+  ): Observable<Solicitacao | undefined> {
+    const agora = new Date();
+ 
+    this.solicitacoes.update((lista) =>
+      lista.map((s) =>
+        s.id === id
+          ? {
+              ...s,
+              estado: EstadoSolicitacao.ARRUMADA,
+              descricaoManutencao,
+              orientacoesCliente,
+              dataHoraManutencao: agora,
+              funcionarioManutencao: funcionario,
+              historico: [
+                ...s.historico,
+                {
+                  dataHora: agora,
+                  estado: EstadoSolicitacao.ARRUMADA,
+                  funcionario,
+                },
+              ],
+            }
+          : s,
+      ),
+    );
+ 
     return this.getById(id);
   }
 }

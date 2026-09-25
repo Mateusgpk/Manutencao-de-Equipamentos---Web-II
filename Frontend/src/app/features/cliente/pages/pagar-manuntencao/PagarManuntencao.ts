@@ -1,4 +1,5 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
  
 import {
@@ -18,7 +19,7 @@ type Etapa =
  
 @Component({
   selector: 'app-pagar-manuntencao',
-  imports: [RouterLink],
+  imports: [RouterLink, CurrencyPipe, DatePipe],
   templateUrl: './PagarManuntencao.html',
   styleUrl: './PagarManuntencao.css',
 })
@@ -32,7 +33,7 @@ export class PagarManuntencao implements OnInit {
   protected readonly etapa = signal<Etapa>('carregando');
   protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
   protected readonly enviandoPagamento = signal(false);
-  oi(){}
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
  
@@ -91,25 +92,5 @@ export class PagarManuntencao implements OnInit {
   /** Ao clicar OK na mensagem de sucesso, volta para a Pagina Inicial do Cliente. */
   protected voltarParaInicio(): void {
     this.router.navigate(['/home']);
-  }
-
-  protected formatarMoeda(valor: number | undefined): string {
-    if (valor === undefined) {
-      return '';
-    }
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(valor);
-  }
-
-  protected formatarDataHora(data: Date | undefined): string {
-    if (!data) {
-      return '';
-    }
-    return new Intl.DateTimeFormat('pt-BR', {
-      dateStyle: 'short',
-      timeStyle: 'short',
-    }).format(data);
   }
 }
