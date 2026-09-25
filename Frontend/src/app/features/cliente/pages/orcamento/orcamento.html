@@ -134,7 +134,7 @@
           <div class="flex justify-between gap-4">
             <dt class="text-slate-500">Valor Orçado</dt>
             <dd class="text-right text-lg font-bold text-blue-900">
-              {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
+              {{ solicitacao()?.valorOrcamento | currency:'BRL' }}
             </dd>
           </div>
         </dl>
@@ -188,7 +188,7 @@
     <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl">
       @if (etapa() === 'servicoAprovado') {
       <p class="text-lg font-semibold text-slate-900">
-        Serviço Aprovado no Valor {{ formatarMoeda(solicitacao()?.valorOrcamento) }}
+        Serviço Aprovado no Valor {{ solicitacao()?.valorOrcamento | currency:'BRL' }}
       </p>
       } @else {
       <p class="text-lg font-semibold text-slate-900">Serviço Rejeitado</p>

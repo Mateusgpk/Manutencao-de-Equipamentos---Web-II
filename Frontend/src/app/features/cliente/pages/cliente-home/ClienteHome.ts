@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ESTADO_SOLICITACAO_LABEL, EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
@@ -6,12 +7,13 @@ import { SolicitacaoService } from '../../../../shared/services/solicitacao.serv
 @Component({
   selector: 'app-cliente-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CurrencyPipe],
   templateUrl: './ClienteHome.html',
   styleUrl: './ClienteHome.css',
 })
 export class ClienteHome implements OnInit {
   private readonly service = inject(SolicitacaoService);
+  private readonly currencyPipe = inject(CurrencyPipe);
   private readonly cpfClienteLogado = '123.456.789-00';
   readonly estadoLabel = ESTADO_SOLICITACAO_LABEL;
   readonly EstadoSolicitacao = EstadoSolicitacao;
@@ -65,12 +67,8 @@ export class ClienteHome implements OnInit {
   pagar(s: Solicitacao): void {
     const valor = s.valorOrcamento === undefined
       ? 'valor ainda não informado'
-      : this.formatarMoeda(s.valorOrcamento);
+      : this.currencyPipe.transform(s.valorOrcamento, 'BRL');
 
     alert(`Pagamento da Solicitação #${s.id}\nValor: ${valor}`);
-  }
-
-  formatarMoeda(valor: number): string {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
   }
 }

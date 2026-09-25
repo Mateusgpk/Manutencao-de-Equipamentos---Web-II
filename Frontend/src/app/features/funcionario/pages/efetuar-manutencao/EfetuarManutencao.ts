@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
@@ -10,7 +11,7 @@ const ESTADOS_PERMITIDOS = [EstadoSolicitacao.APROVADA, EstadoSolicitacao.REDIRE
 
 @Component({
     selector: 'app-efetuar-manutencao',
-    imports: [ReactiveFormsModule, RouterLink],
+    imports: [ReactiveFormsModule, RouterLink, DatePipe],
     templateUrl: './EfetuarManutencao.html',
     styleUrl: './EfetuarManutencao.css',
 })
@@ -106,10 +107,5 @@ export class EfetuarManutencao implements OnInit {
 
     protected voltarParaInicio(): void {
         this.router.navigate(['/employee/home']);
-    }
-
-    protected formatarDataHora(data: Date | undefined): string {
-        if (!data) return '';
-        return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(data);
     }
 }

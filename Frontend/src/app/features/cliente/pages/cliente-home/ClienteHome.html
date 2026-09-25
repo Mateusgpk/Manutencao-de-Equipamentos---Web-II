@@ -102,7 +102,7 @@
             <dt class="text-xs uppercase text-gray-500">Valor Orçado</dt>
             <dd class="text-sm text-gray-900">
               @if (selecionada.valorOrcamento !== undefined) {
-                {{ formatarMoeda(selecionada.valorOrcamento) }}
+                {{ selecionada.valorOrcamento | currency:'BRL' }}
               } @else {
                 Não informado
               }
