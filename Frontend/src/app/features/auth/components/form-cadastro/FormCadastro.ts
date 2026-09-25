@@ -10,10 +10,12 @@ import { InputTexto } from '../../../../shared/components/input-texto/input-text
 import { CommonModule } from '@angular/common';
 import { auth, User } from '../../../../shared/services/auth/auth'
 
+import { MascaraCPFDirective } from '../../../../shared/directives/mascara-cpf';
+
 
 @Component({
   selector: 'app-form-cadastro',
-  imports: [CommonModule, ReactiveFormsModule, InputTexto, BtnSubmit],
+  imports: [CommonModule, ReactiveFormsModule, InputTexto, BtnSubmit, MascaraCPFDirective],
   templateUrl: './FormCadastro.html',
   styleUrl: './FormCadastro.css',
 })
@@ -25,7 +27,7 @@ export class FormCadastro implements OnInit{
     email: new FormControl('', [Validators.required, Validators.email]),
     senha: new FormControl('', [Validators.required, Validators.min(5)]),
     cpf: new FormControl('', [Validators.required, Validators.maxLength(11), Validators.minLength(11)]),
-    cep: new FormControl('', [Validators.required,Validators.maxLength(8), Validators.minLength(8)]),
+    cep: new FormControl('', [Validators.required,Validators.maxLength(14), Validators.minLength(14)]),
     endereco: new FormControl('', Validators.required),
     numero: new FormControl('', Validators.required),
     complemento: new FormControl(''),
