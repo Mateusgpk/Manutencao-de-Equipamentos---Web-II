@@ -1,3 +1,4 @@
+// código morto? agora user é separado em cliente e employee
 
 export class User {
     name!: string;

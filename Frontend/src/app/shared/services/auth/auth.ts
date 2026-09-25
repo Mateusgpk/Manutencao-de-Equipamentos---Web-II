@@ -1,7 +1,6 @@
-import { Employee } from "../../../features/employee/models/employee.model"
+import { Employee } from "../../../features/funcionario/models/employee.model"
 import { User } from "../../models/user.model";
 import { Client } from "../../../features/client/models/client.model";
-import { register } from "node:module";
 
 export const auth = {
     storageUser(user:User):boolean{
@@ -30,11 +29,12 @@ export const auth = {
     },
 
     registerEmployee(employee:Employee):boolean{
+        employee.user.role = "FUNCIONARIO"; 
         if(this.storageUser(employee.user)){
-            const nowEmployee=localStorage.getItem("employee")
+            const nowEmployee=localStorage.getItem("employees")
             const employees: Employee[]=nowEmployee?JSON.parse(nowEmployee):[];
             employees.push(employee);
-            localStorage.setItem("clients",JSON.stringify(employees))
+            localStorage.setItem("employees",JSON.stringify(employees)) 
             return true
         }
 
