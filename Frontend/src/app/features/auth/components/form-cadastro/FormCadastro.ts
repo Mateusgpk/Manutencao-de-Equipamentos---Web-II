@@ -31,6 +31,7 @@ export class FormCadastro implements OnInit{
     Logo, tirar daqui depois de implementar */
     senha: new FormControl('', [Validators.required, Validators.minLength(5)]),
     cpf: new FormControl('', [Validators.required, Validators.maxLength(11), Validators.minLength(11)]),
+    telefone: new FormControl('', [Validators.required, Validators.pattern(/^\(?\d{2}\)?\s?(9\d{4}|[2-8]\d{3})\-?\d{4}$/)]),
     cep: new FormControl('', [Validators.required,Validators.maxLength(14), Validators.minLength(14)]),
     endereco: new FormControl('', Validators.required),
     numero: new FormControl('', Validators.required),
@@ -97,6 +98,7 @@ export class FormCadastro implements OnInit{
       const client = new Client({
         name: this.formCadastro.value.nome!,
         cpf: this.formCadastro.value.cpf!,
+        telefone: this.formCadastro.value.telefone!,
         cep: this.formCadastro.value.cep!,
         endereco: this.formCadastro.value.endereco!,
         numero: this.formCadastro.value.numero!,
