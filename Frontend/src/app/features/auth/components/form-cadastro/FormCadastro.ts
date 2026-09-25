@@ -8,7 +8,8 @@ import { Subject } from 'rxjs/internal/Subject';
 import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { CommonModule } from '@angular/common';
-import { auth, User } from '../../../../shared/services/auth/auth'
+import { auth } from '../../../../shared/services/auth/auth';
+import { Client } from '../../../cliente/models/client.model';
 
 
 @Component({
@@ -86,8 +87,8 @@ export class FormCadastro implements OnInit{
     if (this.formCadastro.valid) {
       
       console.log('Dados enviados:', this.formCadastro.value);
-      const user = new User(this.formCadastro.value as Partial<User>)
-      if (auth.registerUser(user)){
+      const user = new Client(this.formCadastro.value as Partial<Client>)
+      if (auth.registerClient(user)){
         alert("usuario salvo")
       }
       

@@ -1,6 +1,6 @@
-import { Employee } from "../../../features/employee/models/employee.model"
+import { Employee } from "../../../features/funcionario/models/employee.model";
 import { User } from "../../models/user.model";
-import { Client } from "../../../features/client/models/client.model";
+import { Client } from "../../../features/cliente/models/client.model";
 import { register } from "node:module";
 
 export const auth = {
