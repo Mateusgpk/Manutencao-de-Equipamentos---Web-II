@@ -50,13 +50,15 @@ export interface Solicitacao {
   // Preenchido ao entrar no estado REJEITADA (RF007)
   motivoRejeicao?: string;
   dataHoraPagamento?: Date;
-  funcionarioDestino?: string;
 
   // Preenchido ao entrar no estado ARRUMADA (RF014)
   descricaoManutencao?: string;
   orientacoesCliente?: string;
   dataHoraManutencao?: Date;
   funcionarioManutencao?: string;
+
+  // Preenchido ao entrar no estado REDIRECIONADA (RF015)
+  funcionarioDestino?: string;
 
   historico: HistoricoSolicitacao[];
 }
