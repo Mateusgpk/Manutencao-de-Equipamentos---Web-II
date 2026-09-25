@@ -8,7 +8,9 @@ import { Subject } from 'rxjs/internal/Subject';
 import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { CommonModule } from '@angular/common';
-import { auth, User } from '../../../../shared/services/auth/auth'
+import { auth } from '../../../../shared/services/auth/auth'
+import { User } from '../../../../shared/models/user.model';
+import { Client } from '../../../../features/client/models/client.model';
 
 import { MascaraCPFDirective } from '../../../../shared/directives/mascara-cpf';
 
@@ -25,7 +27,9 @@ export class FormCadastro implements OnInit{
   formCadastro = new FormGroup({
     nome: new FormControl('', [Validators.required, Validators.minLength(3)]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    senha: new FormControl('', [Validators.required, Validators.min(5)]),
+    /* TODO: de acordo com documentação, a senha seria mandada por email, não cadastrada
+    Logo, tirar daqui depois de implementar */
+    senha: new FormControl('', [Validators.required, Validators.minLength(5)]),
     cpf: new FormControl('', [Validators.required, Validators.maxLength(11), Validators.minLength(11)]),
     cep: new FormControl('', [Validators.required,Validators.maxLength(14), Validators.minLength(14)]),
     endereco: new FormControl('', Validators.required),
@@ -88,9 +92,25 @@ export class FormCadastro implements OnInit{
     if (this.formCadastro.valid) {
       
       console.log('Dados enviados:', this.formCadastro.value);
-      const user = new User(this.formCadastro.value as Partial<User>)
-      if (auth.registerUser(user)){
-        alert("usuario salvo")
+
+      const user = new User(this.formCadastro.value.email!, this.formCadastro.value.senha!);
+      const client = new Client({
+        name: this.formCadastro.value.nome!,
+        cpf: this.formCadastro.value.cpf!,
+        cep: this.formCadastro.value.cep!,
+        endereco: this.formCadastro.value.endereco!,
+        numero: this.formCadastro.value.numero!,
+        complemento: this.formCadastro.value.complemento ?? '',
+        bairro: this.formCadastro.value.bairro!,
+        cidade: this.formCadastro.value.cidade!,
+        estado: this.formCadastro.value.estado!,
+        user,
+      });
+
+      if (auth.registerClient(client)) {
+        alert('Cliente cadastrado com sucesso!');
+      } else {
+        alert('Já existe um usuário cadastrado com este e-mail.');
       }
       
       const savedUserJson = localStorage.getItem("user");
