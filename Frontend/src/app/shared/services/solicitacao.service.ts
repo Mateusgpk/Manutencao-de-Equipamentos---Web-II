@@ -303,4 +303,39 @@ export class SolicitacaoService {
 
     return this.getById(id);
   }
+
+    /** RF014 - Efetuar Manutenção: solicitação APROVADA/REDIRECIONADA passa para ARRUMADA. */
+    efetuarManutencao(
+    id: number,
+    descricaoManutencao: string,
+    orientacoesCliente: string,
+    funcionario: string,
+  ): Observable<Solicitacao | undefined> {
+    const agora = new Date();
+ 
+    this.solicitacoes.update((lista) =>
+      lista.map((s) =>
+        s.id === id
+          ? {
+              ...s,
+              estado: EstadoSolicitacao.ARRUMADA,
+              descricaoManutencao,
+              orientacoesCliente,
+              dataHoraManutencao: agora,
+              funcionarioManutencao: funcionario,
+              historico: [
+                ...s.historico,
+                {
+                  dataHora: agora,
+                  estado: EstadoSolicitacao.ARRUMADA,
+                  funcionario,
+                },
+              ],
+            }
+          : s,
+      ),
+    );
+ 
+    return this.getById(id);
+  }
 }

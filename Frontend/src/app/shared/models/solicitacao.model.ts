@@ -26,6 +26,7 @@ export interface HistoricoSolicitacao {
   estado: EstadoSolicitacao;
   funcionario?: string;
   observacao?: string;
+  funcionarioDestino?: string;
 }
 
 export interface Solicitacao {
@@ -50,6 +51,12 @@ export interface Solicitacao {
   motivoRejeicao?: string;
   dataHoraPagamento?: Date;
   funcionarioDestino?: string;
+
+  // Preenchido ao entrar no estado ARRUMADA (RF014)
+  descricaoManutencao?: string;
+  orientacoesCliente?: string;
+  dataHoraManutencao?: Date;
+  funcionarioManutencao?: string;
 
   historico: HistoricoSolicitacao[];
 }

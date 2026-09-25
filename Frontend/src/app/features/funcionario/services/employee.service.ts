@@ -1,13 +1,14 @@
 import { Injectable, signal } from '@angular/core';
 import { Employee } from '../models/employee.model';
+import { User } from '../../../shared/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
   private nextId = 3;
 
   private readonly employees = signal<Employee[]>([
-    new Employee(1, 'Maria', 'maria@company.com', '2002-02-20', '123'),
-    new Employee(2, 'Mario', 'mario@company.com', '1999-09-19', '456'),
+    criarFuncionario(1, 'Maria', '2002-02-20', 'maria@company.com', '123'),
+    criarFuncionario(2, 'Mario', '1999-09-19', 'mario@company.com', '456'),
   ]);
 
   listAll(): Employee[] {
@@ -18,7 +19,6 @@ export class EmployeeService {
     return this.employees().find((e) => e.id === id);
   }
 
-  // Lista todos funcionários exceto ele mesmo (para RF015)
   listAllExcept(id: number): Employee[] {
     return this.employees().filter((e) => e.id !== id);
   }
@@ -35,10 +35,25 @@ export class EmployeeService {
   }
 
   remove(id: number): void {
-    // não pode remover o último funcionário
-    if (this.employees().length <= 1) { 
-      return; 
+    if (this.employees().length <= 1) {
+      return;
     }
-    this.employees.update((list) => list.filter((e) => e.id !== id)); // funcionário não pode remover a si mesmo
+    this.employees.update((list) => list.filter((e) => e.id !== id));
   }
+}
+
+function criarFuncionario(
+  id: number,
+  name: string,
+  birthDate: string,
+  email: string,
+  password: string,
+): Employee {
+  const employee = new Employee();
+  employee.id = id;
+  employee.name = name;
+  employee.birthDate = birthDate;
+  employee.user = new User(email, password);
+  employee.user.role = 'FUNCIONARIO'; 
+  return employee;
 }

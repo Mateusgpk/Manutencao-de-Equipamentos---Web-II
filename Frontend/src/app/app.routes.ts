@@ -6,6 +6,7 @@ import { Orcamento } from './features/cliente/pages/orcamento/orcamento';
 import { PagarManuntencao } from './features/cliente/pages/pagar-manuntencao/PagarManuntencao';
 import { FuncionarioHome } from './features/funcionario/pages/funcionario-home/FuncionarioHome';
 import { EfetuarOrcamento } from './features/funcionario/pages/efetuar-orcamento/EfetuarOrcamento';
+import { EfetuarManutencao } from './features/funcionario/pages/efetuar-manutencao/EfetuarManutencao';
 import { Categorias } from './features/funcionario/pages/categorias/categorias';
 import { Layout } from './features/funcionario/components/layout/layout';
 import { Funcionarios } from './features/funcionario/pages/funcionarios/funcionarios';
@@ -46,6 +47,9 @@ export const routes: Routes = [
         path: 'orcamento/:id', 
         component: EfetuarOrcamento 
       },
+      { 
+        path: 'employee/manutencao/:id', 
+        component: EfetuarManutencao },
       {
         path: 'categories',
         component: Categorias,
