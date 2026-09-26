@@ -53,7 +53,6 @@ export const auth = {
                 role:usuario.role
             };
         }
-
         return{
             sucesso:false
         };

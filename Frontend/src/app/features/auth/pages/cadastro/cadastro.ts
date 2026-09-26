@@ -12,7 +12,7 @@ import { FormLogin } from '../../components/form-login/FormLogin';
   templateUrl:`./cadastro.html`,
 })
 export class Cadastro {
-  tamanho="h-165";
+  tamanho="h-185";
   abaAtiva: 'login' | 'cadastro' = 'cadastro'; 
 
 constructor(private router: Router) {}
@@ -27,7 +27,7 @@ constructor(private router: Router) {}
 
   trocarAba(aba: 'login' | 'cadastro') {
     this.abaAtiva = aba;
-    this.tamanho = aba === 'login' ? 'h-70' : 'h-165';
+    this.tamanho = aba === 'login' ? 'h-70' : 'h-185';
      this.router.navigate([`/${aba}`]);
   }
 }

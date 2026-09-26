@@ -1,13 +1,15 @@
 import { Directive, HostListener } from '@angular/core';
-import { NgControl } from '@angular/forms';
-
+import { FormControl, NgControl } from '@angular/forms';
+import { Optional,Self } from '@angular/core';
 @Directive({
   selector: '[MascaraCPF]',
   standalone: true
 })
 export class MascaraCPFDirective {
-  
-  constructor(private ngControl: NgControl) {}
+
+  constructor(
+    @Optional() @Self() private ngControl: NgControl
+  ) {}
 
   @HostListener('input', ['$event'])
   onInput(event: Event): void {

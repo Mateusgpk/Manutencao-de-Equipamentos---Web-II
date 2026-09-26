@@ -1,1 +1,6 @@
-<p>crud-funcionario works!</p>
+
+<ul>
+@for (funcionario of funcionarios; track funcionario.id){
+    <li>{{funcionario.name}}</li>
+} 
+</ul>

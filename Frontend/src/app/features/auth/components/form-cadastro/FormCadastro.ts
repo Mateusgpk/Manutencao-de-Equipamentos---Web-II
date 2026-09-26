@@ -9,7 +9,6 @@ import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { CommonModule } from '@angular/common';
 import { auth } from '../../../../shared/services/auth/auth'
-import { User } from '../../../../shared/models/user.model';
 import { Client } from '../../../../features/cliente/models/client.model';
 
 import { MascaraCPFDirective } from '../../../../shared/directives/mascara-cpf';
@@ -20,7 +19,7 @@ import { MascaraCPFDirective } from '../../../../shared/directives/mascara-cpf';
   imports: [CommonModule, ReactiveFormsModule, InputTexto, BtnSubmit, MascaraCPFDirective],
   templateUrl: './FormCadastro.html',
   styleUrl: './FormCadastro.css',
-})
+})  
 
 
 export class FormCadastro implements OnInit{
