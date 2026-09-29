@@ -29,7 +29,7 @@
               } @else if (s.estado === EstadoSolicitacao.REJEITADA) {
                 <button class="rounded bg-emerald-600 px-3 py-1 text-xs font-semibold text-white" type="button" (click)="resgatar(s)">Resgatar Serviço</button>
               } @else if (s.estado === EstadoSolicitacao.ARRUMADA) {
-                <button class="rounded bg-blue-600 px-3 py-1 text-xs font-semibold text-white" type="button" (click)="pagar(s)">Pagar Serviço</button>
+                <a class="rounded bg-blue-600 px-3 py-1 text-xs font-semibold text-white" [routerLink]="['/pagar-servico', s.id]">Pagar Serviço</a>
               } @else if (s.estado !== EstadoSolicitacao.APROVADA) {
                 <button class="rounded border px-3 py-1 text-xs" type="button" (click)="visualizar(s)">Visualizar Serviço</button>
               }
@@ -108,6 +108,53 @@
               }
             </dd>
           </div>
+
+          @if (selecionada.funcionarioOrcamento) {
+            <div>
+              <dt class="text-xs uppercase text-gray-500">Orçamento realizado por</dt>
+              <dd class="text-sm text-gray-900">
+                {{ selecionada.funcionarioOrcamento }}
+                @if (selecionada.dataHoraOrcamento) {
+                  em {{ dataHora(selecionada.dataHoraOrcamento) }}
+                }
+              </dd>
+            </div>
+          }
+
+          @if (selecionada.motivoRejeicao) {
+            <div class="sm:col-span-2">
+              <dt class="text-xs uppercase text-gray-500">Motivo da rejeição</dt>
+              <dd class="text-sm text-gray-900">{{ selecionada.motivoRejeicao }}</dd>
+            </div>
+          }
+
+          @if (selecionada.descricaoManutencao) {
+            <div class="sm:col-span-2">
+              <dt class="text-xs uppercase text-gray-500">Descrição da Manutenção</dt>
+              <dd class="text-sm text-gray-900">{{ selecionada.descricaoManutencao }}</dd>
+            </div>
+          }
+
+          @if (selecionada.orientacoesCliente) {
+            <div class="sm:col-span-2">
+              <dt class="text-xs uppercase text-gray-500">Orientações para o Cliente</dt>
+              <dd class="text-sm text-gray-900">{{ selecionada.orientacoesCliente }}</dd>
+            </div>
+          }
+
+          @if (selecionada.funcionarioDestino) {
+            <div>
+              <dt class="text-xs uppercase text-gray-500">Redirecionada para</dt>
+              <dd class="text-sm text-gray-900">{{ selecionada.funcionarioDestino }}</dd>
+            </div>
+          }
+
+          @if (selecionada.dataHoraPagamento) {
+            <div>
+              <dt class="text-xs uppercase text-gray-500">Data/Hora do Pagamento</dt>
+              <dd class="text-sm text-gray-900">{{ dataHora(selecionada.dataHoraPagamento) }}</dd>
+            </div>
+          }
         </dl>
 
         <div class="mt-6">
@@ -120,6 +167,9 @@
                 @if (h.funcionario) {
                   <span>| Funcionário: {{ h.funcionario }}</span>
                 }
+                @if (h.funcionarioDestino) {
+                  <span>| Destino: {{ h.funcionarioDestino }}</span>
+                }
                 @if (h.observacao) {
                   <span>| Obs.: {{ h.observacao }}</span>
                 }
@@ -128,7 +178,20 @@
           </ul>
         </div>
 
-        <div class="mt-6 flex justify-end">
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+          @if (selecionada.estado === EstadoSolicitacao.ORCADA) {
+            <a class="rounded bg-blue-600 px-5 py-2 text-center text-white hover:bg-blue-700" [routerLink]="['/orcamento', selecionada.id]">
+              Aprovar/Rejeitar Serviço
+            </a>
+          } @else if (selecionada.estado === EstadoSolicitacao.REJEITADA) {
+            <button class="rounded bg-emerald-600 px-5 py-2 text-white hover:bg-emerald-700" type="button" (click)="resgatar(selecionada)">
+              Resgatar Serviço
+            </button>
+          } @else if (selecionada.estado === EstadoSolicitacao.ARRUMADA) {
+            <a class="rounded bg-blue-600 px-5 py-2 text-center text-white hover:bg-blue-700" [routerLink]="['/pagar-servico', selecionada.id]">
+              Pagar Serviço
+            </a>
+          }
           <button
             type="button"
             class="rounded bg-blue-500 px-5 py-2 text-white hover:bg-blue-600"

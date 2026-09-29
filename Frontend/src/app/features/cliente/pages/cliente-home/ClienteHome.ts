@@ -13,7 +13,6 @@ import { SolicitacaoService } from '../../../../shared/services/solicitacao.serv
 })
 export class ClienteHome implements OnInit {
   private readonly service = inject(SolicitacaoService);
-  private readonly currencyPipe = inject(CurrencyPipe);
   private readonly cpfClienteLogado = '123.456.789-00';
   readonly estadoLabel = ESTADO_SOLICITACAO_LABEL;
   readonly EstadoSolicitacao = EstadoSolicitacao;
@@ -61,14 +60,8 @@ export class ClienteHome implements OnInit {
       this.atualizarSolicitacoes(
         this.solicitacoes.map((item) => item.id === atualizada.id ? atualizada : item),
       );
+      this.solicitacaoSelecionada = atualizada;
     });
   }
 
-  pagar(s: Solicitacao): void {
-    const valor = s.valorOrcamento === undefined
-      ? 'valor ainda não informado'
-      : this.currencyPipe.transform(s.valorOrcamento, 'BRL');
-
-    alert(`Pagamento da Solicitação #${s.id}\nValor: ${valor}`);
-  }
 }
