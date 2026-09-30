@@ -33,15 +33,15 @@ export class FormLogin {
     if (this.formCadastro.valid) {
       console.log('Dados enviados:', this.formCadastro.value);
       
-      const login=auth.loginuser(new User(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? ""))
+      const login=auth.loginuser(new User(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? "",""))
 
       if (login.sucesso) {
 
         alert('Login realizado com sucesso!');
-        if (login.role === 'FUNCIONARIO') {
+        if (login.role === 'EMPLOYEE') {
           this.router.navigate(['employee/home']);
         }
-        else if (login.role === 'CLIENTE') {
+        else if (login.role === 'CLIENT') {
           this.router.navigate(['/home']);
         }
         else {

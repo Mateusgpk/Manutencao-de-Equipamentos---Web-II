@@ -3,6 +3,7 @@ import { InputTexto } from '../../../../shared/components/input-texto/input-text
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Crudfuncionario } from '../../services/crudfuncionario';
 import { Employee } from '../../models/employee.model';
+import { User } from '../../../../shared/models/user.model';
 @Component({
   selector: 'app-addfuncionario',
   imports: [InputTexto],
@@ -19,7 +20,9 @@ export class Addfuncionario {
   constructor(private crudfuncionario: Crudfuncionario) {}
   addFuncionario() {
     if (this.FormCadastro.valid) {
-      const funcionario = new Employee(this.FormCadastro.value as Partial<Employee>);
+      const funcionario = new Employee({...(this.FormCadastro.value as Partial<Employee>),
+        user: new User(String(this.FormCadastro.value.email),String(this.FormCadastro.value.senha),"EMPLOYEE")
+      });
       console.log('Funcionário cadastrado:', funcionario);
       if (this.crudfuncionario.addFuncionario(funcionario)) {
         console.log('Funcionário adicionado com sucesso');

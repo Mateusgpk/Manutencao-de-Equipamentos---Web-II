@@ -93,14 +93,8 @@ export class FormCadastro implements OnInit{
     if (this.formCadastro.valid) {
       
       console.log('Dados enviados:', this.formCadastro.value)
-      const user = new Client({
-    ...(this.formCadastro.value as Partial<Client>),
-
-    user: new User(
-        email: this.formCadastro.value.email,
-        senha: this.formCadastro.value.senha,
-        role: 'CLIENT'
-    )
+      const user = new Client({...(this.formCadastro.value as Partial<Client>),
+      user: new User( String( this.formCadastro.value.email), String (this.formCadastro.value.senha),'CLIENT')
 })
       if (auth.registerClient(user)){
         alert("usuario salvo")

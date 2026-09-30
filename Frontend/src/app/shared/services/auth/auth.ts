@@ -1,7 +1,6 @@
 import { Employee } from "../../../features/funcionario/models/employee.model";
 import { User } from "../../models/user.model";
 import { Client } from "../../../features/cliente/models/client.model";
-import { register } from "node:module";
 
 
 export const auth = {
@@ -19,7 +18,6 @@ export const auth = {
 
 
     registerClient(client: Client): boolean{
-        client.user.role="CLIENTE"
         if (this.storageUser(client.user)){
             const nowClients=localStorage.getItem("clients")
             const clients: Client[]=nowClients?JSON.parse(nowClients):[];
