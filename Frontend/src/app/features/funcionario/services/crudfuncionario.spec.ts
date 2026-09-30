@@ -9,15 +9,6 @@ describe('Crudfuncionario', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(Crudfuncionario);
-    
-const funcionario = new Employee();
-
-funcionario.id = 1;
-funcionario.name = 'João';
-funcionario.birthDate = '2000-05-15';
-funcionario.user = new User('joao@email.com', '123456');
-
-service.addFuncionario(funcionario);
   });
 
   it('should be created', () => {

@@ -10,6 +10,7 @@ import { EfetuarManutencao } from './features/funcionario/pages/efetuar-manutenc
 import { Categorias } from './features/funcionario/pages/categorias/categorias';
 import { Layout } from './features/funcionario/components/layout/layout';
 import { Funcionarios } from './features/funcionario/pages/funcionarios/funcionarios';
+import { Addfuncionario } from './features/funcionario/pages/addfuncionario/addfuncionario';
 
 export const routes: Routes = [
   {
@@ -57,6 +58,11 @@ export const routes: Routes = [
       {
         path: 'crud-funcionario',
         component: Funcionarios,
+      }
+      ,
+      {
+        path: 'add-funcionario',
+        component: Addfuncionario,
       }
     ]
   },

@@ -1,0 +1,9 @@
+    <app-input-texto id="nome" label="Nome" placeholder="Peter Parker"
+        [control]="FormCadastro.controls.name"></app-input-texto>
+    <app-input-texto class="forms-control" id="email" label="Email" placeholder="peter.parker@example.com"
+        [control]="FormCadastro.controls.email"></app-input-texto>
+    <app-input-texto class="forms-control" id="senha" label="Senha" type="password" placeholder="********"
+        [control]="FormCadastro.controls.senha"></app-input-texto>
+    <app-input-texto class="forms-control" id="dataNascimento" label="Data de Nascimento" type="date"
+        [control]="FormCadastro.controls.dataNascimento"></app-input-texto>
+    <button class="btn-cadastro mt-5 bg-blue-800" type="submit" (click)="addFuncionario()">Cadastrar</button>

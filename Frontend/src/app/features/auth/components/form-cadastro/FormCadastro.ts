@@ -10,6 +10,7 @@ import { InputTexto } from '../../../../shared/components/input-texto/input-text
 import { CommonModule } from '@angular/common';
 import { auth } from '../../../../shared/services/auth/auth'
 import { Client } from '../../../../features/cliente/models/client.model';
+import { User } from '../../../../shared/models/user.model';
 
 import { MascaraCPFDirective } from '../../../../shared/directives/mascara-cpf';
 
@@ -91,8 +92,16 @@ export class FormCadastro implements OnInit{
     this.piscar = 'piscando'
     if (this.formCadastro.valid) {
       
-      console.log('Dados enviados:', this.formCadastro.value);
-      const user = new Client(this.formCadastro.value as Partial<Client>)
+      console.log('Dados enviados:', this.formCadastro.value)
+      const user = new Client({
+    ...(this.formCadastro.value as Partial<Client>),
+
+    user: new User(
+        email: this.formCadastro.value.email,
+        senha: this.formCadastro.value.senha,
+        role: 'CLIENT'
+    )
+})
       if (auth.registerClient(user)){
         alert("usuario salvo")
       }
