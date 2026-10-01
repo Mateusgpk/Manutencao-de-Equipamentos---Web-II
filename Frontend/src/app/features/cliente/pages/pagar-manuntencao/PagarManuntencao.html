@@ -57,6 +57,73 @@
       </p>
     </div>
 
+    <div class="mt-8">
+      <p class="text-base font-semibold text-slate-900">Forma de pagamento</p>
+      <div class="mt-3 flex gap-6">
+        <label class="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+          <input type="radio" name="metodo" class="accent-blue-500" [checked]="metodo() === 'cartao'"
+            (change)="selecionarMetodo('cartao')" />
+          Cartão de crédito
+        </label>
+        <label class="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+          <input type="radio" name="metodo" class="accent-blue-500" [checked]="metodo() === 'pix'"
+            (change)="selecionarMetodo('pix')" />
+          Pix
+        </label>
+      </div>
+    </div>
+
+    @if (metodo() === 'cartao') {
+    <form class="mt-6 space-y-4" [formGroup]="cartaoForm" novalidate>
+      <div>
+        <label for="cartao-numero" class="block text-sm font-medium text-slate-800">Número do cartão</label>
+        <input id="cartao-numero" type="text" formControlName="numero" inputmode="numeric" maxlength="19"
+          placeholder="1234 5678 9012 3456" (input)="mascararNumero($event)"
+          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none" />
+        @if (campoInvalido('numero')) {
+        <p class="mt-1 text-xs text-red-600">Informe os 16 dígitos do cartão.</p>
+        }
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="cartao-validade" class="block text-sm font-medium text-slate-800">Validade</label>
+          <input id="cartao-validade" type="text" formControlName="validade" inputmode="numeric" maxlength="5"
+            placeholder="MM/AA" (input)="mascararValidade($event)"
+            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none" />
+          @if (campoInvalido('validade')) {
+          <p class="mt-1 text-xs text-red-600">Use o formato MM/AA.</p>
+          }
+        </div>
+        <div>
+          <label for="cartao-cvc" class="block text-sm font-medium text-slate-800">CVC</label>
+          <input id="cartao-cvc" type="text" formControlName="cvc" inputmode="numeric" maxlength="4"
+            placeholder="123" (input)="mascararCvc($event)"
+            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none" />
+          @if (campoInvalido('cvc')) {
+          <p class="mt-1 text-xs text-red-600">Informe 3 ou 4 dígitos.</p>
+          }
+        </div>
+      </div>
+
+      <div>
+        <label for="cartao-nome" class="block text-sm font-medium text-slate-800">Nome no cartão</label>
+        <input id="cartao-nome" type="text" formControlName="nome" placeholder="Como está no cartão"
+          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none" />
+        @if (campoInvalido('nome')) {
+        <p class="mt-1 text-xs text-red-600">Informe o nome como está no cartão.</p>
+        }
+      </div>
+      
+    </form>
+    } @else {
+    <div class="mt-6">
+      <label for="codigo-pix" class="block text-sm font-medium text-slate-800">Pix copia e cola</label>
+      <textarea id="codigo-pix" readonly rows="4" [value]="codigoPix()"
+        class="mt-1 w-full resize-none break-all rounded-md border border-slate-300 bg-slate-50 p-3 font-mono text-xs text-slate-700 focus:outline-none"></textarea>
+    </div>
+    }
+
     @if (etapa() === 'pagamento') {
     <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
       <button type="button"
