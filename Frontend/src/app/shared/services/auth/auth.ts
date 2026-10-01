@@ -3,8 +3,20 @@ import { User } from "../../models/user.model";
 import { Client } from "../../../features/cliente/models/client.model";
 
 
+
+
 export const auth = {
+    gerarId(): number{
+        const atual=localStorage.getItem("user")
+        const usuarios:User[]=atual?JSON.parse(atual) : [];
+        if (usuarios.length===0){
+            return 1;
+        }
+        return Math.max(...usuarios.map(usuarios =>usuarios.id))+1   
+    },
+
     storageUser(user:User):boolean{
+        user.id=this.gerarId();
         const atual=localStorage.getItem("user")
         const users: User[]= atual? JSON.parse(atual) :[]
         const emailuse= users.some(u=>u.email===user.email)
@@ -15,6 +27,7 @@ export const auth = {
         localStorage.setItem("user", JSON.stringify(users) )
         return true
     },
+
 
 
     registerClient(client: Client): boolean{
@@ -29,7 +42,6 @@ export const auth = {
     },
 
     registerEmployee(employee:Employee):boolean{
-        employee.user.role = "FUNCIONARIO"; 
         if(this.storageUser(employee.user)){
             const nowEmployee=localStorage.getItem("employees")
             const employees: Employee[]=nowEmployee?JSON.parse(nowEmployee):[];
@@ -45,7 +57,7 @@ export const auth = {
         const atual=localStorage.getItem("user")
         const users:User[] = atual ? JSON.parse(atual) : [];
         const usuario = users.find(us => us.email === user.email && us.password === user.password)
-        if (usuario){
+        if (usuario && usuario.active==true){
             return{
                 sucesso:true,
                 role:usuario.role

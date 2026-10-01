@@ -42,7 +42,7 @@ export const routes: Routes = [
   {path: 'employee', component: Layout, children: [
       {
         path: 'home',
-        component: ClienteHome,
+        component: FuncionarioHome,
       },
       { 
         path: 'orcamento/:id', 

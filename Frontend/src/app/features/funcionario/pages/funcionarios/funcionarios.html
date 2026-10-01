@@ -1,8 +1,24 @@
 <div><button routerLink="/employee/add-funcionario">Add Funcionario</button></div>
-<ul>
-
-
-@for (funcionario of funcionarios; track funcionario.id){
-    <li>{{funcionario.name}}</li>
+<div class="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
+<table class="min-w-full divide-y divide-slate-200 text-sm">
+    <thead class="bg-slate-100 text-left text-xs font-semibold uppercase text-slate-600">
+        <tr>
+          <th class="px-5 py-3">ID</th>
+          <th class="px-5 py-3">Funcionario</th>
+          <th class="px-5 py-3">Email</th>
+          <th class="px-5 py-3">Data de nascimento</th>
+          <th class="px-5 py-3">Ações</th>
+        </tr>
+    </thead>
+@for (funcionario of funcionarios; track funcionario.user.id){
+    <tr>
+    <td class="whitespace-nowrap px-4 py-3">{{funcionario.user.id}}</td>
+    <td class="whitespace-nowrap px-4 py-3">{{funcionario.name}}</td>
+    <td class="whitespace-nowrap px-4 py-3">{{funcionario.user.email}}</td>
+    <td class="whitespace-nowrap px-4 py-3">{{funcionario.dataNascimento}}</td>
+    <td><button class="bg-gray-500" (click)="desativar(funcionario.user.id)">Desativar </button> </td>
+    </tr>
 } 
-</ul>
+  
+</table>
+</div>

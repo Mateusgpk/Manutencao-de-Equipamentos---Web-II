@@ -1,4 +1,6 @@
 export class User {
+    id!: number ;
+    active:boolean=true;
     email!: string;
     password!: string;
     role!: string;

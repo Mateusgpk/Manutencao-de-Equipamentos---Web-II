@@ -1,10 +1,9 @@
 import { User } from "../../../shared/models/user.model"
 
 export class Employee {
-  id!: number ;
   name!: string  ;
   dataNascimento!: string;
-  user!: User ;
+  user: User = new User('', '','');
 
   constructor(dados: Partial<Employee>) {
     Object.assign(this, dados);

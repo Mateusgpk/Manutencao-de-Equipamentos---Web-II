@@ -30,9 +30,9 @@ export class FormCadastro implements OnInit{
     /* TODO: de acordo com documentação, a senha seria mandada por email, não cadastrada
     Logo, tirar daqui depois de implementar */
     senha: new FormControl('', [Validators.required, Validators.minLength(5)]),
-    cpf: new FormControl('', [Validators.required, Validators.maxLength(11), Validators.minLength(11)]),
+    cpf: new FormControl('', [Validators.required, Validators.maxLength(14), Validators.minLength(14)]),
     telefone: new FormControl('', [Validators.required, Validators.pattern(/^\(?\d{2}\)?\s?(9\d{4}|[2-8]\d{3})\-?\d{4}$/)]),
-    cep: new FormControl('', [Validators.required,Validators.maxLength(14), Validators.minLength(14)]),
+    cep: new FormControl('', [Validators.required,Validators.maxLength(9)]),
     endereco: new FormControl('', Validators.required),
     numero: new FormControl('', Validators.required),
     complemento: new FormControl(''),
@@ -91,7 +91,7 @@ export class FormCadastro implements OnInit{
  async aoEnviar() {
     this.piscar = 'piscando'
     if (this.formCadastro.valid) {
-      
+      this.formCadastro.value.cpf=this.formCadastro.value.cpf?.replace(/[.-]/g,'');
       console.log('Dados enviados:', this.formCadastro.value)
       const user = new Client({...(this.formCadastro.value as Partial<Client>),
       user: new User( String( this.formCadastro.value.email), String (this.formCadastro.value.senha),'CLIENT')
