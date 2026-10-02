@@ -27,30 +27,23 @@ export class FormLogin {
   constructor(private router: Router) { }
   aoEnviar() {
     this.corfundo = 'bg-blue-600';
-
-
-
     if (this.formCadastro.valid) {
       console.log('Dados enviados:', this.formCadastro.value);
       
-      const login=auth.loginuser(new User(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? "",""))
-
-      if (login.sucesso) {
-
-        alert('Login realizado com sucesso!');
-        if (login.role === 'EMPLOYEE') {
-          this.router.navigate(['employee/home']);
-        }
-        else if (login.role === 'CLIENT') {
+      auth.loginuser(new User(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? "","")).subscribe((usu)=>{
+        if (usu!=null){
+          alert('Login realizado com sucesso!');
+          if (usu.user.role==='EMPLOYEE'){
+            this.router.navigate(['employee/home']);
+          }else if (usu.user.role === 'CLIENT') {
           this.router.navigate(['/home']);
-        }
-        else {
-          this.router.navigate(['/']);
-        }
-
-      } else {
+        }else{
+          this.router.navigate(['/']);  
+        }}
+         else {
         console.log('Email ou senha incorretos.');
       }
-    }
+    });
   }
+}
 }

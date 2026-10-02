@@ -25,8 +25,8 @@ export class Crudfuncionario {
     funcionario.user.active=false
     localStorage.setItem("employees", JSON.stringify(todosfuncionarios));
 
-    
-    const usersStorage = localStorage.getItem("users");
+
+    const usersStorage = localStorage.getItem("user");
     const todosusers: User[] = usersStorage
       ? JSON.parse(usersStorage)
       : [];
@@ -37,9 +37,8 @@ export class Crudfuncionario {
 
     if (user) {
       user.active = false;
-
       localStorage.setItem(
-        "users",
+        "user",
         JSON.stringify(todosusers)
       );
     }

@@ -1,11 +1,17 @@
 import { Employee } from "../../../features/funcionario/models/employee.model";
 import { User } from "../../models/user.model";
 import { Client } from "../../../features/cliente/models/client.model";
+import { Observable } from "rxjs";
+import { of } from "rxjs";
 
 
 
 
 export const auth = {
+
+    getuserlogado(){
+
+    },
     gerarId(): number{
         const atual=localStorage.getItem("user")
         const usuarios:User[]=atual?JSON.parse(atual) : [];
@@ -53,18 +59,24 @@ export const auth = {
         return false;
     },
 
-    loginuser (user:User):{ sucesso: boolean; role?: string }{
+    loginuser (user:User): Observable<Client | Employee | null>{
         const atual=localStorage.getItem("user")
         const users:User[] = atual ? JSON.parse(atual) : [];
-        const usuario = users.find(us => us.email === user.email && us.password === user.password)
-        if (usuario && usuario.active==true){
-            return{
-                sucesso:true,
-                role:usuario.role
-            };
+        const usuario = users.find(us => us.email === user.email && us.password === user.password);
+        let login;
+        if (usuario?.active==true){
+        if (usuario?.role==="EMPLOYEE"){
+            const nowEmployee=localStorage.getItem("employees")
+            const employees: Employee[]=nowEmployee?JSON.parse(nowEmployee):[];
+            return of(employees.find(us=> us.user.id===usuario.id)?? null)
+        }else{
+            const nowClients=localStorage.getItem("clients")
+            const clients: Client[]=nowClients?JSON.parse(nowClients):[];
+            return of(clients.find(us=> us.user.id===usuario.id)?? null)
+            } 
         }
-        return{
-            sucesso:false
-        };
+        else{
+            return of(null)
+        }
     }
 }
