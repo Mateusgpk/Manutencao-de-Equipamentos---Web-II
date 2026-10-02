@@ -12,6 +12,7 @@ import { auth } from '../../../../shared/services/auth/auth'
 import { Client } from '../../../../features/cliente/models/client.model';
 import { User } from '../../../../shared/models/user.model';
 
+import { CpfValidator } from '../../../../shared/validators/cpf.validator';
 import { MascaraCPFDirective } from '../../../../shared/directives/mascara-cpf';
 
 
@@ -30,7 +31,7 @@ export class FormCadastro implements OnInit{
     /* TODO: de acordo com documentação, a senha seria mandada por email, não cadastrada
     Logo, tirar daqui depois de implementar */
     senha: new FormControl('', [Validators.required, Validators.minLength(5)]),
-    cpf: new FormControl('', [Validators.required, Validators.maxLength(14), Validators.minLength(14)]),
+    cpf: new FormControl('', [Validators.required, Validators.maxLength(14), Validators.minLength(14), CpfValidator.validar()]),
     telefone: new FormControl('', [Validators.required, Validators.pattern(/^\(?\d{2}\)?\s?(9\d{4}|[2-8]\d{3})\-?\d{4}$/)]),
     cep: new FormControl('', [Validators.required,Validators.maxLength(9)]),
     endereco: new FormControl('', Validators.required),
