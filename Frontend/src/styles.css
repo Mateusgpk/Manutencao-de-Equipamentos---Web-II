@@ -1,10 +1,41 @@
-/* You can add global styles to this file, and also import other style files */
 @import '@fortawesome/fontawesome-free/css/all.css';
 @import 'tailwindcss';
 
+@theme {
+  --color-primary: #0099FF;
+  --color-primary-hover: #007ACC;
+  --color-primary-subtle: #D9F0FF;
+
+  --color-accent: #73C527;
+  --color-accent-hover: #5CA01E;
+  --color-accent-subtle: #E8F7D8;
+
+  --color-background: #F2FAFF;
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #E6F0F9;
+
+  --color-border: #C4DDEC;
+  --color-border-subtle: #E1EEF7;
+
+  --color-foreground: #0B192C;
+  --color-foreground-muted: #5B7290;
+  --color-on-primary: #FFFFFF;
+  --color-on-accent: #FFFFFF;
+
+  --color-success: #32D74B;
+  --color-warning: #FFB300;
+  --color-danger: #FF3B30;
+
+  --font-sans: 'Segoe UI', 'Open Sans', Tahoma, sans-serif;
+  --font-heading: 'Segoe UI', 'Nunito', Tahoma, sans-serif;
+}
+
 @layer base {
+  html {
+    font-family: var(--font-sans);
+  }
+
   body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
   }
 }
