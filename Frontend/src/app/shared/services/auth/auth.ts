@@ -6,12 +6,20 @@ import { of } from "rxjs";
 
 
 
+const LS_CHAVE: string = "usuarioLogado";
+export const auth = {   
 
-export const auth = {
-
-    getuserlogado(){
-
+    get usuarioLogado(): Employee|Client|null {
+    let usu = localStorage[LS_CHAVE];
+    return (usu ? JSON.parse(localStorage[LS_CHAVE]) : null);
     },
+    set usuarioLogado(usuario: Employee|Client) {
+    localStorage[LS_CHAVE] = JSON.stringify(usuario);
+    },
+    logout() {
+    delete localStorage[LS_CHAVE];
+    },
+
     gerarId(): number{
         const atual=localStorage.getItem("user")
         const usuarios:User[]=atual?JSON.parse(atual) : [];
