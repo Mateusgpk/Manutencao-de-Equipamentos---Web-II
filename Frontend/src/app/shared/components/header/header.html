@@ -1,11 +1,22 @@
-<header class="sticky top-0 z-50 border-b border-slate-200 bg-blue-500 backdrop-blur">
+<header
+  class="sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border shadow-sm shadow-primary-subtle/50">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-    <a class="text-base font-bold text-slate-950 transition hover:text-teal-700" routerLink="/">
-      Manutenção de Equipamentos
+
+    <a class="flex items-center gap-3 transition-transform hover:scale-[1.02]" routerLink="/">
+      <span
+        class="text-xl font-extrabold font-heading bg-linear-to-b from-primary to-primary-hover bg-clip-text text-transparent drop-shadow-sm">
+        Manutenção
+      </span>
     </a>
 
-    <!-- <nav class="flex items-center gap-6 text-sm font-medium text-slate-600" aria-label="Navegação principal">
-      <a class="transition hover:text-teal-700" routerLink="/">Início</a>
-    </nav> -->
+    <nav class="flex items-center gap-6 text-sm font-bold font-heading text-foreground-muted"
+      aria-label="Navegação principal">
+      <a class="transition-colors hover:text-primary" routerLink="/">Início</a>
+
+      <a class="bg-linear-to-b from-primary-subtle to-primary text-on-primary border border-primary px-5 py-1.5 rounded-full shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105"
+        routerLink="/login">
+        Acessar Painel
+      </a>
+    </nav>
   </div>
 </header>

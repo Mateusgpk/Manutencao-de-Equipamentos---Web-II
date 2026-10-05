@@ -1,5 +1,4 @@
-<p class="text-gray-600">Preencha o formulário abaixo para se cadastrar.</p>
-<form [formGroup]="formCadastro" (ngSubmit)="aoEnviar()" class="space-y-2 flex flex-col ">
+<form [formGroup]="formCadastro" (ngSubmit)="aoEnviar()" class="flex flex-col space-y-6 mt-6">
 
     <app-input-texto id="nome" label="Nome" placeholder="Peter Parker"
         [control]="formCadastro.controls.nome"></app-input-texto>
@@ -49,7 +48,7 @@
 
     </div>
 
-    <app-btn-submit (onclick)="aoEnviar()" class="{{corfundo}} btn-cadastro mt-5" value="Cadastrar"
+    <app-btn-submit (onclick)="aoEnviar()" class="btn-cadastro mt-2" value="Cadastrar"
         type="submit">Cadastrar</app-btn-submit>
 
 </form>

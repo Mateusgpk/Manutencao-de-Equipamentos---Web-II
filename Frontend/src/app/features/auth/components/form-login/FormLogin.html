@@ -1,8 +1,7 @@
-
-<form [formGroup]="formCadastro" (ngSubmit)="aoEnviar()" class="space-y-2 flex flex-col w-full">
-    <app-input-texto class="forms-control size-full" id="email" label="Email" placeholder="miranhadasilva@yahoo.com" 
-    [control]="formCadastro.controls.email"></app-input-texto>
+<form [formGroup]="formCadastro" (ngSubmit)="aoEnviar()" class="flex flex-col space-y-6 mt-6">
+    <app-input-texto class="forms-control size-full" id="email" label="Email" placeholder="miranhadasilva@yahoo.com"
+        [control]="formCadastro.controls.email"></app-input-texto>
     <app-input-texto class="forms-control" id="senha" type="password" label="Senha" placeholder="••••••••" class=""
-    [control]="formCadastro.controls.senha"></app-input-texto>
-    <app-btn-submit  (onclick)="aoEnviar()" class="{{corfundo}} mt-5" value="Login"  type="submit">Login</app-btn-submit>
+        [control]="formCadastro.controls.senha"></app-input-texto>
+    <app-btn-submit (onclick)="aoEnviar()" class="mt-2" value="Login" type="submit">Login</app-btn-submit>
 </form>
