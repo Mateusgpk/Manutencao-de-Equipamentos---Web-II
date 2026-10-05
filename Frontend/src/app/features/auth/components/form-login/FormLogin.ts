@@ -5,17 +5,39 @@ import { InputTexto } from '../../../../shared/components/input-texto/input-text
 import { CommonModule } from '@angular/common';
 import { auth } from '../../../../shared/services/auth/auth'
 import { User } from '../../../../shared/models/user.model';
-import { Router } from '@angular/router';
+import { Router, RouterModule,ActivatedRoute } from '@angular/router';
+import { OnInit } from '@angular/core';
+import { inject } from '@angular/core';
+import { Client } from '../../../cliente/models/client.model';
 
 @Component({
   selector: 'app-form-login',
-  imports: [InputTexto, BtnSubmit, CommonModule, ReactiveFormsModule,],
+  imports: [InputTexto, BtnSubmit, CommonModule, ReactiveFormsModule,RouterModule],
   templateUrl: './FormLogin.html',
   styleUrl: './FormLogin.css',
 })
 
 
-export class FormLogin {
+export class FormLogin implements OnInit{
+message!: string;
+private router = inject(Router)
+private route = inject(ActivatedRoute)
+ngOnInit(): void {
+  if (auth.usuarioLogado) {
+    if (auth.usuarioLogado instanceof Client){
+      this.router.navigate( ["/home"] );
+    }else{
+      this.router.navigate( ["/employee/home"] );
+    }
+
+  }
+  else {
+    this.route.queryParams.subscribe(params => {
+    this.message = params['error'];
+  });
+
+}
+}
 
 
   formCadastro = new FormGroup({
@@ -24,7 +46,6 @@ export class FormLogin {
   });
   corfundo = 'bg-blue-800';
 
-  constructor(private router: Router) { }
   aoEnviar() {
     this.corfundo = 'bg-blue-600';
     if (this.formCadastro.valid) {
@@ -34,6 +55,7 @@ export class FormLogin {
         if (usu!=null){
           alert('Login realizado com sucesso!');
           if (usu.user.role==='EMPLOYEE'){
+            auth.usuarioLogado=usu;
             this.router.navigate(['employee/home']);
           }else if (usu.user.role === 'CLIENT') {
           this.router.navigate(['/home']);
