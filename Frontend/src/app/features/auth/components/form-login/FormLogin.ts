@@ -54,8 +54,8 @@ ngOnInit(): void {
       auth.loginuser(new User(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? "","")).subscribe((usu)=>{
         if (usu!=null){
           alert('Login realizado com sucesso!');
+          auth.usuarioLogado=usu;
           if (usu.user.role==='EMPLOYEE'){
-            auth.usuarioLogado=usu;
             this.router.navigate(['employee/home']);
           }else if (usu.user.role === 'CLIENT') {
           this.router.navigate(['/home']);
