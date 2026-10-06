@@ -1,25 +1,28 @@
+import { Injectable } from '@angular/core';
 import { Employee } from "../../../features/funcionario/models/employee.model";
 import { User } from "../../models/user.model";
 import { Client } from "../../../features/cliente/models/client.model";
 import { Observable } from "rxjs";
 import { of } from "rxjs";
-
-
-
-
 const LS_CHAVE: string = "usuarioLogado";
-export const auth = {   
+@Injectable({
+  providedIn: 'root',
+})
 
-    get usuarioLogado(): Employee|Client|null {
+
+export class Autenticador {
+    
+
+    public get usuarioLogado(): Employee|Client|null {
     let usu = localStorage[LS_CHAVE];
     return (usu ? JSON.parse(localStorage[LS_CHAVE]) : null);
-    },
-    set usuarioLogado(usuario: Employee|Client) {
+    }
+    public set usuarioLogado(usuario: Employee|Client) {
     localStorage[LS_CHAVE] = JSON.stringify(usuario);
-    },
+    }
     logout() {
     delete localStorage[LS_CHAVE];
-    },
+    }
 
     gerarId(): number{
         const atual=localStorage.getItem("user")
@@ -28,7 +31,7 @@ export const auth = {
             return 1;
         }
         return Math.max(...usuarios.map(usuarios =>usuarios.id))+1   
-    },
+    }
 
     storageUser(user:User):boolean{
         user.id=this.gerarId();
@@ -41,7 +44,7 @@ export const auth = {
         users.push(user)
         localStorage.setItem("user", JSON.stringify(users) )
         return true
-    },
+    }
 
 
 
@@ -54,7 +57,7 @@ export const auth = {
             return true
         }
         return false
-    },
+    }
 
     registerEmployee(employee:Employee):boolean{
         if(this.storageUser(employee.user)){
@@ -66,7 +69,7 @@ export const auth = {
         }
 
         return false;
-    },
+    }
 
     loginuser (user:User): Observable<Client | Employee | null>{
         const atual=localStorage.getItem("user")
@@ -88,4 +91,6 @@ export const auth = {
             return of(null)
         }
     }
+
+
 }

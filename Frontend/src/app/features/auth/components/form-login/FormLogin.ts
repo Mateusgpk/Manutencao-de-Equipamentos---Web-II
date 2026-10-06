@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { CommonModule } from '@angular/common';
-import { auth } from '../../../../shared/services/auth/auth'
+import { Autenticador } from '../../../../shared/services/auth/autenticador'
 import { User } from '../../../../shared/models/user.model';
 import { Router, RouterModule,ActivatedRoute } from '@angular/router';
 import { OnInit } from '@angular/core';
@@ -20,11 +20,12 @@ import { Client } from '../../../cliente/models/client.model';
 
 export class FormLogin implements OnInit{
 message!: string;
+private loginAutenticador=inject(Autenticador)
 private router = inject(Router)
 private route = inject(ActivatedRoute)
 ngOnInit(): void {
-  if (auth.usuarioLogado) {
-    if (auth.usuarioLogado instanceof Client){
+  if (this.loginAutenticador.usuarioLogado) {
+    if (this.loginAutenticador.usuarioLogado instanceof Client){
       this.router.navigate( ["/home"] );
     }else{
       this.router.navigate( ["/employee/home"] );
@@ -51,11 +52,11 @@ ngOnInit(): void {
     if (this.formCadastro.valid) {
       console.log('Dados enviados:', this.formCadastro.value);
       
-      auth.loginuser(new User(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? "","")).subscribe((usu)=>{
+      this.loginAutenticador.loginuser(new User(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? "","")).subscribe((usu)=>{
         if (usu!=null){
           alert('Login realizado com sucesso!');
           if (usu.user.role==='EMPLOYEE'){
-            auth.usuarioLogado=usu;
+            this.loginAutenticador.usuarioLogado=usu;
             this.router.navigate(['employee/home']);
           }else if (usu.user.role === 'CLIENT') {
           this.router.navigate(['/home']);

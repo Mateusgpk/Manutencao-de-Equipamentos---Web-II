@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Apicep } from '../../services/apicep';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
@@ -14,6 +14,8 @@ import { User } from '../../../../shared/models/user.model';
 
 import { CpfValidator } from '../../../../shared/validators/cpf.validator';
 import { MascaraCPFDirective } from '../../../../shared/directives/mascara-cpf';
+import { Autenticador } from '../../../../shared/services/auth/autenticador';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -25,6 +27,11 @@ import { MascaraCPFDirective } from '../../../../shared/directives/mascara-cpf';
 
 
 export class FormCadastro implements OnInit{
+  private loginAutenticador=inject(Autenticador)
+  private router = inject(Router)
+  private route = inject(ActivatedRoute)
+  message!: string;
+
   formCadastro = new FormGroup({
     nome: new FormControl('', [Validators.required, Validators.minLength(3)]),
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -48,7 +55,21 @@ export class FormCadastro implements OnInit{
   private destroy$ = new Subject<void>();
 
   ngOnInit() {
-    this.formCadastro.controls.cep.valueChanges
+     if (this.loginAutenticador.usuarioLogado) {
+    if (this.loginAutenticador.usuarioLogado instanceof Client){
+      this.router.navigate( ["/home"] );
+    }else{
+      this.router.navigate( ["/employee/home"] );
+    }
+
+  }
+  else {
+    this.route.queryParams.subscribe(params => {
+    this.message = params['error'];
+  });
+  }
+
+  this.formCadastro.controls.cep.valueChanges
       .pipe(
         debounceTime(400),          // Aguarda 400ms de inatividade após o último clique
         distinctUntilChanged(),     // Só emite se o texto atual for diferente do anterior
@@ -57,6 +78,7 @@ export class FormCadastro implements OnInit{
       .subscribe(valor => {
         this.executarAcao(valor);
       });
+      
   }
 
   validacep = /^[0-9]{8}$/;
@@ -97,8 +119,9 @@ export class FormCadastro implements OnInit{
       const user = new Client({...(this.formCadastro.value as Partial<Client>),
       user: new User( String( this.formCadastro.value.email), String (this.formCadastro.value.senha),'CLIENT')
 })
-      if (auth.registerClient(user)){
+      if (this.loginAutenticador.registerClient(user)){
         alert("usuario salvo")
+        
       }
       
       const savedUserJson = localStorage.getItem("user");
