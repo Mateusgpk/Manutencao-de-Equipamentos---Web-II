@@ -11,6 +11,7 @@ import { Categorias } from './features/funcionario/pages/categorias/categorias';
 import { Layout } from './features/funcionario/components/layout/layout';
 import { Funcionarios } from './features/funcionario/pages/funcionarios/funcionarios';
 import { Addfuncionario } from './features/funcionario/pages/addfuncionario/addfuncionario';
+import { autenticadorGuard } from './shared/services/auth/autenticador-guard';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
   {
     path: 'home',
     component: ClienteHome,
+    canActivate: [autenticadorGuard], 
+    data: {
+      role: 'CLIENT'
+    }
   },
   {
     path: 'cadastro',
@@ -33,16 +38,28 @@ export const routes: Routes = [
   {
     path: 'orcamento/:id',
     component: Orcamento,
+    canActivate: [autenticadorGuard], 
+    data: {
+      role: 'CLIENT'
+    }
   },
   {
     path: 'pagar-servico/:id',
     component: PagarManuntencao,
+    canActivate: [autenticadorGuard], 
+    data: {
+      role: 'CLIENT'
+    }
   },
 
   {path: 'employee', component: Layout, children: [
       {
         path: 'home',
         component: FuncionarioHome,
+        canActivate: [autenticadorGuard], 
+        data: {
+          role: 'EMPLOYEE'
+        }
       },
       { 
         path: 'orcamento/:id', 

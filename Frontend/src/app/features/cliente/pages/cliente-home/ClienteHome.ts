@@ -3,15 +3,29 @@ import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ESTADO_SOLICITACAO_LABEL, EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
+import { Router } from 'express';
+import { Autenticador } from '../../../../shared/services/auth/autenticador';
+import { Client } from '../../models/client.model';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-cliente-home',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe],
+  imports: [RouterLink, CurrencyPipe,RouterOutlet],
   templateUrl: './ClienteHome.html',
   styleUrl: './ClienteHome.css',
 })
 export class ClienteHome implements OnInit {
+  private router = inject(Router);
+  private loginserver= inject(Autenticador)
+
+  get usuarioLogado(): Client|null {
+    if (this.loginserver.usuarioLogado instanceof Client){
+    return this.loginserver.usuarioLogado;}
+    return null
+  }
+
+
   private readonly service = inject(SolicitacaoService);
   private readonly cpfClienteLogado = '123.456.789-00';
   readonly estadoLabel = ESTADO_SOLICITACAO_LABEL;
