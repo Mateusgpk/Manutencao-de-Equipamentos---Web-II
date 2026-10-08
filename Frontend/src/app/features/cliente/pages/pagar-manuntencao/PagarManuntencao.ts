@@ -16,7 +16,8 @@ type Etapa =
   | 'naoEncontrada'
   | 'pagamento'
   | 'confirmandoPagamento'
-  | 'pagamentoConfirmado';
+  | 'pagamentoConfirmado'
+  | 'pixGerado';
  
 @Component({
   selector: 'app-pagar-manuntencao',
@@ -144,11 +145,12 @@ export class PagarManuntencao implements OnInit {
       if (atualizada) {
         this.solicitacao.set(atualizada);
       }
-      this.etapa.set('pagamentoConfirmado');
+      // No Pix, o código só é gerado depois que o pagamento é confirmado.
+      this.etapa.set(this.metodo() === 'pix' ? 'pixGerado' : 'pagamentoConfirmado');
     });
   }
 
-  /** Ao clicar OK na mensagem de sucesso, volta para a Pagina Inicial do Cliente. */
+  /** Ao fechar o modal (sucesso ou código Pix), volta para a Pagina Inicial do Cliente. */
   protected voltarParaInicio(): void {
     this.router.navigate(['/home']);
   }
