@@ -7,15 +7,14 @@ import { Optional,Self } from '@angular/core';
 })
 export class MascaraCPFDirective {
 
-  constructor(
-    @Optional() @Self() private ngControl: NgControl
-  ) {}
+  constructor(@Optional() @Self() private ngControl: NgControl) {}
 
   @HostListener('input', ['$event'])
   onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     
     let valor = input.value.replace(/\D/g, '');
+    
 
     if (valor.length > 11) {
       valor = valor.substring(0, 11);

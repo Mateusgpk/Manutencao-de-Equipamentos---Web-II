@@ -7,14 +7,14 @@
         [control]="formCadastro.controls.email"></app-input-texto>
 
     <app-input-texto class="form-control" label="CPF" id="cpf" placeholder="Digite seu CPF"
-        [control]="formCadastro.controls.cpf" MascaraCPF></app-input-texto>
+        [control]="formCadastro.controls.cpf" mascara="cpf"></app-input-texto>
 
     @if (formCadastro.controls.cpf.hasError('cpfInvalido') && formCadastro.controls.cpf.touched) {
         <span class="text-xs text-red-600 mt-1">O CPF informado é inválido.</span>
     }
 
     <app-input-texto class="form-control" label="Telefone" id="telefone" placeholder="(41) 99999-9999"
-        [control]="formCadastro.controls.telefone"></app-input-texto>
+        [control]="formCadastro.controls.telefone" mascara="telefone"></app-input-texto>
 
     <app-input-texto class="form-control" label="Senha" id="senha" placeholder="Digite sua senha"
         [control]="formCadastro.controls.senha"></app-input-texto>

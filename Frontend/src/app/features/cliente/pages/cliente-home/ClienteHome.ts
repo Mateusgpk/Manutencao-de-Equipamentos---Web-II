@@ -3,7 +3,7 @@ import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ESTADO_SOLICITACAO_LABEL, EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
-import { Router } from 'express';
+import { Router } from '@angular/router';
 import { Autenticador } from '../../../../shared/services/auth/autenticador';
 import { Client } from '../../models/client.model';
 import { RouterOutlet } from '@angular/router';

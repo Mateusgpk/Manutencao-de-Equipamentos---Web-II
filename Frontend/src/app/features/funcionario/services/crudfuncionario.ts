@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Employee } from '../models/employee.model';
-import { auth } from '../../../shared/services/auth/auth';
 import { User } from '../../../shared/models/user.model';
+import { Autenticador } from '../../../shared/services/auth/autenticador';
+import { inject } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
 export class Crudfuncionario {
+  private loginserver = inject(Autenticador)
   getallFuncionario(): Employee[]{
     const empregados=localStorage.getItem("employees");
     const todosempregados: Employee[]=empregados?JSON.parse(empregados):[];
@@ -13,7 +15,7 @@ export class Crudfuncionario {
     return ativos;
   }
   addFuncionario(employee:Employee):boolean{
-    return auth.registerEmployee(employee)
+    return this.loginserver.registerEmployee(employee)
   }
   desactiveFuncionario(id:number):boolean{
     const funcionarios=localStorage.getItem("employees")

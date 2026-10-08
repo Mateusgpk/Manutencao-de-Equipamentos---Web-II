@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router'; 
 import { FormCadastro } from '../../components/form-cadastro/FormCadastro';
 import { FormLogin } from '../../components/form-login/FormLogin';

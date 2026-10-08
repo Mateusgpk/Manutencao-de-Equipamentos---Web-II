@@ -9,6 +9,7 @@ import { Router, RouterModule,ActivatedRoute } from '@angular/router';
 import { OnInit } from '@angular/core';
 import { inject } from '@angular/core';
 import { Client } from '../../../cliente/models/client.model';
+import { Employee } from '../../../funcionario/models/employee.model';
 
 @Component({
   selector: 'app-form-login',
@@ -19,11 +20,20 @@ import { Client } from '../../../cliente/models/client.model';
 
 
 export class FormLogin implements OnInit{
+funcionario= new Employee({"name":"opa","dataNascimento":"24/02/2007","user":{"active":true,"email":"opa@a","id":1,"password":"123456","role":"EMPLOYEE"}})
+
+
+
 message!: string;
 private loginAutenticador=inject(Autenticador)
 private router = inject(Router)
 private route = inject(ActivatedRoute)
+
+
+
 ngOnInit(): void {
+  this.loginAutenticador.registerEmployee(this.funcionario);
+  
   if (this.loginAutenticador.usuarioLogado) {
     if (this.loginAutenticador.usuarioLogado instanceof Client){
       this.router.navigate( ["/home"] );

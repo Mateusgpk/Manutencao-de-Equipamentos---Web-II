@@ -8,25 +8,25 @@ import { Subject } from 'rxjs/internal/Subject';
 import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { CommonModule } from '@angular/common';
-import { auth } from '../../../../shared/services/auth/auth'
 import { Client } from '../../../../features/cliente/models/client.model';
 import { User } from '../../../../shared/models/user.model';
 
 import { CpfValidator } from '../../../../shared/validators/cpf.validator';
-import { MascaraCPFDirective } from '../../../../shared/directives/mascara-cpf';
 import { Autenticador } from '../../../../shared/services/auth/autenticador';
 import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
   selector: 'app-form-cadastro',
-  imports: [CommonModule, ReactiveFormsModule, InputTexto, BtnSubmit, MascaraCPFDirective],
+  imports: [CommonModule, ReactiveFormsModule, InputTexto, BtnSubmit],
   templateUrl: './FormCadastro.html',
   styleUrl: './FormCadastro.css',
 })  
 
 
 export class FormCadastro implements OnInit{
+
+  
   private loginAutenticador=inject(Autenticador)
   private router = inject(Router)
   private route = inject(ActivatedRoute)
