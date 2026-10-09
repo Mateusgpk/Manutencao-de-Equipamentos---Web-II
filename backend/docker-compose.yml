@@ -1,24 +1,21 @@
-service:
-
+services:
 db:
   image: mysql
   restart: always
   container_name: manutencao_equipamento-db
   environment:
-    - MYSQL_DB=${DB_NAME}
-    - MYSQL_USER=${DB_USER}
-    - MYSQL_PASSWORD=${DB_PASSWORD}
+    - MYSQL_DATABASE=${DB_NAME}
+    - MYSQL_DATABASE=${DB_PASSWORD}
   ports:
     - "3306:3306"
 
   backend:
-    build:
-    container_name: manutencao_equipamento-db
+    build: .
+    container_name:
     ports:
       - "8080:8080"
   depends_on:
   - db
 environment:
     - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/${DB_NAME}
-    - DB_USER=${DB_USER}
     - DB_PASSWORD=${DB_PASSWORD}
