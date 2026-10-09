@@ -349,4 +349,22 @@ export class SolicitacaoService {
  
     return this.getById(id);
   }
+
+  /** RF015 - Redirecionar Manutenção: solicitação passa para REDIRECIONADA. */
+  redirecionarManutencao(id: number, funcionarioOrigem: string, funcionarioDestino: string): Observable<Solicitacao | undefined> {
+    const agora = new Date();
+    this.solicitacoes.update((lista) =>
+      lista.map((s) =>
+        s.id === id
+          ? {
+              ...s,
+              estado: EstadoSolicitacao.REDIRECIONADA,
+              funcionarioDestino,
+              historico: [...s.historico, { dataHora: agora, estado: EstadoSolicitacao.REDIRECIONADA, funcionario: funcionarioOrigem, funcionarioDestino }],
+            }
+          : s,
+      ),
+    );
+    return this.getById(id);
+  }
 }
