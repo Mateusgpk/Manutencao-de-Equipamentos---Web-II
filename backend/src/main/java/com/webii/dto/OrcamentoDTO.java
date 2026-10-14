@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class SolicitacaoCreateDTO {
+public class OrcamentoDTO {
     @NotBlank private String descricaoEquipamento;
     @NotNull private Long categoriaId;
     @NotBlank private String descricaoDefeito;

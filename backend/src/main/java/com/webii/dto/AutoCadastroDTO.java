@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class AutocadastroDTO {
+public class AutoCadastroDTO {
     @NotBlank private String name;
     @NotBlank private String cpf;
     @NotBlank @Email private String email;
