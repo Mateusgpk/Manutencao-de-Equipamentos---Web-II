@@ -1,3 +1,38 @@
-{"usuarios":[],
-"clientes":[],
-"funcionarios":[]}
+{
+  "usuarios": [
+    {
+      "idUser": 1,
+      "active": true,
+      "email": "m@a",
+      "password": "123456",
+      "role": "CLIENT",
+      "id": "LhpMuhHl4-s"
+    }
+  ],
+  "clientes": [
+    {
+      "cpf": "11375659936",
+      "telefone": "(41) 99664-1322",
+      "cep": "83702100",
+      "endereco": "Rua Julia Theresa Bini",
+      "estado": "PR",
+      "cidade": "Araucária",
+      "bairro": "Centro",
+      "numero": "100",
+      "complemento": "a",
+      "user": {
+        "idUser": 1,
+        "active": true,
+        "email": "m@a",
+        "password": "123456",
+        "role": "CLIENT"
+      },
+      "nome": "mas",
+      "email": "m@a",
+      "senha": "123456",
+      "id": "lo6KkuY7Q_0"
+    }
+  ],
+  "funcionarios": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}

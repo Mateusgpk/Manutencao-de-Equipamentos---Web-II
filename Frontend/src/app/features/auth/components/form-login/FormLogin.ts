@@ -20,7 +20,7 @@ import { Employee } from '../../../funcionario/models/employee.model';
 
 
 export class FormLogin implements OnInit{
-funcionario= new Employee({"name":"opa","dataNascimento":"24/02/2007","user":{"active":true,"email":"opa@a","id":1,"password":"123456","role":"EMPLOYEE"}})
+funcionario= new Employee({"name":"opa","dataNascimento":"24/02/2007","user":{"active":true,"email":"opa@a","idUser":1,"password":"123456","role":"EMPLOYEE"}})
 
 
 

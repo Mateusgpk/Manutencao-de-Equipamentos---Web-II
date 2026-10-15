@@ -20,7 +20,7 @@ export class Crudfuncionario {
   desactiveFuncionario(id:number):boolean{
     const funcionarios=localStorage.getItem("employees")
     const todosfuncionarios: Employee[]=funcionarios?JSON.parse(funcionarios):[];
-    const funcionario = todosfuncionarios.find(us => us.user.id === id)
+    const funcionario = todosfuncionarios.find(us => us.user.idUser === id)
     if (!funcionario) {
       return false;
     }
@@ -34,7 +34,7 @@ export class Crudfuncionario {
       : [];
 
     const user = todosusers.find(
-      us => us.id === id
+      us => us.idUser === id
     );
 
     if (user) {

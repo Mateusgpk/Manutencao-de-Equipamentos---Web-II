@@ -12,7 +12,7 @@ const LS_CHAVE: string = 'usuarioLogado';
   providedIn: 'root',
 })
 export class Autenticador {
-  BASE_URL = 'http://localhost:3000';
+  BASE_URL = 'http://localhost:3000/';
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -23,59 +23,58 @@ export class Autenticador {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   login(login: User): Observable<Client | Employee | null> {
-    const existe = this.httpClient.get<User[]>(this.BASE_URL + '/usuarios', this.httpOptions).pipe(
-      map((lista) => {
+    return this.httpClient.get<User[]>(this.BASE_URL + 'usuarios/', this.httpOptions).pipe(
+      switchMap((lista) => {
         let usu = lista.find((u) => u.email === login.email && u.password === login.password);
-        if (usu != undefined) {
-          if (usu?.active == true) {
-            if (usu.role === 'EMPLOYEE') {
-              const nowEmployee = this.httpClient.get<Employee[]>(
-                this.BASE_URL + '/empregados',
-                this.httpOptions,
-              );
-              return nowEmployee.pipe(
+        if (usu && usu.active == true) {
+          if (usu.role === 'EMPLOYEE') {
+            return this.httpClient.get<Employee[]>(this.BASE_URL + 'funcionarios/', this.httpOptions)
+              .pipe(
                 map((lista) => {
-                  let igual = lista.find((u) => u.user == usu);
+                  let igual = lista.find((u) => u.user.idUser == usu.idUser);
+                  return igual || null;
                 }),
               );
-            } else {
-              const nowClients = this.httpClient.get<Client[]>(
-                this.BASE_URL + '/clientes',
-                this.httpOptions,
-              );
-              return nowClients.pipe(
-                map((lista) => {
-                  let igual = lista.find((u) => u.user == usu);
-                }),
-              );
-            }
+          } else {
+            return this.httpClient.get<Client[]>(this.BASE_URL + 'clientes/', this.httpOptions).pipe(
+              map((lista) => {
+                let igual = lista.find((u) => u.user.idUser == usu.idUser);
+                return igual || null;
+              }),
+            );
           }
         }
-        return null;
+        return of(null);
       }),
     );
-    return of(null);
   }
   inseriruser(user: User): Observable<boolean> {
-    return this.httpClient.get<User[]>(this.BASE_URL + '/usuarios', this.httpOptions).pipe(
+    this.gerarId().subscribe((id) => {
+      user.idUser = id;
+    });
+    return this.httpClient.get<User[]>(this.BASE_URL + 'usuarios/', this.httpOptions).pipe(
       map((lista) => lista.find((u) => u.email === user.email)),
       switchMap((usuarioEncontrado) => {
         if (usuarioEncontrado) {
           return of(false);
         } else {
+
           return this.httpClient
-            .post<User>(this.BASE_URL + '/usuarios', JSON.stringify, this.httpOptions)
+            .post<User>(this.BASE_URL + 'usuarios/', JSON.stringify(user), this.httpOptions)
             .pipe(map(() => true));
         }
       }),
     );
   }
   inserir(usuario: Client): Observable<boolean> {
+    this.gerarId().subscribe((id) => {
+      usuario.user.idUser = id;
+    });
     return this.inseriruser(usuario.user).pipe(
       switchMap((userFoiInserido) => {
         if (userFoiInserido) {
           return this.httpClient
-            .post<Client>(this.BASE_URL + '/clientes', JSON.stringify(usuario), this.httpOptions)
+            .post<Client>(this.BASE_URL + 'clientes/', JSON.stringify(usuario), this.httpOptions)
             .pipe(map(() => true));
         } else {
           return of(false);
@@ -85,7 +84,7 @@ export class Autenticador {
   }
   alterar(usuario: User): Observable<User> {
     return this.httpClient.put<User>(
-      this.BASE_URL + '/' + usuario.id,
+      this.BASE_URL + 'usuarios/' + usuario.idUser,
       JSON.stringify(usuario),
       this.httpOptions,
     );
@@ -111,21 +110,19 @@ export class Autenticador {
     }
   }
 
-  gerarId(): number {
-    if (!isPlatformBrowser(this.platformId)) return 1;
-
-    const atual = localStorage.getItem('user');
-    const usuarios: User[] = atual ? JSON.parse(atual) : [];
-    if (usuarios.length === 0) {
-      return 1;
-    }
-    return Math.max(...usuarios.map((usuarios) => usuarios.id)) + 1;
+  gerarId(): Observable<number> {
+    return this.httpClient.get<User[]>(this.BASE_URL + 'usuarios/', this.httpOptions).pipe(
+      map((lista) => lista.map((u) => u.idUser)),
+      map((ids) => (ids.length > 0 ? Math.max(...ids) + 1 : 1)),
+    );
   }
 
   storageUser(user: User): boolean {
     if (!isPlatformBrowser(this.platformId)) return false;
 
-    user.id = this.gerarId();
+    this.gerarId().subscribe((id) => {
+      user.idUser = id;
+    });
     const atual = localStorage.getItem('user');
     const users: User[] = atual ? JSON.parse(atual) : [];
     const emailuse = users.some((u) => u.email === user.email);
@@ -174,11 +171,11 @@ export class Autenticador {
       if (usuario?.role === 'EMPLOYEE') {
         const nowEmployee = localStorage.getItem('employees');
         const employees: Employee[] = nowEmployee ? JSON.parse(nowEmployee) : [];
-        return of(employees.find((us) => us.user.id === usuario.id) ?? null);
+        return of(employees.find((us) => us.user.idUser === usuario.idUser) ?? null);
       } else {
         const nowClients = localStorage.getItem('clients');
         const clients: Client[] = nowClients ? JSON.parse(nowClients) : [];
-        return of(clients.find((us) => us.user.id === usuario.id) ?? null);
+        return of(clients.find((us) => us.user.idUser === usuario.idUser) ?? null);
       }
     } else {
       return of(null);
