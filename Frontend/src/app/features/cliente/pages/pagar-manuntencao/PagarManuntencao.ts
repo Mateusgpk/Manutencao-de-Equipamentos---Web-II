@@ -45,7 +45,6 @@ export class PagarManuntencao implements OnInit {
     validade: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]),
     cvc: new FormControl('', [Validators.required, Validators.pattern(/^\d{3,4}$/)]),
     nome: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    parcelas: new FormControl(1, [Validators.required]),
   });
 
   /** Código Pix "copia e cola". */
