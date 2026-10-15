@@ -15,21 +15,16 @@ import { CpfValidator } from '../../../../shared/validators/cpf.validator';
 import { Autenticador } from '../../../../shared/services/auth/autenticador';
 import { Router, ActivatedRoute } from '@angular/router';
 
-
 @Component({
   selector: 'app-form-cadastro',
   imports: [CommonModule, ReactiveFormsModule, InputTexto, BtnSubmit],
   templateUrl: './FormCadastro.html',
   styleUrl: './FormCadastro.css',
-})  
-
-
-export class FormCadastro implements OnInit{
-
-  
-  private loginAutenticador=inject(Autenticador)
-  private router = inject(Router)
-  private route = inject(ActivatedRoute)
+})
+export class FormCadastro implements OnInit {
+  private loginAutenticador = inject(Autenticador);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
   message!: string;
 
   formCadastro = new FormGroup({
@@ -38,9 +33,17 @@ export class FormCadastro implements OnInit{
     /* TODO: de acordo com documentação, a senha seria mandada por email, não cadastrada
     Logo, tirar daqui depois de implementar */
     senha: new FormControl('', [Validators.required, Validators.minLength(5)]),
-    cpf: new FormControl('', [Validators.required, Validators.maxLength(14), Validators.minLength(14), CpfValidator.validar()]),
-    telefone: new FormControl('', [Validators.required, Validators.pattern(/^\(?\d{2}\)?\s?(9\d{4}|[2-8]\d{3})\-?\d{4}$/)]),
-    cep: new FormControl('', [Validators.required,Validators.maxLength(9)]),
+    cpf: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(14),
+      Validators.minLength(14),
+      CpfValidator.validar(),
+    ]),
+    telefone: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^\(?\d{2}\)?\s?(9\d{4}|[2-8]\d{3})\-?\d{4}$/),
+    ]),
+    cep: new FormControl('', [Validators.required, Validators.maxLength(9)]),
     endereco: new FormControl('', Validators.required),
     numero: new FormControl('', Validators.required),
     complemento: new FormControl(''),
@@ -48,37 +51,34 @@ export class FormCadastro implements OnInit{
     cidade: new FormControl('', Validators.required),
     estado: new FormControl('', Validators.required),
   });
-    dadosCep: any;
+  dadosCep: any;
 
   constructor(private apicep: Apicep) {}
 
   private destroy$ = new Subject<void>();
 
   ngOnInit() {
-     if (this.loginAutenticador.usuarioLogado) {
-    if (this.loginAutenticador.usuarioLogado instanceof Client){
-      this.router.navigate( ["/home"] );
-    }else{
-      this.router.navigate( ["/employee/home"] );
+    if (this.loginAutenticador.usuarioLogado) {
+      if (this.loginAutenticador.usuarioLogado instanceof Client) {
+        this.router.navigate(['/home']);
+      } else {
+        this.router.navigate(['/employee/home']);
+      }
+    } else {
+      this.route.queryParams.subscribe((params) => {
+        this.message = params['error'];
+      });
     }
 
-  }
-  else {
-    this.route.queryParams.subscribe(params => {
-    this.message = params['error'];
-  });
-  }
-
-  this.formCadastro.controls.cep.valueChanges
+    this.formCadastro.controls.cep.valueChanges
       .pipe(
-        debounceTime(400),          // Aguarda 400ms de inatividade após o último clique
-        distinctUntilChanged(),     // Só emite se o texto atual for diferente do anterior
-        takeUntil(this.destroy$)    // Cancela a inscrição quando o componente sumir
+        debounceTime(400), // Aguarda 400ms de inatividade após o último clique
+        distinctUntilChanged(), // Só emite se o texto atual for diferente do anterior
+        takeUntil(this.destroy$), // Cancela a inscrição quando o componente sumir
       )
-      .subscribe(valor => {
+      .subscribe((valor) => {
         this.executarAcao(valor);
       });
-      
   }
 
   validacep = /^[0-9]{8}$/;
@@ -94,40 +94,42 @@ export class FormCadastro implements OnInit{
               endereco: this.dadosCep.logradouro,
               bairro: this.dadosCep.bairro,
               cidade: this.dadosCep.localidade,
-              estado: this.dadosCep.uf
+              estado: this.dadosCep.uf,
             });
-          }
+          },
         });
       }
     }
   }
 
-    ngOnDestroy() {
+  ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
- corfundo: string = 'bg-blue-800';
- piscar: string=''
+  corfundo: string = 'bg-blue-800';
+  piscar: string = '';
 
-
- async aoEnviar() {
-    this.piscar = 'piscando'
+  async aoEnviar() {
+    this.piscar = 'piscando';
     if (this.formCadastro.valid) {
-      this.formCadastro.value.cpf=this.formCadastro.value.cpf?.replace(/[.-]/g,'');
-      console.log('Dados enviados:', this.formCadastro.value)
-      const user = new Client({...(this.formCadastro.value as Partial<Client>),
-      user: new User( String( this.formCadastro.value.email), String (this.formCadastro.value.senha),'CLIENT')
-})
-      if (this.loginAutenticador.registerClient(user)){
-        alert("usuario salvo")
-        
-      }
-      
-      const savedUserJson = localStorage.getItem("user");
-      console.log(savedUserJson)
-
-
+      this.formCadastro.value.cpf = this.formCadastro.value.cpf?.replace(/[.-]/g, '');
+      console.log('Dados enviados:', this.formCadastro.value);
+      const user = new Client({
+        ...(this.formCadastro.value as Partial<Client>),
+        user: new User(
+          String(this.formCadastro.value.email),
+          String(this.formCadastro.value.senha),
+          'CLIENT',
+        ),
+      });
+      this.loginAutenticador.inserir(user).subscribe((sucesso) => {
+        if (sucesso) {
+          alert('usuario salvo');
+        } else {
+          alert('rapaiz deu ruim');
+        }
+      });
     }
   }
 }
