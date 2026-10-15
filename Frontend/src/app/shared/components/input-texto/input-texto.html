@@ -1,50 +1,81 @@
 <div class="flex flex-col w-full">
-    <label [for]="id" class="text-sm font-medium text-gray-700 mb-1">
-        {{ label }}
-    </label>
+  <label [for]="id" class="text-sm font-medium text-gray-700 mb-1">
+    {{ label }}
+  </label>
 
-    @switch (mascara) {
-        @case ('cpf') {
-            <input 
-                [id]="id" 
-                [type]="type"  
-                [formControl]="control" 
-                [placeholder]="placeholder" 
-                class="px-4 py-2 border rounded-md {{ class }} {{ control.invalid && formDir?.submitted ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50' : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}"
-                MascaraCPF>
-        }
-        @case('telefone'){
-               <input 
-                [id]="id" 
-                [type]="type"  
-                [formControl]="control" 
-                [placeholder]="placeholder" 
-                class="px-4 py-2 border rounded-md {{ class }} {{ control.invalid && formDir?.submitted ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50' : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}"
-                MascaraTelefone>
-        }
-        @default {    
-            <input 
-                [id]="id" 
-                [type]="type"  
-                [formControl]="control" 
-                [placeholder]="placeholder" 
-                class="px-4 py-2 border rounded-md {{ class }} {{ control.invalid && formDir?.submitted ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50' : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }}">
-        }
+  @switch (mascara) {
+    @case ('cpf') {
+      <input
+        [id]="id"
+        [type]="type"
+        [formControl]="control"
+        [placeholder]="placeholder"
+        class="px-4 py-2 border rounded-md {{ class }} {{
+          control.invalid && formDir?.submitted
+            ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50'
+            : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+        }}"
+        MascaraCPF
+      />
     }
+    @case ('telefone') {
+      <input
+        [id]="id"
+        [type]="type"
+        [formControl]="control"
+        [placeholder]="placeholder"
+        class="px-4 py-2 border rounded-md {{ class }} {{
+          control.invalid && formDir?.submitted
+            ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50'
+            : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+        }}"
+        MascaraTelefone
+      />
+    }
+    @case ('senha') {
+      <div class="relative">
+        <input
+          [id]="id"
+          [type]="mostrar_senha ? 'text' : 'password'"
+          [formControl]="control"
+          [placeholder]="placeholder"
+          class="px-4 py-2 w-full border rounded-md {{ class }} {{
+            control.invalid && formDir?.submitted
+              ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50'
+              : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+          }}"
+        />
+        <button class="absolute inset-y-0 right-2" type="button" (click)="alternar_visibilidade()">
+          <i class="fa-solid" [class.fa-eye]="!mostrar_senha" [class.fa-eye-slash]="mostrar_senha"></i>
+        </button>
+      </div>
+    }
+    @default {
+      <input
+        [id]="id"
+        [type]="type"
+        [formControl]="control"
+        [placeholder]="placeholder"
+        class="px-4 py-2 border rounded-md {{ class }} {{
+          control.invalid && formDir?.submitted
+            ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50'
+            : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+        }}"
+      />
+    }
+  }
 
-    @if (control.invalid && formDir?.submitted) {
-        <div class="text-red-500 text-xs mt-1 font-medium flex flex-col">
-            @if (control.errors?.['required']) {
-                <span>Este campo é obrigatório.</span>
-            }
-            @if (control.errors?.['minlength']) {
-                <span>
-                    Digite ao menos {{ control.errors?.['minlength'].requiredLength }} caracteres.
-                </span>
-            }
-            @if (control.errors?.['pattern']) {
-                <span>Formato inválido.</span>
-            }
-        </div>
-    }
+  @if (control.invalid && formDir?.submitted) {
+    <div class="text-red-500 text-xs mt-1 font-medium flex flex-col">
+      @if (control.errors?.['required']) {
+        <span>Este campo é obrigatório.</span>
+      }
+      @if (control.errors?.['minlength']) {
+        <span> Digite ao menos {{ control.errors?.['minlength'].requiredLength }} caracteres. </span>
+      }
+      @if (control.errors?.['pattern']) {
+        <span>Formato inválido.</span>
+      }
+    </div>
+  }
 </div>
