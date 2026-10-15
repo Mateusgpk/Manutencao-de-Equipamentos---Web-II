@@ -14,15 +14,18 @@ services:
               timeout: 3s
               retries: 10
               start_period: 30s
-
+    volumes:
+      - mysql_data:/var/lib/mysql
   backend:
     build: .
     ports:
       - "8080:8080"
     depends_on:
-      - db
+       db:
             condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/${DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      volumes:
+        mysql_data:
