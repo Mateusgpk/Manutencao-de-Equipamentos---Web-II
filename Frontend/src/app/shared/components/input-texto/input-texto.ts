@@ -21,4 +21,10 @@ export class InputTexto {
   @Input() mascara: 'cpf' | 'cep' | 'telefone' | 'senha' | 'nenhuma' = 'nenhuma';
 
   formDir = inject(FormGroupDirective, { optional: true });
+
+  mostrar_senha = false;
+
+  protected alternar_visibilidade() : void {
+    this.mostrar_senha = !this.mostrar_senha;
+  }
 }

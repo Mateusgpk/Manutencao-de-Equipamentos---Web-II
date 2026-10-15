@@ -36,7 +36,7 @@
       <div class="relative">
         <input
           [id]="id"
-          type="password"
+          [type]="mostrar_senha ? 'text' : 'password'"
           [formControl]="control"
           [placeholder]="placeholder"
           class="px-4 py-2 w-full border rounded-md {{ class }} {{
@@ -44,10 +44,9 @@
               ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50'
               : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
           }}"
-          MascaraTelefone
         />
-        <button class="absolute inset-y-0 right-2" type="button">
-          <i class="fa-solid fa-eye"></i>
+        <button class="absolute inset-y-0 right-2" type="button" (click)="alternar_visibilidade()">
+          <i class="fa-solid" [class.fa-eye]="!mostrar_senha" [class.fa-eye-slash]="mostrar_senha"></i>
         </button>
       </div>
     }
@@ -72,7 +71,7 @@
         <span>Este campo é obrigatório.</span>
       }
       @if (control.errors?.['minlength']) {
-        <span> Digite ao menos {{ control.errors['minlength'].requiredLength }} caracteres. </span>
+        <span> Digite ao menos {{ control.errors?.['minlength'].requiredLength }} caracteres. </span>
       }
       @if (control.errors?.['pattern']) {
         <span>Formato inválido.</span>
