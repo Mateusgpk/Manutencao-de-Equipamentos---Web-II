@@ -8,18 +8,17 @@ import { MascaraTelefoneDirective } from '../../directives/mascara-telefone';
   standalone: true,
   imports: [ReactiveFormsModule, MascaraCPFDirective, MascaraTelefoneDirective],
   templateUrl: './input-texto.html',
-  styleUrl: './input-texto.css'
+  styleUrl: './input-texto.css',
 })
-
-
-export class InputTexto { // (E Textarea no outro)
+export class InputTexto {
+  // (E Textarea no outro)
   @Input({ required: true }) label!: string;
-  @Input({ required: true }) control!: FormControl; 
+  @Input({ required: true }) control!: FormControl;
   @Input() type: string = 'text';
   @Input() placeholder: string = '';
   @Input() id: string = '';
   @Input() class: string = '';
-  @Input() mascara: 'cpf' | 'cep' | 'telefone' | 'nenhuma' = 'nenhuma';;
+  @Input() mascara: 'cpf' | 'cep' | 'telefone' | 'senha' | 'nenhuma' = 'nenhuma';
 
   formDir = inject(FormGroupDirective, { optional: true });
 }
