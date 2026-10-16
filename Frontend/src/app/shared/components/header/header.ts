@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Autenticador } from '../../services/auth';
 
 @Component({
   selector: 'app-header',
@@ -7,4 +8,14 @@ import { RouterLink } from '@angular/router';
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
-export class Header {}
+
+export class Header {
+  private autentica=inject(Autenticador)
+  logado: boolean = !!this.autentica.usuarioLogado;
+  acao(){
+    console.log("aoooo")
+    this.autentica.logout()
+    this.autentica.autentica()
+  }
+
+}

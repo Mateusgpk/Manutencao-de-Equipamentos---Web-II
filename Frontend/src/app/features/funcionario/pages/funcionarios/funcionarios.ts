@@ -14,10 +14,12 @@ export class Funcionarios {
   funcionarios:Employee[]=[];
   constructor (private crudfuncionario: Crudfuncionario){};
 
-  ngOnInit(){this.funcionarios=this.crudfuncionario.getallFuncionario();}
-    desativar(id:number){
+  ngOnInit(){
+    this.crudfuncionario.getallFuncionario().subscribe((ativos)=>{this.funcionarios=ativos});
+  }
+    desativar(id:string){
     if(this.crudfuncionario.desactiveFuncionario(id)){
-      this.funcionarios=this.crudfuncionario.getallFuncionario();
+      this.crudfuncionario.getallFuncionario().subscribe((ativos)=>{this.funcionarios=ativos});
     }
   }
 

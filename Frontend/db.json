@@ -1,38 +1,34 @@
 {
   "usuarios": [
     {
-      "idUser": 1,
       "active": true,
-      "email": "m@a",
+      "email": "opa@a",
+      "id": "SeXseChVIxI",
       "password": "123456",
-      "role": "CLIENT",
-      "id": "LhpMuhHl4-s"
-    }
-  ],
-  "clientes": [
+      "role": "EMPLOYEE"
+    },
     {
-      "cpf": "11375659936",
-      "telefone": "(41) 99664-1322",
-      "cep": "83702100",
-      "endereco": "Rua Julia Theresa Bini",
-      "estado": "PR",
-      "cidade": "Araucária",
-      "bairro": "Centro",
-      "numero": "100",
-      "complemento": "a",
-      "user": {
-        "idUser": 1,
-        "active": true,
-        "email": "m@a",
-        "password": "123456",
-        "role": "CLIENT"
-      },
-      "nome": "mas",
-      "email": "m@a",
-      "senha": "123456",
-      "id": "lo6KkuY7Q_0"
+      "active": true,
+      "email": "opa@a",
+      "id": "IRrSXF5lAEM",
+      "password": "123456",
+      "role": "EMPLOYEE"
     }
   ],
-  "funcionarios": [],
+  "clientes": [],
+  "funcionarios": [
+    {
+      "id": "SrI43V2e7sA",
+      "name": "opa",
+      "dataNascimento": "24/02/2007",
+      "user": {
+        "active": true,
+        "email": "opa@a",
+        "id": "1",
+        "password": "123456",
+        "role": "EMPLOYEE"
+      }
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

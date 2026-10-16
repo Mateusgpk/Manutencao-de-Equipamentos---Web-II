@@ -17,6 +17,7 @@
         routerLink="/login">
         Acessar Painel
       </a>
+      @if (logado) { <button class="fa fa-user" (click)="acao()"></button>}
     </nav>
   </div>
 </header>

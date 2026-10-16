@@ -58,17 +58,7 @@ export class FormCadastro implements OnInit {
   private destroy$ = new Subject<void>();
 
   ngOnInit() {
-    if (this.loginAutenticador.usuarioLogado) {
-      if (this.loginAutenticador.usuarioLogado instanceof Client) {
-        this.router.navigate(['/home']);
-      } else {
-        this.router.navigate(['/employee/home']);
-      }
-    } else {
-      this.route.queryParams.subscribe((params) => {
-        this.message = params['error'];
-      });
-    }
+    this.loginAutenticador.autentica()
 
     this.formCadastro.controls.cep.valueChanges
       .pipe(
@@ -123,7 +113,7 @@ export class FormCadastro implements OnInit {
           'CLIENT',
         ),
       });
-      this.loginAutenticador.inserir(user).subscribe((sucesso) => {
+      this.loginAutenticador.inserirCliente(user).subscribe((sucesso) => {
         if (sucesso) {
           alert('usuario salvo');
         } else {

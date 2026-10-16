@@ -3,51 +3,39 @@ import { Employee } from '../models/employee.model';
 import { User } from '../../../shared/models/user.model';
 import { Autenticador } from '../../../shared/services/auth/autenticador';
 import { inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class Crudfuncionario {
+  BASE_URL = 'http://localhost:3000/';
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    }),
+  };
+  private httpClient = inject(HttpClient);
   private loginserver = inject(Autenticador)
-  getallFuncionario(): Employee[]{
-    const empregados=localStorage.getItem("employees");
-    const todosempregados: Employee[]=empregados?JSON.parse(empregados):[];
-    const ativos=todosempregados.filter(us=>us.user.active===true)
-    return ativos;
+  getallFuncionario(): Observable <Employee[]>{
+    return this.httpClient.get<Employee[]>(this.BASE_URL+"funcionarios/",this.httpOptions).pipe(map((lista) => lista.filter((u)=>u.user.active===true)))
   }
-  addFuncionario(employee:Employee):boolean{
-    return this.loginserver.registerEmployee(employee)
-  }
-  desactiveFuncionario(id:number):boolean{
-    const funcionarios=localStorage.getItem("employees")
-    const todosfuncionarios: Employee[]=funcionarios?JSON.parse(funcionarios):[];
-    const funcionario = todosfuncionarios.find(us => us.user.idUser === id)
-    if (!funcionario) {
-      return false;
-    }
-    funcionario.user.active=false
-    localStorage.setItem("employees", JSON.stringify(todosfuncionarios));
-
-
-    const usersStorage = localStorage.getItem("user");
-    const todosusers: User[] = usersStorage
-      ? JSON.parse(usersStorage)
-      : [];
-
-    const user = todosusers.find(
-      us => us.idUser === id
-    );
-
-    if (user) {
-      user.active = false;
-      localStorage.setItem(
-        "user",
-        JSON.stringify(todosusers)
-      );
-    }
-
-
-
-    return true
+  addFuncionario(employee:Employee):boolean | void {
+    this.loginserver.inserirFuncionario(employee).subscribe( (id) => {
+      return id;
+  })
+}
+  desactiveFuncionario(id:string):boolean{
+    this.httpClient.get<Employee>(this.BASE_URL + 'funcionarios/'+id, this.httpOptions).subscribe((funcionario) => {
+      funcionario.user.active=false
+      this.httpClient.put<Employee>(this.BASE_URL + 'funcionarios/'+id,this.httpOptions).subscribe((resposta)=>{console.log('Funcionario desativado',resposta)})
+    })
+    this.httpClient.get<User>(this.BASE_URL + 'usuarios/'+id, this.httpOptions).subscribe((user) => {
+      user.active=false
+      this.httpClient.put<User>(this.BASE_URL + 'usuarios/'+id,this.httpOptions).subscribe((resposta)=>{console.log('Funcionario desativado',resposta)})
+    })
+    return true;
   }
 }
 

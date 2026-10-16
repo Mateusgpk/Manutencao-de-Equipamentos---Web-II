@@ -1,6 +1,7 @@
 import { User } from "../../../shared/models/user.model";
 
 export class Client {
+    id?: string;
     name!: string;
     cpf!: string;
     telefone!: string;

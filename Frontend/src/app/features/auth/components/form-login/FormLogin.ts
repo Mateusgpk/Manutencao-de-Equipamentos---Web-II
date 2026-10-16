@@ -20,11 +20,11 @@ import { Employee } from '../../../funcionario/models/employee.model';
 
 
 export class FormLogin implements OnInit{
-funcionario= new Employee({"name":"opa","dataNascimento":"24/02/2007","user":{"active":true,"email":"opa@a","idUser":1,"password":"123456","role":"EMPLOYEE"}})
+funcionario= new Employee({"name":"opa","dataNascimento":"24/02/2007","user":{"active":true,"email":"opa@a","id":"","password":"123456","role":"EMPLOYEE"}})
 
 
 
-message!: string;
+
 private loginAutenticador=inject(Autenticador)
 private router = inject(Router)
 private route = inject(ActivatedRoute)
@@ -32,22 +32,10 @@ private route = inject(ActivatedRoute)
 
 
 ngOnInit(): void {
-  this.loginAutenticador.registerEmployee(this.funcionario);
-  
-  if (this.loginAutenticador.usuarioLogado) {
-    if (this.loginAutenticador.usuarioLogado instanceof Client){
-      this.router.navigate( ["/home"] );
-    }else{
-      this.router.navigate( ["/employee/home"] );
-    }
-
+  if (this.loginAutenticador.inserirFuncionario(this.funcionario).subscribe((bool)=> {return bool})){
+    console.log("deu boa")
   }
-  else {
-    this.route.queryParams.subscribe(params => {
-    this.message = params['error'];
-  });
-
-}
+  this.loginAutenticador.autentica()
 }
 
 
@@ -79,4 +67,7 @@ ngOnInit(): void {
     });
   }
 }
+  logout(){
+    this.loginAutenticador.logout();
+  }
 }
