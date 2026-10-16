@@ -1,4 +1,4 @@
-package.com.webii.controller;
+package com.webii.controller;
 
 import com.webii.entity.Client;
 import com.webii.repository.ClientRepository;
