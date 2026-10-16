@@ -367,4 +367,28 @@ export class SolicitacaoService {
     );
     return this.getById(id);
   }
+
+  /** RF016 - Finalizar Solicitação: solicitação PAGA passa para FINALIZADA. */
+  finalizarSolicitacao(id: number, funcionario: string): Observable<Solicitacao | undefined> {
+    const agora = new Date();
+
+    this.solicitacoes.update((lista) =>
+      lista.map((s) =>
+        s.id === id && s.estado === EstadoSolicitacao.PAGA
+          ? {
+              ...s,
+              estado: EstadoSolicitacao.FINALIZADA,
+              dataHoraFinalizacao: agora,
+              funcionarioFinalizacao: funcionario,
+              historico: [
+                ...s.historico,
+                { dataHora: agora, estado: EstadoSolicitacao.FINALIZADA, funcionario },
+              ],
+            }
+          : s,
+      ),
+    );
+
+    return this.getById(id);
+  }
 }

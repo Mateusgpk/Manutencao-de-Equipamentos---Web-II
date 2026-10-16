@@ -60,5 +60,9 @@ export interface Solicitacao {
   // Preenchido ao entrar no estado REDIRECIONADA (RF015)
   funcionarioDestino?: string;
 
+  // Preenchido ao entrar no estado FINALIZADA (RF016)
+  dataHoraFinalizacao?: Date;
+  funcionarioFinalizacao?: string;
+
   historico: HistoricoSolicitacao[];
 }
