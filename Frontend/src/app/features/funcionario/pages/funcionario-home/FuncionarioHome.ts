@@ -17,8 +17,13 @@ export class FuncionarioHome implements OnInit {
   inicio = ''; fim = '';
   solicitacoesAbertas: Solicitacao[] = [];
   solicitacaoSelecionada?: Solicitacao;
+  solicitacaoParaFinalizar?: Solicitacao;
 
   ngOnInit(): void {
+    this.carregar();
+  }
+
+  private carregar(): void {
     this.solicitacaoService.listarTodas().subscribe((solicitacoes) => {
       this.todasSolicitacoes = solicitacoes
         .filter((s) => s.estado !== EstadoSolicitacao.REDIRECIONADA || s.funcionarioDestino === this.funcionarioLogado)
@@ -49,6 +54,26 @@ export class FuncionarioHome implements OnInit {
 
   fecharHistorico(): void {
     this.solicitacaoSelecionada = undefined;
+  }
+
+  abrirFinalizacao(solicitacao: Solicitacao): void {
+    this.solicitacaoParaFinalizar = solicitacao;
+  }
+
+  cancelarFinalizacao(): void {
+    this.solicitacaoParaFinalizar = undefined;
+  }
+
+  confirmarFinalizacao(): void {
+    const s = this.solicitacaoParaFinalizar;
+    if (!s) return;
+
+    this.solicitacaoService
+      .finalizarSolicitacao(s.id, this.funcionarioLogado)
+      .subscribe(() => {
+        this.solicitacaoParaFinalizar = undefined;
+        this.carregar();
+      });
   }
 
   corEstado(estado: EstadoSolicitacao): string { return ({ ABERTA: 'bg-slate-100', ORCADA: 'bg-amber-900/10', REJEITADA: 'bg-red-100', APROVADA: 'bg-yellow-100', REDIRECIONADA: 'bg-purple-100', ARRUMADA: 'bg-blue-100', PAGA: 'bg-orange-100', FINALIZADA: 'bg-green-100' } as Record<EstadoSolicitacao, string>)[estado]; }

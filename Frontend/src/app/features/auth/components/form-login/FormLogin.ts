@@ -50,7 +50,7 @@ ngOnInit(): void {
     if (this.formCadastro.valid) {
       console.log('Dados enviados:', this.formCadastro.value);
       
-      this.loginAutenticador.login(new User(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? "","")).subscribe((usu)=>{
+      this.loginAutenticador.loginuser(new User(this.formCadastro.value.email?? "", this.formCadastro.value.senha ?? "","")).subscribe((usu)=>{
         if (usu!=null){
           alert('Login realizado com sucesso!');
           this.loginAutenticador.usuarioLogado=usu;

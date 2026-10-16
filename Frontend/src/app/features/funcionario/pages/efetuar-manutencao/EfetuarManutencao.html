@@ -1,4 +1,4 @@
-<!-- Tela de Efetuar Manutenção (RF014). -->
+<!-- Tela de Efetuar Manutenção (RF014) com Redirecionar Manutenção (RF015) em modal. -->
 <section class="max-w-3xl mx-auto px-4 py-10">
     @switch (etapa()) {
     @case ('carregando') {
@@ -6,7 +6,6 @@
     }
 
     @case ('naoEncontrada') {
-    <!-- se id da URL não existir, ou se solicitação não estiver em APROVADA/REDIRECIONADA -->
     <div class="border border-yellow-300 bg-yellow-50 p-4 text-center rounded">
         <p class="text-yellow-800">
             Não foi possível encontrar uma solicitação disponível para manutenção com este id.
@@ -26,7 +25,6 @@
             Efetuar Manutenção da Solicitação #{{ s.id }}
         </h1>
 
-        <!-- dados da solicitação e do cliente -->
         <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-gray-100 pb-6">
             <div>
                 <dt class="text-xs uppercase text-gray-500">Data/Hora da Solicitação</dt>
@@ -44,7 +42,6 @@
                 <dt class="text-xs uppercase text-gray-500">Descrição do Defeito</dt>
                 <dd class="text-sm text-gray-900">{{ s.descricaoDefeito }}</dd>
             </div>
-
             <div class="sm:col-span-2">
                 <dt class="text-xs uppercase text-gray-500">Cliente</dt>
                 <dd class="text-sm text-gray-900">{{ s.clienteNome }} — CPF: {{ s.clienteCpf }}</dd>
@@ -60,12 +57,11 @@
         </dl>
 
         @if (!mostrarFormularioManutencao()) {
-
         <div class="mt-6 flex flex-col sm:flex-row justify-end gap-3">
-            <a [routerLink]="['/employee/manutencao', s.id, 'redirecionar']"
-                class="text-center bg-gray-100 text-gray-700 px-5 py-2 rounded hover:bg-gray-200">
+            <button type="button" (click)="abrirRedirecionamento()"
+                class="bg-gray-100 text-gray-700 px-5 py-2 rounded hover:bg-gray-200">
                 Redirecionar Manutenção
-            </a>
+            </button>
             <button type="button" (click)="abrirFormularioManutencao()"
                 class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600">
                 Efetuar Manutenção
@@ -114,6 +110,40 @@
             </div>
         </form>
         }
+
+        @if (mostrarModalRedirecionar()) {
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+            (click)="cancelarRedirecionamento()">
+            <form class="w-full max-w-sm rounded bg-white p-6 shadow-lg" (click)="$event.stopPropagation()"
+                (ngSubmit)="confirmarRedirecionamento()">
+                <h2 class="mb-4 text-lg font-bold text-gray-900">Redirecionar Manutenção</h2>
+
+                <label for="funcionarioDestino" class="block text-sm text-gray-700 mb-1">
+                    Redirecionar para o funcionário
+                </label>
+                <select id="funcionarioDestino" [formControl]="funcionarioDestinoControl"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md bg-white">
+                    <option [ngValue]="null" disabled>Selecione um funcionário</option>
+                    @for (f of funcionariosDisponiveis; track f) {
+                    <option [ngValue]="f">{{ f }}</option>
+                    }
+                </select>
+
+                @if (funcionarioDestinoControl.invalid && funcionarioDestinoControl.touched) {
+                <p class="text-sm text-red-600 mt-1">Selecione um funcionário de destino.</p>
+                }
+
+                <div class="mt-6 flex gap-3">
+                    <button type="button" (click)="cancelarRedirecionamento()"
+                        class="w-full rounded border border-gray-300 px-5 py-2">Cancelar</button>
+                    <button type="submit" [disabled]="enviando()"
+                        class="w-full rounded bg-blue-500 px-5 py-2 text-white hover:bg-blue-600 disabled:opacity-60">
+                        Confirmar
+                    </button>
+                </div>
+            </form>
+        </div>
+        }
     </div>
     }
     }
@@ -123,6 +153,18 @@
     <div class="fixed inset-0 bg-black/50 flex items-center justify-center px-4">
         <div class="bg-white max-w-sm w-full p-6 rounded text-center">
             <p class="text-gray-900 font-semibold">Manutenção registrada com sucesso!</p>
+            <button type="button" class="mt-6 w-full bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600"
+                (click)="voltarParaInicio()">
+                OK
+            </button>
+        </div>
+    </div>
+    }
+
+    @if (etapa() === 'redirecionada') {
+    <div class="fixed inset-0 bg-black/50 flex items-center justify-center px-4">
+        <div class="bg-white max-w-sm w-full p-6 rounded text-center">
+            <p class="text-gray-900 font-semibold">Serviço redirecionado com sucesso!</p>
             <button type="button" class="mt-6 w-full bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600"
                 (click)="voltarParaInicio()">
                 OK

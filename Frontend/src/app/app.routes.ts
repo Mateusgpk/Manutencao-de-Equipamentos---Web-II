@@ -66,7 +66,7 @@ export const routes: Routes = [
         component: EfetuarOrcamento 
       },
       { 
-        path: 'employee/manutencao/:id', 
+        path: 'manutencao/:id', 
         component: EfetuarManutencao },
       {
         path: 'categories',

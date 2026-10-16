@@ -29,8 +29,10 @@
             <td class="whitespace-nowrap px-4 py-3 text-right">
               @if (solicitacao.estado === EstadoSolicitacao.ABERTA) {
                 <a class="rounded bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white" [routerLink]="['/employee/orcamento', solicitacao.id]">Efetuar Orçamento</a>
-              } @else if (solicitacao.estado === EstadoSolicitacao.APROVADA || solicitacao.estado === EstadoSolicitacao.REDIRECIONADA || solicitacao.estado === EstadoSolicitacao.PAGA) {
-                <button class="rounded bg-slate-700 px-3 py-1.5 text-xs font-semibold text-white" type="button">{{ solicitacao.estado === EstadoSolicitacao.PAGA ? 'Finalizar Solicitação' : 'Efetuar Manutenção' }}</button>
+              } @else if (solicitacao.estado === EstadoSolicitacao.APROVADA || solicitacao.estado === EstadoSolicitacao.REDIRECIONADA) {
+                <button class="rounded bg-slate-700 px-3 py-1.5 text-xs font-semibold text-white" type="button">Efetuar Manutenção</button>
+              } @else if (solicitacao.estado === EstadoSolicitacao.PAGA) {
+                <button class="rounded bg-green-600 px-3 py-1.5 text-xs font-semibold text-white" type="button" (click)="abrirFinalizacao(solicitacao)">Finalizar Solicitação</button>
               } @else if (solicitacao.estado === EstadoSolicitacao.FINALIZADA) {
                 <button class="rounded border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700" type="button" (click)="visualizarHistorico(solicitacao)">Ver Histórico</button>
               } @else { <span class="text-xs text-slate-500">Sem ação</span> }
@@ -116,6 +118,19 @@
           >
             OK
           </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (solicitacaoParaFinalizar; as s) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" (click)="cancelarFinalizacao()">
+      <div class="w-full max-w-sm rounded bg-white p-6 text-center shadow-lg" (click)="$event.stopPropagation()">
+        <p class="font-semibold text-gray-900">Finalizar a solicitação #{{ s.id }}?</p>
+        <p class="mt-2 text-sm text-gray-600">{{ s.descricaoEquipamento }} {{ s.clienteNome }}</p>
+        <div class="mt-6 flex gap-3">
+          <button type="button" class="w-full rounded border border-gray-300 px-5 py-2" (click)="cancelarFinalizacao()">Cancelar</button>
+          <button type="button" class="w-full rounded bg-green-600 px-5 py-2 text-white hover:bg-green-700" (click)="confirmarFinalizacao()">Confirmar</button>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
 
-type Etapa = 'carregando' | 'naoEncontrada' | 'formulario' | 'manutencaoRegistrada';
+type Etapa = 'carregando' | 'naoEncontrada' | 'formulario' | 'manutencaoRegistrada' | 'redirecionada';
 
 const ESTADOS_PERMITIDOS = [EstadoSolicitacao.APROVADA, EstadoSolicitacao.REDIRECIONADA];
 
@@ -15,7 +15,6 @@ const ESTADOS_PERMITIDOS = [EstadoSolicitacao.APROVADA, EstadoSolicitacao.REDIRE
     templateUrl: './EfetuarManutencao.html',
     styleUrl: './EfetuarManutencao.css',
 })
-
 export class EfetuarManutencao implements OnInit {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
@@ -25,10 +24,17 @@ export class EfetuarManutencao implements OnInit {
     protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
     protected readonly enviando = signal(false);
 
-
     protected readonly mostrarFormularioManutencao = signal(false);
 
+    protected readonly mostrarModalRedirecionar = signal(false);
+
     private readonly funcionarioLogado = 'Maria'; // implementar: pegar do login do funcionário logado
+
+    private readonly todosFuncionarios = ['Maria', 'Mário'];
+
+    protected get funcionariosDisponiveis(): string[] {
+        return this.todosFuncionarios.filter((f) => f !== this.funcionarioLogado);
+    }
 
     protected readonly descricaoManutencaoControl = new FormControl<string>('', {
         nonNullable: true,
@@ -38,6 +44,10 @@ export class EfetuarManutencao implements OnInit {
     protected readonly orientacoesClienteControl = new FormControl<string>('', {
         nonNullable: true,
         validators: [Validators.required, Validators.minLength(5)],
+    });
+
+    protected readonly funcionarioDestinoControl = new FormControl<string | null>(null, {
+        validators: [Validators.required],
     });
 
     ngOnInit(): void {
@@ -101,6 +111,43 @@ export class EfetuarManutencao implements OnInit {
                 error: () => {
                     this.enviando.set(false);
                     alert('Ocorreu um erro ao registrar a manutenção.');
+                },
+            });
+    }
+
+    protected abrirRedirecionamento(): void {
+        this.mostrarModalRedirecionar.set(true);
+    }
+
+    protected cancelarRedirecionamento(): void {
+        this.mostrarModalRedirecionar.set(false);
+        this.funcionarioDestinoControl.reset(null);
+    }
+
+    protected confirmarRedirecionamento(): void {
+        if (this.funcionarioDestinoControl.invalid) {
+            this.funcionarioDestinoControl.markAsTouched();
+            return;
+        }
+
+        const s = this.solicitacao();
+        if (!s || this.enviando()) {
+            return;
+        }
+
+        this.enviando.set(true);
+
+        this.solicitacaoService
+            .redirecionarManutencao(s.id, this.funcionarioLogado, this.funcionarioDestinoControl.value!)
+            .subscribe({
+                next: () => {
+                    this.enviando.set(false);
+                    this.mostrarModalRedirecionar.set(false);
+                    this.etapa.set('redirecionada');
+                },
+                error: () => {
+                    this.enviando.set(false);
+                    alert('Ocorreu um erro ao redirecionar a manutenção.');
                 },
             });
     }
