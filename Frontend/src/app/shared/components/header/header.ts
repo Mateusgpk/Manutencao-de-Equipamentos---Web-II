@@ -1,5 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Autenticador } from '../../services/auth';
 
 @Component({
@@ -11,11 +11,13 @@ import { Autenticador } from '../../services/auth';
 
 export class Header {
   private autentica=inject(Autenticador)
-  logado: boolean = !!this.autentica.usuarioLogado;
+  private router = inject(Router)
+  get logado(): boolean {
+    return !!this.autentica.usuarioLogado;
+  }
   acao(){
-    console.log("aoooo")
     this.autentica.logout()
-    this.autentica.autentica()
+    this.router.navigate(['/login']);
   }
 
 }

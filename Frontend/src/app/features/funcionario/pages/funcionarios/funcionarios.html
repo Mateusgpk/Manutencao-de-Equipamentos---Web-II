@@ -10,16 +10,17 @@
           <th class="px-5 py-3">Ações</th>
         </tr>
     </thead>
+    @if (!!funcionarios){
 @for (funcionario of funcionarios; track funcionario.user.id){
     <tr>
-    <td class="whitespace-nowrap px-4 py-3">{{funcionario.user.id}}</td>
+    <td class="whitespace-nowrap px-4 py-3">{{funcionario.id}}</td>
     <td class="whitespace-nowrap px-4 py-3">{{funcionario.name}}</td>
     <td class="whitespace-nowrap px-4 py-3">{{funcionario.user.email}}</td>
     <td class="whitespace-nowrap px-4 py-3">{{funcionario.dataNascimento}}</td>
-    <td><button class="bg-yellow-500" (click)="desativar(funcionario.user.id)">Desativar </button> </td>
+    <td><button class="bg-yellow-500" (click)="desativar(funcionario.id)">Desativar </button> </td>
     <td><button class="bg-gray-500">Editar</button></td>
     </tr>
-} 
+}}
   
 </table>
 </div>

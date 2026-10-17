@@ -73,6 +73,8 @@ inseriruser(user: User): Observable<boolean> {
       user.id = String(
         ids.length > 0 ? Math.max(...ids) + 1 : 1
       );
+
+      console.log(user);
       return this.httpClient.post<User>(
         this.BASE_URL + 'usuarios/',
         user,
@@ -132,7 +134,7 @@ inserirFuncionario(usuario: Employee): Observable<boolean> {
     return null;
   }
 
-  public set usuarioLogado(usuario: Employee | Client) {
+  public set usuarioLogado(usuario: Employee | Client | null) {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem(LS_CHAVE, JSON.stringify(usuario));
     }
@@ -141,6 +143,7 @@ inserirFuncionario(usuario: Employee): Observable<boolean> {
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem(LS_CHAVE);
+      this.usuarioLogado =null
     }
   }
 
@@ -156,7 +159,6 @@ inserirFuncionario(usuario: Employee): Observable<boolean> {
 
   }
   else {
-    this.router.navigate( ["/login"])
     this.route.queryParams.subscribe(params => {
     this.message = params['error'];
   });

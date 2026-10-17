@@ -4,7 +4,7 @@ import { User } from '../../../shared/models/user.model';
 import { Autenticador } from '../../../shared/services/auth/autenticador';
 import { inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -26,16 +26,24 @@ export class Crudfuncionario {
       return id;
   })
 }
-  desactiveFuncionario(id:string):boolean{
-    this.httpClient.get<Employee>(this.BASE_URL + 'funcionarios/'+id, this.httpOptions).subscribe((funcionario) => {
+  desactiveFuncionario(id:string|undefined):Observable<User>{
+    return this.httpClient.get<Employee>(this.BASE_URL + 'funcionarios/'+id, this.httpOptions).pipe(switchMap((funcionario) => {
       funcionario.user.active=false
-      this.httpClient.put<Employee>(this.BASE_URL + 'funcionarios/'+id,this.httpOptions).subscribe((resposta)=>{console.log('Funcionario desativado',resposta)})
-    })
-    this.httpClient.get<User>(this.BASE_URL + 'usuarios/'+id, this.httpOptions).subscribe((user) => {
-      user.active=false
-      this.httpClient.put<User>(this.BASE_URL + 'usuarios/'+id,this.httpOptions).subscribe((resposta)=>{console.log('Funcionario desativado',resposta)})
-    })
-    return true;
+      const funcionariouserid=funcionario.user.id
+      console.log(funcionariouserid)
+      return this.httpClient.put<Employee>(this.BASE_URL + 'funcionarios/'+id,funcionario,this.httpOptions)
+      .pipe(
+        switchMap(() =>this.httpClient.get<User>(this.BASE_URL+'usuarios/'+funcionariouserid,this.httpOptions)),
+        switchMap((user)=>{
+          user.active=false;
+          return this.httpClient.put<User>(this.BASE_URL+'usuarios/'+funcionariouserid,user,this.httpOptions)
+        }
+      )
+    )
+  }
+))
+      
+
   }
 }
 

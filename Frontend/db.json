@@ -3,22 +3,45 @@
     {
       "active": true,
       "email": "opa@a",
-      "id": "SeXseChVIxI",
+      "id": "1",
       "password": "123456",
       "role": "EMPLOYEE"
     },
     {
+      "id": "2",
       "active": true,
-      "email": "opa@a",
-      "id": "IRrSXF5lAEM",
+      "email": "a@a",
       "password": "123456",
-      "role": "EMPLOYEE"
+      "role": "CLIENT"
     }
   ],
-  "clientes": [],
+  "clientes": [
+    {
+      "cpf": "11375659936",
+      "telefone": "(41) 99664-1322",
+      "cep": "83702100",
+      "endereco": "Rua Julia Theresa Bini",
+      "estado": "PR",
+      "cidade": "Araucária",
+      "bairro": "Centro",
+      "numero": "100",
+      "complemento": "a",
+      "user": {
+        "id": "2",
+        "active": true,
+        "email": "a@a",
+        "password": "123456",
+        "role": "CLIENT"
+      },
+      "nome": "rapaiz",
+      "email": "a@a",
+      "senha": "123456",
+      "id": 1
+    }
+  ],
   "funcionarios": [
     {
-      "id": "SrI43V2e7sA",
+      "id": "1",
       "name": "opa",
       "dataNascimento": "24/02/2007",
       "user": {
@@ -29,6 +52,5 @@
         "role": "EMPLOYEE"
       }
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }
