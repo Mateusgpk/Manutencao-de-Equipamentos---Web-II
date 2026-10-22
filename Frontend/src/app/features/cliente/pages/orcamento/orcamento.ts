@@ -39,6 +39,7 @@ export class Orcamento implements OnInit {
   protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
   protected readonly enviandoRejeicao = signal(false);
   protected readonly enviandoAprovacao = signal(false);
+  protected readonly erro = signal('');
 
   /** RF007 - motivo da rejeição, validado como obrigatório. */
   protected readonly motivoRejeicaoControl = new FormControl('', {
@@ -68,6 +69,7 @@ export class Orcamento implements OnInit {
   /** RF006 - Aprovar Serviço. */
   /** Abre a mini revisão antes de aprovar de fato o serviço (RF006). */
   protected abrirConfirmacaoAprovacao(): void {
+    this.erro.set('');
     this.etapa.set('confirmandoAprovacao');
 
   }
@@ -83,13 +85,21 @@ export class Orcamento implements OnInit {
     if (!atual) {
       return;
     }
+    this.erro.set('');
     this.enviandoAprovacao.set(true);
-    this.solicitacaoService.aprovarServico(atual.id).subscribe((atualizada) => {
-      this.enviandoAprovacao.set(false);
-      if (atualizada) {
+    this.solicitacaoService.aprovarServico(atual.id).subscribe({
+      next: (atualizada) => {
+        // Se a solicitação não ficou como APROVADA, a gravação não aconteceu.
+        if (atualizada?.estado !== EstadoSolicitacao.APROVADA) {
+          this.mostrarErro('aprovar');
+          return;
+        }
+
+        this.enviandoAprovacao.set(false);
         this.solicitacao.set(atualizada);
-      }
-      this.etapa.set('servicoAprovado');
+        this.etapa.set('servicoAprovado');
+      },
+      error: () => this.mostrarErro('aprovar'),
     });
   }
 
@@ -110,6 +120,7 @@ export class Orcamento implements OnInit {
     if (this.motivoRejeicaoControl.invalid) {
       return;
     }
+    this.erro.set('');
     this.etapa.set('confirmandoRejeicao');
 
   }
@@ -134,17 +145,32 @@ export class Orcamento implements OnInit {
       return;
     }
 
+    this.erro.set('');
     this.enviandoRejeicao.set(true);
 
     this.solicitacaoService
       .rejeitarServico(atual.id, this.motivoRejeicaoControl.value.trim())
-      .subscribe((atualizada) => {
-        this.enviandoRejeicao.set(false);
-        if (atualizada) {
+      .subscribe({
+        next: (atualizada) => {
+          // Se a solicitação não ficou como REJEITADA, a gravação não aconteceu.
+          if (atualizada?.estado !== EstadoSolicitacao.REJEITADA) {
+            this.mostrarErro('rejeitar');
+            return;
+          }
+
+          this.enviandoRejeicao.set(false);
           this.solicitacao.set(atualizada);
-        }
-        this.etapa.set('servicoRejeitado');
+          this.etapa.set('servicoRejeitado');
+        },
+        error: () => this.mostrarErro('rejeitar'),
       });
+  }
+
+  /** Reabilita os botões e avisa o usuário que a ação não foi gravada. */
+  private mostrarErro(acao: 'aprovar' | 'rejeitar'): void {
+    this.enviandoAprovacao.set(false);
+    this.enviandoRejeicao.set(false);
+    this.erro.set(`Não foi possível ${acao} o serviço. Verifique a conexão e tente novamente.`);
   }
 
   /** Ao clicar OK nas mensagens de sucesso, volta para a Página Inicial do Cliente (RF003). */

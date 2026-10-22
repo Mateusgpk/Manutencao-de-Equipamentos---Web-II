@@ -1,6 +1,6 @@
 import { Component, HostListener, computed, inject, OnInit, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
  
 import {
@@ -19,6 +19,21 @@ type Etapa =
   | 'pagamentoConfirmado'
   | 'pixGerado';
  
+/** Confere se o cartão não está vencido (vale até o fim do mês informado). */
+function validadeCartaoValidator(control: AbstractControl): ValidationErrors | null {
+  const partes = /^(\d{2})\/(\d{2})$/.exec(control.value ?? '');
+  if (!partes) {
+    return null;
+  }
+
+  const mes = Number(partes[1]);
+  const ano = 2000 + Number(partes[2]);
+  const hoje = new Date();
+  const vencido = ano < hoje.getFullYear() || (ano === hoje.getFullYear() && mes < hoje.getMonth() + 1);
+
+  return vencido ? { cartaoVencido: true } : null;
+}
+
 @Component({
   selector: 'app-pagar-manuntencao',
   imports: [RouterLink, CurrencyPipe, DatePipe, ReactiveFormsModule],
@@ -35,6 +50,7 @@ export class PagarManuntencao implements OnInit {
   protected readonly etapa = signal<Etapa>('carregando');
   protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
   protected readonly enviandoPagamento = signal(false);
+  protected readonly erro = signal('');
 
   /** Forma de pagamento escolhida. */
   protected readonly metodo = signal<'cartao' | 'pix'>('cartao');
@@ -42,7 +58,7 @@ export class PagarManuntencao implements OnInit {
   /** Formulário do cartão (os dados ficam só no front, nada é enviado). */
   protected readonly cartaoForm = new FormGroup({
     numero: new FormControl('', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{4} \d{4}$/)]),
-    validade: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]),
+    validade: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), validadeCartaoValidator]),
     cvc: new FormControl('', [Validators.required, Validators.pattern(/^\d{3,4}$/)]),
     nome: new FormControl('', [Validators.required, Validators.minLength(3)]),
   });
@@ -114,6 +130,7 @@ export class PagarManuntencao implements OnInit {
       return;
     }
 
+    this.erro.set('');
     this.etapa.set('confirmandoPagamento');
   }
 
@@ -137,16 +154,28 @@ export class PagarManuntencao implements OnInit {
       return;
     }
 
+    this.erro.set('');
     this.enviandoPagamento.set(true);
 
-    this.solicitacaoService.pagarServico(atual.id).subscribe((atualizada) => {
-      this.enviandoPagamento.set(false);
-      if (atualizada) {
+    this.solicitacaoService.pagarServico(atual.id).subscribe({
+      next: (atualizada) => {
+        if (atualizada?.estado !== EstadoSolicitacao.PAGA) {
+          this.mostrarErroPagamento();
+          return;
+        }
+
+        this.enviandoPagamento.set(false);
         this.solicitacao.set(atualizada);
-      }
-      // No Pix, o código só é gerado depois que o pagamento é confirmado.
-      this.etapa.set(this.metodo() === 'pix' ? 'pixGerado' : 'pagamentoConfirmado');
+        this.etapa.set(this.metodo() === 'pix' ? 'pixGerado' : 'pagamentoConfirmado');
+      },
+      error: () => this.mostrarErroPagamento(),
     });
+  }
+
+  /** Reabilita os botões e avisa o usuário que o pagamento não foi registrado. */
+  private mostrarErroPagamento(): void {
+    this.enviandoPagamento.set(false);
+    this.erro.set('Não foi possível registrar o pagamento. Verifique a conexão e tente novamente.');
   }
 
   /** Ao fechar o modal (sucesso ou código Pix), volta para a Pagina Inicial do Cliente. */
