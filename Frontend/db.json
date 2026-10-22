@@ -13,6 +13,20 @@
       "email": "a@a",
       "password": "123456",
       "role": "CLIENT"
+    },
+    {
+      "active": true,
+      "email": "roberto@a",
+      "id": "3",
+      "password": "123456",
+      "role": "EMPLOYEE"
+    },
+    {
+      "id": "4",
+      "active": true,
+      "email": "pum@a",
+      "password": "123456",
+      "role": "EMPLOYEE"
     }
   ],
   "clientes": [
@@ -36,7 +50,7 @@
       "nome": "rapaiz",
       "email": "a@a",
       "senha": "123456",
-      "id": 1
+      "id": "1"
     }
   ],
   "funcionarios": [
@@ -51,6 +65,35 @@
         "password": "123456",
         "role": "EMPLOYEE"
       }
+    },
+    {
+      "id": "2",
+      "name": "robertoo",
+      "dataNascimento": "2016-06-21",
+      "user": {
+        "active": true,
+        "email": "roberto@a",
+        "id": "3",
+        "password": "123456",
+        "role": "EMPLOYEE"
+      },
+      "email": "roberto@a",
+      "senha": "123456"
+    },
+    {
+      "id": "3",
+      "name": "larisso",
+      "dataNascimento": "2026-10-04",
+      "user": {
+        "id": "4",
+        "active": true,
+        "email": "pum@a",
+        "password": "123456",
+        "role": "EMPLOYEE"
+      },
+      "email": "robertao@fake",
+      "senha": "123456"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

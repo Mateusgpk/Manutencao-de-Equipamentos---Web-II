@@ -3,32 +3,34 @@ import { Crudfuncionario } from '../../services/crudfuncionario';
 import { Employee } from '../../models/employee.model';
 import { RouterLink } from '@angular/router';
 import { OnInit } from '@angular/core';
-import { switchMap } from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'app-funcionarios',
-  imports: [RouterLink],
+  imports: [RouterLink,AsyncPipe],
   templateUrl: './funcionarios.html',
   styleUrl: './funcionarios.css',
 })
 export class Funcionarios {
-  funcionarios:Employee[]=[];
+
+  private recarregar$ = new BehaviorSubject<void>(undefined);
+  funcionarios$: Observable<Employee[]> = this.recarregar$.pipe(
+    switchMap(() => this.crudfuncionario.getallFuncionario())
+  );
+
   constructor (private crudfuncionario: Crudfuncionario){};
 
-  ngOnInit(){
-    this.crudfuncionario.getallFuncionario().subscribe((ativos)=>{this.funcionarios=ativos});
-  }
 desativar(id: string | undefined): void {
-  this.crudfuncionario.desactiveFuncionario(id).pipe(
-    switchMap(() => this.crudfuncionario.getallFuncionario())
-  ).subscribe({
-    next: (ativos) => {
-      this.funcionarios = ativos;
+  this.crudfuncionario.desactiveFuncionario(id).subscribe({
+    next: () => {
+      console.log('Funcionario desativado com sucesso!');
+      this.recarregar$.next(); 
     },
-    error: (erro) => {
-      console.error('Erro ao desativar funcionário:', erro);
-    }
+    error: (err) => console.error('Erro ao desativar:', err),
   });
 }
-
-
 }
+
+
+

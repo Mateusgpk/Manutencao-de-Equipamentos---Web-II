@@ -63,23 +63,52 @@ export const routes: Routes = [
       },
       { 
         path: 'orcamento/:id', 
-        component: EfetuarOrcamento 
+        component: EfetuarOrcamento, 
+        canActivate: [autenticadorGuard], 
+        data: {
+          role: 'EMPLOYEE'
+        }
       },
       { 
         path: 'manutencao/:id', 
-        component: EfetuarManutencao },
+        component: EfetuarManutencao, 
+        canActivate: [autenticadorGuard], 
+        data: {
+          role: 'EMPLOYEE'
+        }
+      },
       {
         path: 'categories',
         component: Categorias,
+        canActivate: [autenticadorGuard], 
+        data: {
+          role: 'EMPLOYEE'
+        }
       },
       {
         path: 'crud-funcionario',
         component: Funcionarios,
+        canActivate: [autenticadorGuard], 
+        data: {
+          role: 'EMPLOYEE'
+        }
       }
       ,
       {
         path: 'add-funcionario',
         component: Addfuncionario,
+        canActivate: [autenticadorGuard], 
+        data: {
+          role: 'EMPLOYEE'
+        }
+      },
+      {
+        path: 'edit-funcionario/:id',
+        component: Addfuncionario,
+        canActivate: [autenticadorGuard], 
+        data: {
+          role: 'EMPLOYEE'
+        }
       }
     ]
   },

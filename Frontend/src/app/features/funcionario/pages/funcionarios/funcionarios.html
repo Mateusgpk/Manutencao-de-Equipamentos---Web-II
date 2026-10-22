@@ -7,20 +7,35 @@
           <th class="px-5 py-3">Funcionario</th>
           <th class="px-5 py-3">Email</th>
           <th class="px-5 py-3">Data de nascimento</th>
-          <th class="px-5 py-3">Ações</th>
+          <th class="px-5 py-3 columns-2 flex justify-center">Ações</th>
         </tr>
     </thead>
-    @if (!!funcionarios){
+    <tbody>
+    @if (funcionarios$ | async; as funcionarios){
 @for (funcionario of funcionarios; track funcionario.user.id){
     <tr>
     <td class="whitespace-nowrap px-4 py-3">{{funcionario.id}}</td>
     <td class="whitespace-nowrap px-4 py-3">{{funcionario.name}}</td>
     <td class="whitespace-nowrap px-4 py-3">{{funcionario.user.email}}</td>
     <td class="whitespace-nowrap px-4 py-3">{{funcionario.dataNascimento}}</td>
-    <td><button class="bg-yellow-500" (click)="desativar(funcionario.id)">Desativar </button> </td>
-    <td><button class="bg-gray-500">Editar</button></td>
+    <td class="whitespace-nowrap px-4 py-3 flex items-center gap-3 ">
+        <button class="bg-yellow-500 cursor-pointer rounded-sm p-1" (click)="desativar(funcionario.id) ">Desativar </button> 
+        <a [routerLink]="['/employee/edit-funcionario', funcionario.id]"
+          href="#" title="Editar" alt="Editar"
+          class="btn btn-xs btn-warning">
+          <i class="fa fa-edit" aria-hidden="true"></i>
+          Editar
+        </a>
+    </td>
+    
     </tr>
-}}
-  
+    } @empty {
+    <tr><td colspan="6">Nenhum funcionário ativo encontrado.</td></tr>
+  }
+} @else {
+  <p>Carregando funcionários...</p>
+}
+
+  </tbody>
 </table>
 </div>

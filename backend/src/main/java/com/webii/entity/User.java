@@ -19,6 +19,10 @@ public class User {
     private Long id;
 
     @NotBlank
+    @Column(nullable = false)
+    private boolean ativo=true;
+
+    @NotBlank
     @Email
     @Column(nullable = false, unique = true)
     private String email;

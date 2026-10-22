@@ -52,7 +52,7 @@ export class Autenticador {
     );
   }
 
-inseriruser(user: User): Observable<boolean> {
+inseriruser(user: User): Observable<User | boolean> {
   return this.httpClient.get<User[]>(
     this.BASE_URL + 'usuarios/',
     this.httpOptions
@@ -80,7 +80,7 @@ inseriruser(user: User): Observable<boolean> {
         user,
         this.httpOptions
       ).pipe(
-        map(() => true)
+        map(() => user)
       );
     })
   );
@@ -111,6 +111,10 @@ inserirFuncionario(usuario: Employee): Observable<boolean> {
         switchMap((listaFunc) => {
           const ids = listaFunc.map(f => Number(f.id)).filter(id => !isNaN(id));
           usuario.id = String(ids.length > 0 ? Math.max(...ids) + 1 : 1);
+          if (userFoiInserido instanceof Employee) {
+            usuario.user.id = String(userFoiInserido.id);
+          }
+          
 
           return this.httpClient.post<Employee>(this.BASE_URL + 'funcionarios/', usuario, this.httpOptions)
             .pipe(map(() => true));
@@ -119,10 +123,17 @@ inserirFuncionario(usuario: Employee): Observable<boolean> {
     })
   );
 }
-  alterar(usuario: User): Observable<User> {
+  alterarUser(usuario: User): Observable<User> {
     return this.httpClient.put<User>(
       this.BASE_URL + 'usuarios/' + usuario.id,
-      JSON.stringify(usuario),
+      usuario,
+      this.httpOptions,
+    );
+  }
+  alterarFuncionario(funcionario: Employee): Observable<Employee> {
+    return this.httpClient.put<Employee>(
+      this.BASE_URL + 'funcionarios/' + funcionario.id,
+      funcionario,
       this.httpOptions,
     );
   }

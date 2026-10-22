@@ -4,13 +4,14 @@ import com.webii.entity.Client;
 import com.webii.repository.ClientRepository;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/clients")
@@ -21,6 +22,22 @@ public class ClientController {
 
     public ClientController(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
+    }
+
+    @GetMapping
+    public  ResponseEntity<List<Client>> listarTodos(){
+        List<Client> listaClientes = clientRepository.findAll();
+        return ResponseEntity.ok(listaClientes);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Client> buscarCliente(@PathVariable("id") Long id){
+        Optional<Client> cliente = clientRepository.findByUserId(id);
+        if (cliente.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }else {
+            return ResponseEntity.ok(cliente.get());
+        }
     }
 
     @PostMapping
