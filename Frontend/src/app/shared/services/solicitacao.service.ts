@@ -106,6 +106,7 @@ export class SolicitacaoService {
       clienteTelefone: '(41) 99866-8909',
       clienteEndereco: 'Rua João Besciak, 305 - Araucária/PR',
       valorOrcamento: 75.9,
+      dataHoraPagamento: new Date('2026-09-12T16:09:00'), 
       dataHoraOrcamento: new Date('2026-09-15T19:59:00'),
       funcionarioOrcamento: 'Maria',
       historico: [

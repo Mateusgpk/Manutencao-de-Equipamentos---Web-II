@@ -11,6 +11,7 @@ import { Categorias } from './features/funcionario/pages/categorias/categorias';
 import { Layout } from './features/funcionario/components/layout/layout';
 import { Funcionarios } from './features/funcionario/pages/funcionarios/funcionarios';
 import { Addfuncionario } from './features/funcionario/pages/addfuncionario/addfuncionario';
+import { RelatorioCategorias } from './features/funcionario/pages/relatorio-categorias/relatorio-categorias';
 import { autenticadorGuard } from './shared/services/auth/autenticador-guard';
 
 export const routes: Routes = [
@@ -109,7 +110,13 @@ export const routes: Routes = [
         data: {
           role: 'EMPLOYEE'
         }
-      }
+      },
+      {
+        path: 'relatorios/categorias',
+        component: RelatorioCategorias,
+        canActivate: [autenticadorGuard],
+        data: { role: 'EMPLOYEE' }
+      },
     ]
   },
   {
