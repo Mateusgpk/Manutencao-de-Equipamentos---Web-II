@@ -1,13 +1,23 @@
-<section class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+<section class="w-full flex items-center justify-center p-4">
+    <div
+        class="w-full max-w-lg bg-surface/70 backdrop-blur-md border border-border rounded-xl shadow-sm shadow-primary-subtle/50 p-8">
 
-    <div class="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
-        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Solicitar Manutenção</h1>
+        <div class="text-center mb-6 pb-4 border-b border-border">
+            <h1
+                class="text-2xl font-extrabold font-heading bg-linear-to-b from-primary to-primary-hover bg-clip-text text-transparent drop-shadow-xs">
+                Solicitar Manutenção
+            </h1>
+            <p class="text-xs text-foreground-muted mt-1">
+                Preencha os dados do equipamento para abrir o chamado
+            </p>
+        </div>
 
         <form [formGroup]="formSolicitacao" (ngSubmit)="enviarSolicitacao()" class="flex flex-col gap-5">
 
             <app-input-texto id="equipamento" label="Descrição do Equipamento"
                 placeholder="Ex: PC Intel Pentium G4560 GTX1030"
-                [control]="formSolicitacao.controls.descricaoEquipamento"></app-input-texto>
+                [control]="formSolicitacao.controls.descricaoEquipamento">
+            </app-input-texto>
 
             <app-select label="Categoria do Equipamento" [options]="opcoesCategoriaEquipamento"
                 [control]="formSolicitacao.controls.categoriaEquipamento">
@@ -15,9 +25,11 @@
 
             <app-text-area id="descricaoProblema" label="Descrição do Problema"
                 placeholder="Desliga quando tem alto processamento"
-                [control]="formSolicitacao.controls.descricaoProblema"></app-text-area>
+                [control]="formSolicitacao.controls.descricaoProblema">
+            </app-text-area>
 
-            <button type="submit" class="mt-2 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">
+            <button type="submit"
+                class="mt-3 w-full bg-linear-to-b from-primary-subtle to-primary text-on-primary font-heading font-bold text-base py-2.5 px-6 rounded-full border border-primary shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-[1.02] active:scale-95 cursor-pointer">
                 Enviar Solicitação
             </button>
 

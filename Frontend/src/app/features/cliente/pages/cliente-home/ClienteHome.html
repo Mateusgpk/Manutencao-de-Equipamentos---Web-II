@@ -1,207 +1,251 @@
 <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-  <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-    <h1 class="text-2xl font-bold text-slate-900">Minhas Solicitações</h1>
-    <a
-      class="inline-flex items-center justify-center rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      routerLink="/solicitar-manutencao"
-    >
+  <div
+    class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between glass-card bg-white/40 backdrop-blur-[35px] border border-white/50 shadow-glass rounded-[20px] px-6 py-4">
+    <h1
+      class="text-2xl font-extrabold font-heading bg-linear-to-b from-primary to-primary-hover bg-clip-text text-transparent drop-shadow-xs">
+      Minhas Solicitações
+    </h1>
+    <a class="inline-flex items-center justify-center rounded-full border border-accent bg-linear-to-b from-accent-subtle to-accent px-5 py-2 text-sm font-bold font-heading text-on-accent shadow-md shadow-accent/30 transition-all hover:brightness-110 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+      routerLink="/solicitar-manutencao">
       Solicitar Manutenção
     </a>
   </div>
-  <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
-    <table class="min-w-full divide-y divide-slate-200 text-sm">
-      <thead class="bg-slate-100 text-left text-xs font-semibold uppercase text-slate-600"><tr>
-        <th class="px-4 py-3">Data/Hora</th><th class="px-4 py-3">Equipamento</th><th class="px-4 py-3">Estado</th>
-        <th class="px-4 py-3 text-right">Visualizar</th><th class="px-4 py-3 text-right">Ação</th>
-      </tr></thead>
-      <tbody class="divide-y divide-slate-100">
+
+  <div
+    class="glass-card overflow-x-auto rounded-[20px] border border-white/50 bg-white/40 backdrop-blur-[35px] shadow-glass">
+    <table class="min-w-full divide-y divide-border text-sm">
+      <thead
+        class="bg-linear-to-b from-surface/95 via-surface/85 to-surface-muted/95 text-left text-xs font-bold font-heading uppercase tracking-wider text-foreground">
+        <tr class="divide-x divide-border-subtle">
+          <th class="px-4 py-3.5 transition-colors hover:bg-primary-subtle/40">Data/Hora</th>
+          <th class="px-4 py-3.5 transition-colors hover:bg-primary-subtle/40">Equipamento</th>
+          <th class="px-4 py-3.5 transition-colors hover:bg-primary-subtle/40">Estado</th>
+          <th class="px-4 py-3.5 text-right transition-colors hover:bg-primary-subtle/40">Visualizar</th>
+          <th class="px-4 py-3.5 text-right transition-colors hover:bg-primary-subtle/40">Ação</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-border-subtle/80 bg-surface/40">
         @for (s of solicitacoes; track s.id) {
-          <tr>
-            <td class="whitespace-nowrap px-4 py-3">{{ dataHora(s.dataHoraAbertura) }}</td>
-            <td class="px-4 py-3" [title]="s.descricaoEquipamento">{{ limitar(s.descricaoEquipamento) }}</td>
-            <td class="whitespace-nowrap px-4 py-3">{{ estadoLabel[s.estado] }}</td>
-            <td class="whitespace-nowrap px-4 py-3 text-right">
-              <button class="rounded border px-3 py-1 text-xs" type="button" (click)="visualizar(s)">Visualizar Solicitação</button>
-            </td>
-            <td class="whitespace-nowrap px-4 py-3 text-right">
-              @if (s.estado === EstadoSolicitacao.ORCADA) {
-                <a class="rounded bg-blue-600 px-3 py-1 text-xs font-semibold text-white" [routerLink]="['/orcamento', s.id]">Aprovar/Rejeitar Serviço</a>
-              } @else if (s.estado === EstadoSolicitacao.REJEITADA) {
-                <button class="rounded bg-emerald-600 px-3 py-1 text-xs font-semibold text-white" type="button" (click)="resgatar(s)">Resgatar Serviço</button>
-              } @else if (s.estado === EstadoSolicitacao.ARRUMADA) {
-                <a class="rounded bg-blue-600 px-3 py-1 text-xs font-semibold text-white" [routerLink]="['/pagar-servico', s.id]">Pagar Serviço</a>
-              } @else if (s.estado !== EstadoSolicitacao.APROVADA) {
-                <button class="rounded border px-3 py-1 text-xs" type="button" (click)="visualizar(s)">Visualizar Serviço</button>
-              }
-            </td>
-          </tr>
+        <tr
+          class="transition-all duration-150 even:bg-surface-muted/30 hover:bg-linear-to-b hover:from-primary-subtle/40 hover:to-primary-subtle/80 hover:shadow-[inset_0_0_0_1px_rgba(0,153,255,0.35)]">
+          <td class="whitespace-nowrap px-4 py-3.5 font-medium text-foreground-muted">{{ dataHora(s.dataHoraAbertura) }}
+          </td>
+          <td class="px-4 py-3.5 font-semibold text-foreground" [title]="s.descricaoEquipamento">{{
+            limitar(s.descricaoEquipamento) }}</td>
+          <td class="whitespace-nowrap px-4 py-3.5 font-heading font-bold text-primary-hover">{{ estadoLabel[s.estado]
+            }}</td>
+          <td class="whitespace-nowrap px-4 py-3.5 text-right">
+            <button
+              class="rounded-full border border-border bg-linear-to-b from-surface to-surface-muted px-3.5 py-1 text-xs font-heading font-semibold text-foreground shadow-2xs transition-all hover:border-primary/60 hover:from-white hover:to-primary-subtle/60 hover:text-primary-hover active:scale-95 cursor-pointer"
+              type="button" (click)="visualizar(s)">
+              Visualizar Solicitação
+            </button>
+          </td>
+          <td class="whitespace-nowrap px-4 py-3.5 text-right">
+            @if (s.estado === EstadoSolicitacao.ORCADA) {
+            <a class="inline-block rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-3.5 py-1 text-xs font-heading font-bold text-on-primary shadow-sm shadow-primary/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95"
+              [routerLink]="['/orcamento', s.id]">
+              Aprovar/Rejeitar Serviço
+            </a>
+            } @else if (s.estado === EstadoSolicitacao.REJEITADA) {
+            <button
+              class="rounded-full border border-accent bg-linear-to-b from-accent-subtle to-accent px-3.5 py-1 text-xs font-heading font-bold text-on-accent shadow-sm shadow-accent/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95 cursor-pointer"
+              type="button" (click)="resgatar(s)">
+              Resgatar Serviço
+            </button>
+            } @else if (s.estado === EstadoSolicitacao.ARRUMADA) {
+            <a class="inline-block rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-3.5 py-1 text-xs font-heading font-bold text-on-primary shadow-sm shadow-primary/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95"
+              [routerLink]="['/pagar-servico', s.id]">
+              Pagar Serviço
+            </a>
+            } @else if (s.estado !== EstadoSolicitacao.APROVADA) {
+            <button
+              class="rounded-full border border-border bg-linear-to-b from-surface to-surface-muted px-3.5 py-1 text-xs font-heading font-semibold text-foreground shadow-2xs transition-all hover:border-primary/60 hover:from-white hover:to-primary-subtle/60 hover:text-primary-hover active:scale-95 cursor-pointer"
+              type="button" (click)="visualizar(s)">
+              Visualizar Serviço
+            </button>
+            }
+          </td>
+        </tr>
         } @empty {
-          <tr>
-            <td class="px-4 py-6 text-center text-slate-500" colspan="5">Nenhuma solicitação encontrada.</td>
-          </tr>
+        <tr>
+          <td class="px-4 py-8 text-center font-medium text-foreground-muted italic" colspan="5">Nenhuma solicitação
+            encontrada.</td>
+        </tr>
         }
       </tbody>
     </table>
   </div>
 
   @if (solicitacaoSelecionada; as selecionada) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 backdrop-blur-xs px-4"
+    (click)="fecharVisualizacao()">
     <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-      (click)="fecharVisualizacao()"
-    >
-      <div
-        class="w-full max-w-3xl rounded bg-white p-6 shadow-lg"
-        (click)="$event.stopPropagation()"
-      >
-        <h2 class="mb-6 text-xl font-bold text-gray-900">
-          Histórico da Solicitação #{{ selecionada.id }}
-        </h2>
+      class="glass-card w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-[20px] border border-white/60 bg-surface/85 backdrop-blur-[35px] p-6 shadow-glass"
+      (click)="$event.stopPropagation()">
+      <h2
+        class="mb-6 border-b border-border pb-3 text-xl font-extrabold font-heading bg-linear-to-b from-primary to-primary-hover bg-clip-text text-transparent drop-shadow-xs">
+        Histórico da Solicitação #{{ selecionada.id }}
+      </h2>
 
-        <dl class="grid grid-cols-1 gap-4 border-b border-gray-100 pb-6 sm:grid-cols-2">
-          <div>
-            <dt class="text-xs uppercase text-gray-500">Data/Hora da Solicitação</dt>
-            <dd class="text-sm text-gray-900">{{ dataHora(selecionada.dataHoraAbertura) }}</dd>
-          </div>
+      <dl class="grid grid-cols-1 gap-4 rounded-xl border border-border bg-surface/60 p-4 shadow-inner sm:grid-cols-2">
+        <div>
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Data/Hora da
+            Solicitação</dt>
+          <dd class="mt-0.5 text-sm font-semibold text-foreground">{{ dataHora(selecionada.dataHoraAbertura) }}</dd>
+        </div>
 
-          <div>
-            <dt class="text-xs uppercase text-gray-500">Estado atual</dt>
-            <dd class="text-sm text-gray-900">{{ estadoLabel[selecionada.estado] }}</dd>
-          </div>
+        <div>
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Estado atual</dt>
+          <dd class="mt-0.5 text-sm font-heading font-bold text-primary-hover">{{ estadoLabel[selecionada.estado] }}
+          </dd>
+        </div>
 
-          <div>
-            <dt class="text-xs uppercase text-gray-500">Equipamento</dt>
-            <dd class="text-sm text-gray-900">{{ selecionada.descricaoEquipamento }}</dd>
-          </div>
+        <div>
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Equipamento</dt>
+          <dd class="mt-0.5 text-sm font-semibold text-foreground">{{ selecionada.descricaoEquipamento }}</dd>
+        </div>
 
-          <div>
-            <dt class="text-xs uppercase text-gray-500">Categoria</dt>
-            <dd class="text-sm text-gray-900">{{ selecionada.categoriaEquipamento }}</dd>
-          </div>
+        <div>
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Categoria</dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">{{ selecionada.categoriaEquipamento }}</dd>
+        </div>
 
-          <div class="sm:col-span-2">
-            <dt class="text-xs uppercase text-gray-500">Descrição do Defeito</dt>
-            <dd class="text-sm text-gray-900">{{ selecionada.descricaoDefeito }}</dd>
-          </div>
+        <div class="sm:col-span-2">
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Descrição do Defeito
+          </dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">{{ selecionada.descricaoDefeito }}</dd>
+        </div>
 
-          <div class="sm:col-span-2">
-            <dt class="text-xs uppercase text-gray-500">Cliente</dt>
-            <dd class="text-sm text-gray-900">{{ selecionada.clienteNome }} - CPF: {{ selecionada.clienteCpf }}</dd>
-          </div>
+        <div class="sm:col-span-2">
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Cliente</dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">{{ selecionada.clienteNome }} - CPF: {{
+            selecionada.clienteCpf }}</dd>
+        </div>
 
-          <div>
-            <dt class="text-xs uppercase text-gray-500">Telefone</dt>
-            <dd class="text-sm text-gray-900">{{ selecionada.clienteTelefone }}</dd>
-          </div>
+        <div>
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Telefone</dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">{{ selecionada.clienteTelefone }}</dd>
+        </div>
 
-          <div>
-            <dt class="text-xs uppercase text-gray-500">Endereço</dt>
-            <dd class="text-sm text-gray-900">{{ selecionada.clienteEndereco }}</dd>
-          </div>
+        <div>
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Endereço</dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">{{ selecionada.clienteEndereco }}</dd>
+        </div>
 
-          <div>
-            <dt class="text-xs uppercase text-gray-500">Valor Orçado</dt>
-            <dd class="text-sm text-gray-900">
-              @if (selecionada.valorOrcamento !== undefined) {
-                {{ selecionada.valorOrcamento | currency:'BRL' }}
-              } @else {
-                Não informado
-              }
-            </dd>
-          </div>
-
-          @if (selecionada.funcionarioOrcamento) {
-            <div>
-              <dt class="text-xs uppercase text-gray-500">Orçamento realizado por</dt>
-              <dd class="text-sm text-gray-900">
-                {{ selecionada.funcionarioOrcamento }}
-                @if (selecionada.dataHoraOrcamento) {
-                  em {{ dataHora(selecionada.dataHoraOrcamento) }}
-                }
-              </dd>
-            </div>
-          }
-
-          @if (selecionada.motivoRejeicao) {
-            <div class="sm:col-span-2">
-              <dt class="text-xs uppercase text-gray-500">Motivo da rejeição</dt>
-              <dd class="text-sm text-gray-900">{{ selecionada.motivoRejeicao }}</dd>
-            </div>
-          }
-
-          @if (selecionada.descricaoManutencao) {
-            <div class="sm:col-span-2">
-              <dt class="text-xs uppercase text-gray-500">Descrição da Manutenção</dt>
-              <dd class="text-sm text-gray-900">{{ selecionada.descricaoManutencao }}</dd>
-            </div>
-          }
-
-          @if (selecionada.orientacoesCliente) {
-            <div class="sm:col-span-2">
-              <dt class="text-xs uppercase text-gray-500">Orientações para o Cliente</dt>
-              <dd class="text-sm text-gray-900">{{ selecionada.orientacoesCliente }}</dd>
-            </div>
-          }
-
-          @if (selecionada.funcionarioDestino) {
-            <div>
-              <dt class="text-xs uppercase text-gray-500">Redirecionada para</dt>
-              <dd class="text-sm text-gray-900">{{ selecionada.funcionarioDestino }}</dd>
-            </div>
-          }
-
-          @if (selecionada.dataHoraPagamento) {
-            <div>
-              <dt class="text-xs uppercase text-gray-500">Data/Hora do Pagamento</dt>
-              <dd class="text-sm text-gray-900">{{ dataHora(selecionada.dataHoraPagamento) }}</dd>
-            </div>
-          }
-        </dl>
-
-        <div class="mt-6">
-          <h3 class="mb-3 text-sm font-semibold text-gray-900">Histórico</h3>
-
-          <ul class="space-y-2">
-            @for (h of selecionada.historico; track h.dataHora) {
-              <li class="text-sm text-gray-700">
-                {{ dataHora(h.dataHora) }} - {{ estadoLabel[h.estado] }}
-                @if (h.funcionario) {
-                  <span>| Funcionário: {{ h.funcionario }}</span>
-                }
-                @if (h.funcionarioDestino) {
-                  <span>| Destino: {{ h.funcionarioDestino }}</span>
-                }
-                @if (h.observacao) {
-                  <span>| Obs.: {{ h.observacao }}</span>
-                }
-              </li>
+        <div>
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Valor Orçado</dt>
+          <dd class="mt-0.5 text-sm font-bold text-foreground">
+            @if (selecionada.valorOrcamento !== undefined) {
+            {{ selecionada.valorOrcamento | currency:'BRL' }}
+            } @else {
+            Não informado
             }
-          </ul>
+          </dd>
         </div>
 
-        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
-          @if (selecionada.estado === EstadoSolicitacao.ORCADA) {
-            <a class="rounded bg-blue-600 px-5 py-2 text-center text-white hover:bg-blue-700" [routerLink]="['/orcamento', selecionada.id]">
-              Aprovar/Rejeitar Serviço
-            </a>
-          } @else if (selecionada.estado === EstadoSolicitacao.REJEITADA) {
-            <button class="rounded bg-emerald-600 px-5 py-2 text-white hover:bg-emerald-700" type="button" (click)="resgatar(selecionada)">
-              Resgatar Serviço
-            </button>
-          } @else if (selecionada.estado === EstadoSolicitacao.ARRUMADA) {
-            <a class="rounded bg-blue-600 px-5 py-2 text-center text-white hover:bg-blue-700" [routerLink]="['/pagar-servico', selecionada.id]">
-              Pagar Serviço
-            </a>
-          }
-          <button
-            type="button"
-            class="rounded bg-blue-500 px-5 py-2 text-white hover:bg-blue-600"
-            (click)="fecharVisualizacao()"
-          >
-            OK
-          </button>
+        @if (selecionada.funcionarioOrcamento) {
+        <div>
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Orçamento realizado
+            por</dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">
+            {{ selecionada.funcionarioOrcamento }}
+            @if (selecionada.dataHoraOrcamento) {
+            em {{ dataHora(selecionada.dataHoraOrcamento) }}
+            }
+          </dd>
         </div>
+        }
+
+        @if (selecionada.motivoRejeicao) {
+        <div class="sm:col-span-2">
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-danger">Motivo da rejeição</dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">{{ selecionada.motivoRejeicao }}</dd>
+        </div>
+        }
+
+        @if (selecionada.descricaoManutencao) {
+        <div class="sm:col-span-2">
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Descrição da
+            Manutenção</dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">{{ selecionada.descricaoManutencao }}</dd>
+        </div>
+        }
+
+        @if (selecionada.orientacoesCliente) {
+        <div class="sm:col-span-2">
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Orientações para o
+            Cliente</dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">{{ selecionada.orientacoesCliente }}</dd>
+        </div>
+        }
+
+        @if (selecionada.funcionarioDestino) {
+        <div>
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Redirecionada para
+          </dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">{{ selecionada.funcionarioDestino }}</dd>
+        </div>
+        }
+
+        @if (selecionada.dataHoraPagamento) {
+        <div>
+          <dt class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Data/Hora do
+            Pagamento</dt>
+          <dd class="mt-0.5 text-sm font-medium text-foreground">{{ dataHora(selecionada.dataHoraPagamento) }}</dd>
+        </div>
+        }
+      </dl>
+
+      <div class="mt-6">
+        <h3 class="mb-3 text-sm font-extrabold font-heading uppercase tracking-wider text-foreground">Histórico</h3>
+
+        <ul class="space-y-2 rounded-xl border border-border bg-surface/60 p-4 shadow-inner">
+          @for (h of selecionada.historico; track h.dataHora) {
+          <li
+            class="border-b border-border-subtle/70 pb-1.5 text-sm font-medium text-foreground last:border-none last:pb-0">
+            {{ dataHora(h.dataHora) }} - <span class="font-heading font-bold text-primary-hover">{{
+              estadoLabel[h.estado] }}</span>
+            @if (h.funcionario) {
+            <span class="text-foreground-muted"> | Funcionário: {{ h.funcionario }}</span>
+            }
+            @if (h.funcionarioDestino) {
+            <span class="text-foreground-muted"> | Destino: {{ h.funcionarioDestino }}</span>
+            }
+            @if (h.observacao) {
+            <span class="text-foreground-muted"> | Obs.: {{ h.observacao }}</span>
+            }
+          </li>
+          }
+        </ul>
+      </div>
+
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+        @if (selecionada.estado === EstadoSolicitacao.ORCADA) {
+        <a class="rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-5 py-2 text-center font-heading font-bold text-on-primary shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105"
+          [routerLink]="['/orcamento', selecionada.id]">
+          Aprovar/Rejeitar Serviço
+        </a>
+        } @else if (selecionada.estado === EstadoSolicitacao.REJEITADA) {
+        <button
+          class="rounded-full border border-accent bg-linear-to-b from-accent-subtle to-accent px-5 py-2 font-heading font-bold text-on-accent shadow-md shadow-accent/30 transition-all hover:brightness-110 hover:scale-105 cursor-pointer"
+          type="button" (click)="resgatar(selecionada)">
+          Resgatar Serviço
+        </button>
+        } @else if (selecionada.estado === EstadoSolicitacao.ARRUMADA) {
+        <a class="rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-5 py-2 text-center font-heading font-bold text-on-primary shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105"
+          [routerLink]="['/pagar-servico', selecionada.id]">
+          Pagar Serviço
+        </a>
+        }
+        <button type="button"
+          class="rounded-full border border-border bg-linear-to-b from-surface to-surface-muted px-6 py-2 font-heading font-bold text-foreground shadow-sm transition-all hover:border-primary/60 hover:from-white hover:to-primary-subtle/60 hover:text-primary-hover active:scale-95 cursor-pointer"
+          (click)="fecharVisualizacao()">
+          OK
+        </button>
       </div>
     </div>
+  </div>
   }
   <router-outlet></router-outlet>
 </section>
