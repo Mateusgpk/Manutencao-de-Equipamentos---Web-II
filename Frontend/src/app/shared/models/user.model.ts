@@ -4,9 +4,7 @@ export class User {
     email!: string;
     password!: string;
     role!: string;
-    constructor (email:string,password:string,role:string){
-        this.email=email;
-        this.password=password;
-        this.role=role;
+    constructor (dados: Partial<User>){
+        Object.assign(this, dados);
     }
 }

@@ -107,11 +107,11 @@ export class FormCadastro implements OnInit {
       console.log('Dados enviados:', this.formCadastro.value);
       const user = new Client({
         ...(this.formCadastro.value as Partial<Client>),
-        user: new User(
-          String(this.formCadastro.value.email),
-          String(this.formCadastro.value.senha),
-          'CLIENT',
-        ),
+        user: new User({
+          email: String(this.formCadastro.value.email),
+          password: String(this.formCadastro.value.senha),
+          role: 'CLIENT',
+        }),
       });
       this.loginAutenticador.inserirCliente(user).subscribe((sucesso) => {
         if (sucesso) {

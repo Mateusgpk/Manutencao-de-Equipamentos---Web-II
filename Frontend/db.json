@@ -24,7 +24,7 @@
     {
       "id": "4",
       "active": true,
-      "email": "pum@a",
+      "email": "pumaa@aaaaa",
       "password": "123456",
       "role": "EMPLOYEE"
     }
@@ -87,11 +87,11 @@
       "user": {
         "id": "4",
         "active": true,
-        "email": "pum@a",
+        "email": "pumaa@aaaaa",
         "password": "123456",
         "role": "EMPLOYEE"
       },
-      "email": "robertao@fake",
+      "email": "pumaa@aaaaa",
       "senha": "123456"
     }
   ],

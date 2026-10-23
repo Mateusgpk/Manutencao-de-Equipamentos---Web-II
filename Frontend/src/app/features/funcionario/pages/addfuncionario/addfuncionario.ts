@@ -14,7 +14,7 @@ import { OnInit } from '@angular/core';
 })
 export class Addfuncionario implements OnInit {
   novoUsuario = signal(true);
-  usuario = signal(new Employee({user: new User('', '', 'EMPLOYEE')}));
+  usuario = signal(new Employee({user: new User({email: '', password: '', role: 'EMPLOYEE'})}));
   id: string = "";
   loading = signal(false);
   senhaAntiga: string = "";
@@ -28,7 +28,7 @@ export class Addfuncionario implements OnInit {
     dataNascimento: new FormControl('', [Validators.required]),
   });
   ngOnInit(): void {
-    this.usuario.set(new Employee({user: new User('', '', 'EMPLOYEE')}));
+    this.usuario.set(new Employee({user: new User({email: '', password: '', role: 'EMPLOYEE'})}));
     this.loading.set(false);
     this.id = this.route.snapshot.params['id'];
     this.novoUsuario.set(!this.id);
@@ -58,7 +58,7 @@ export class Addfuncionario implements OnInit {
       
       if (this.novoUsuario()) {
       const funcionario = new Employee({...(this.FormCadastro.value as Partial<Employee>),
-        user: new User(String(this.FormCadastro.value.email),String(this.FormCadastro.value.senha),"EMPLOYEE")
+        user: new User({email: String(this.FormCadastro.value.email), password: String(this.FormCadastro.value.senha), role: "EMPLOYEE"})
         });
         if (this.crudfuncionario.addFuncionario(funcionario)) {
           console.log('Funcionário adicionado com sucesso');
@@ -68,7 +68,8 @@ export class Addfuncionario implements OnInit {
     } else{
       let funcionario = new Employee({...(this.FormCadastro.value as Partial<Employee>),
         id: this.id,
-        user: this.usuario().user
+        user: new User({id: this.usuario().user.id, email: String(this.FormCadastro.value.email), password: String(this.FormCadastro.value.senha), role: "EMPLOYEE"}),
+
       });
       this.crudfuncionario.alterarFuncionario(funcionario);
       console.log('Funcionário alterado com sucesso');
@@ -76,6 +77,8 @@ export class Addfuncionario implements OnInit {
     } else {
       console.log('Formulário inválido');
     }
+
+    this.router.navigate(['/employee/crud-funcionario']);
   }
 
 
