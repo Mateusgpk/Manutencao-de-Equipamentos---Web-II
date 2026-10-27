@@ -20,6 +20,7 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean ativo = true; 
 }

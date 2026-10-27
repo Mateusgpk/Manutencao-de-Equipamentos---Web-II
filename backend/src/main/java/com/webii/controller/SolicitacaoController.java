@@ -8,6 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
+import com.webii.dto.ManutencaoDTO;
+import com.webii.dto.OrcamentoDTO;
+import com.webii.dto.RedirecionamentoDTO;
+import com.webii.dto.RejeicaoDTO;
+import com.webii.dto.SolicitacaoCreateDTO;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import java.net.URI;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,8 +58,8 @@ public class SolicitacaoController {
         return solicitacaoService.listarPorCliente(clientId);
     }
 
-    @GetMapping("/{abertas}")
-    public List<solicitacao> getAbertas() {
+    @GetMapping("/abertas")
+    public List<Solicitacao> getAbertas() {
         return solicitacaoService.listarAbertas();
     }
 
@@ -71,8 +80,7 @@ public class SolicitacaoController {
 
     @PatchMapping("/{id}/aprovacao")
     public Solicitacao rejeitarServico(
-        @PathVariable Long id,
-        @Valid @RequestBody RejeicaoDTO dto) {
+        @PathVariable Long id) {
         return solicitacaoService.aprovarServico(id);
         }
     

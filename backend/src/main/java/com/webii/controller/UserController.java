@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> buscarFuncionario(@PathVariable("id") Long id){
-        Optional<User> usuario = userRepository.findByUserId(id);
+        Optional<User> usuario = userRepository.findById(id);
         if (usuario.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }else {
@@ -45,6 +45,6 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Void> cadastrar(@Valid @RequestBody User usuario) {
         User salvo = userRepository.save(usuario);
-        return ResponseEntity.created(URI.create("/api/employee/" + salvo.getId())).build();
+        return ResponseEntity.created(URI.create("/api/users/" + salvo.getId())).build();
     }
 }

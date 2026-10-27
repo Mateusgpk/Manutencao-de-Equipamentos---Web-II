@@ -27,6 +27,7 @@ public class Employee {
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean ativo = true;
 
