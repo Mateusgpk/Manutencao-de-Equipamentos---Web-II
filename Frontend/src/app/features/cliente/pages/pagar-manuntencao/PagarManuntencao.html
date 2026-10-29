@@ -1,7 +1,7 @@
 <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
   @switch (etapa()) {
   @case ('carregando') {
-  <p class="text-center text-slate-500">Carregando dados do pagamento...</p>
+  <p class="text-center text-foreground-muted">Carregando dados do pagamento...</p>
   }
 
   @case ('naoEncontrada') {
@@ -11,7 +11,7 @@
     </p>
 
     <a routerLink="/home"
-      class="mt-4 inline-block rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600">
+      class="mt-4 inline-block rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-5 py-2 text-sm font-heading font-bold text-on-primary shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
       Voltar para o início
     </a>
   </div>
@@ -19,31 +19,31 @@
 
   @default {
   @if (solicitacao(); as s) {
-  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-    <a routerLink="/home" class="text-sm font-medium text-slate-500 transition hover:text-slate-800">
+  <div class="glass-card rounded-[20px] border border-white/50 bg-white/40 backdrop-blur-[35px] shadow-glass p-6 sm:p-8">
+    <a routerLink="/home" class="text-sm font-heading font-semibold text-foreground-muted transition hover:text-primary-hover">
       &larr; Voltar para o início
     </a>
 
     <div class="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
       <!-- Coluna principal -->
       <div>
-        <h1 class="text-3xl font-bold text-slate-900">Pagamento</h1>
-        <p class="mt-1 text-sm text-slate-500">
+        <h1 class="text-3xl font-extrabold font-heading bg-linear-to-b from-primary to-primary-hover bg-clip-text text-transparent drop-shadow-xs">Pagamento</h1>
+        <p class="mt-1 text-sm text-foreground-muted">
           Escolha a forma de pagamento e finalize o pagamento do serviço com segurança.
         </p>
 
-        <p class="mt-8 text-base font-semibold text-slate-900">Forma de pagamento</p>
+        <p class="mt-8 text-base font-heading font-bold text-foreground">Forma de pagamento</p>
         <div class="mt-3 grid grid-cols-2 gap-4">
           <label
-            class="relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-6 text-sm font-medium text-slate-700 transition has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-700">
-            <input type="radio" name="metodo" class="absolute left-3 top-3 h-4 w-4 accent-blue-500"
+            class="relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-border bg-surface/60 px-4 py-6 text-sm font-heading font-semibold text-foreground transition-all hover:border-primary/60 has-[:checked]:border-primary has-[:checked]:bg-primary-subtle/60 has-[:checked]:text-primary-hover has-[:checked]:shadow-md has-[:checked]:shadow-primary/20">
+            <input type="radio" name="metodo" class="absolute left-3 top-3 h-4 w-4 accent-primary"
               [checked]="metodo() === 'cartao'" (change)="selecionarMetodo('cartao')" />
             <i class="fa-solid fa-credit-card text-2xl"></i>
             Cartão de crédito
           </label>
           <label
-            class="relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-6 text-sm font-medium text-slate-700 transition has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-700">
-            <input type="radio" name="metodo" class="absolute left-3 top-3 h-4 w-4 accent-blue-500"
+            class="relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-border bg-surface/60 px-4 py-6 text-sm font-heading font-semibold text-foreground transition-all hover:border-primary/60 has-[:checked]:border-primary has-[:checked]:bg-primary-subtle/60 has-[:checked]:text-primary-hover has-[:checked]:shadow-md has-[:checked]:shadow-primary/20">
+            <input type="radio" name="metodo" class="absolute left-3 top-3 h-4 w-4 accent-primary"
               [checked]="metodo() === 'pix'" (change)="selecionarMetodo('pix')" />
             <i class="fa-brands fa-pix text-2xl"></i>
             Pix
@@ -51,61 +51,61 @@
         </div>
 
         @if (metodo() === 'cartao') {
-        <form class="mt-6 space-y-4 rounded-xl border border-slate-200 p-5" [formGroup]="cartaoForm" novalidate>
-          <p class="text-base font-semibold text-slate-900">Dados do cartão</p>
+        <form class="mt-6 space-y-4 rounded-xl border border-border bg-surface/60 p-5 shadow-inner" [formGroup]="cartaoForm" novalidate>
+          <p class="text-base font-heading font-bold text-foreground">Dados do cartão</p>
 
           <div>
-            <label for="cartao-numero" class="block text-sm font-medium text-slate-800">Número do cartão</label>
+            <label for="cartao-numero" class="block text-sm font-heading font-semibold text-foreground">Número do cartão</label>
             <input id="cartao-numero" type="text" formControlName="numero" inputmode="numeric" maxlength="19"
               placeholder="1234 5678 9012 3456" (input)="mascararNumero($event)"
-              class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none" />
+              class="mt-1 w-full px-3 py-2.5 text-sm rounded-xl border border-border bg-surface/80 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
             @if (campoInvalido('numero')) {
-            <p class="mt-1 text-xs text-red-600">Informe os 16 dígitos do cartão.</p>
+            <p class="mt-1 text-xs text-danger">Informe os 16 dígitos do cartão.</p>
             }
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="cartao-validade" class="block text-sm font-medium text-slate-800">Validade</label>
+              <label for="cartao-validade" class="block text-sm font-heading font-semibold text-foreground">Validade</label>
               <input id="cartao-validade" type="text" formControlName="validade" inputmode="numeric" maxlength="5"
                 placeholder="MM/AA" (input)="mascararValidade($event)"
-                class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none" />
+                class="mt-1 w-full px-3 py-2.5 text-sm rounded-xl border border-border bg-surface/80 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
               @if (campoInvalido('validade')) {
-              <p class="mt-1 text-xs text-red-600">
+              <p class="mt-1 text-xs text-danger">
                 @if (cartaoForm.controls.validade.hasError('cartaoVencido')) { Cartão vencido. }
                 @else { Use o formato MM/AA. }
               </p>
               }
             </div>
             <div>
-              <label for="cartao-cvc" class="block text-sm font-medium text-slate-800">CVC</label>
+              <label for="cartao-cvc" class="block text-sm font-heading font-semibold text-foreground">CVC</label>
               <input id="cartao-cvc" type="text" formControlName="cvc" inputmode="numeric" maxlength="4"
                 placeholder="123" (input)="mascararCvc($event)"
-                class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none" />
+                class="mt-1 w-full px-3 py-2.5 text-sm rounded-xl border border-border bg-surface/80 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
               @if (campoInvalido('cvc')) {
-              <p class="mt-1 text-xs text-red-600">Informe 3 ou 4 dígitos.</p>
+              <p class="mt-1 text-xs text-danger">Informe 3 ou 4 dígitos.</p>
               }
             </div>
           </div>
 
           <div>
-            <label for="cartao-nome" class="block text-sm font-medium text-slate-800">Nome no cartão</label>
+            <label for="cartao-nome" class="block text-sm font-heading font-semibold text-foreground">Nome no cartão</label>
             <input id="cartao-nome" type="text" formControlName="nome" placeholder="Como está no cartão"
-              class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none" />
+              class="mt-1 w-full px-3 py-2.5 text-sm rounded-xl border border-border bg-surface/80 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
             @if (campoInvalido('nome')) {
-            <p class="mt-1 text-xs text-red-600">Informe o nome como está no cartão.</p>
+            <p class="mt-1 text-xs text-danger">Informe o nome como está no cartão.</p>
             }
           </div>
         </form>
         } @else {
-        <div class="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600">
+        <div class="mt-6 rounded-xl border border-border bg-surface/60 p-5 text-sm text-foreground-muted shadow-inner">
           O código Pix será gerado depois que você confirmar o pagamento.
         </div>
         }
 
         @if (etapa() === 'pagamento') {
         <button type="button"
-          class="mt-6 w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+          class="mt-6 w-full rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-5 py-3 text-sm font-heading font-bold text-on-primary shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           (click)="abrirConfirmacaoPagamento()">
           Confirmar Pagamento
         </button>
@@ -113,33 +113,33 @@
       </div>
 
       <!-- Resumo da solicitação -->
-      <aside class="h-fit rounded-xl border border-slate-200 bg-slate-50 p-6">
-        <h2 class="text-lg font-bold text-slate-900">Resumo da solicitação</h2>
+      <aside class="h-fit rounded-xl border border-border bg-surface/60 p-6 shadow-inner">
+        <h2 class="text-lg font-heading font-bold text-foreground">Resumo da solicitação</h2>
 
-        <div class="mt-4 border-b border-slate-200 pb-4">
-          <p class="text-sm font-semibold text-slate-900">{{ s.descricaoEquipamento }}</p>
-          <p class="mt-1 text-xs text-slate-500">Categoria: {{ s.categoriaEquipamento }}</p>
-          <p class="mt-1 text-xs text-slate-500">Solicitação #{{ s.id }}</p>
+        <div class="mt-4 border-b border-border-subtle pb-4">
+          <p class="text-sm font-semibold text-foreground">{{ s.descricaoEquipamento }}</p>
+          <p class="mt-1 text-xs text-foreground-muted">Categoria: {{ s.categoriaEquipamento }}</p>
+          <p class="mt-1 text-xs text-foreground-muted">Solicitação #{{ s.id }}</p>
         </div>
 
-        <dl class="mt-4 space-y-3 border-b border-slate-200 pb-4 text-sm">
+        <dl class="mt-4 space-y-3 border-b border-border-subtle pb-4 text-sm">
           <div class="flex justify-between gap-4">
-            <dt class="text-slate-500">Aberta em</dt>
-            <dd class="text-right text-slate-900">{{ s.dataHoraAbertura | date:'short' }}</dd>
+            <dt class="text-foreground-muted">Aberta em</dt>
+            <dd class="text-right text-foreground">{{ s.dataHoraAbertura | date:'short' }}</dd>
           </div>
           <div class="flex justify-between gap-4">
-            <dt class="text-slate-500">Situação</dt>
-            <dd class="text-right text-slate-900">{{ estadoLabel[s.estado] }}</dd>
+            <dt class="text-foreground-muted">Situação</dt>
+            <dd class="text-right text-foreground">{{ estadoLabel[s.estado] }}</dd>
           </div>
           <div class="gap-1">
-            <dt class="text-slate-500">Defeito</dt>
-            <dd class="mt-1 text-slate-900">{{ s.descricaoDefeito }}</dd>
+            <dt class="text-foreground-muted">Defeito</dt>
+            <dd class="mt-1 text-foreground">{{ s.descricaoDefeito }}</dd>
           </div>
         </dl>
 
         <div class="mt-4 flex items-baseline justify-between">
-          <span class="text-base font-bold text-slate-900">Total</span>
-          <span class="text-2xl font-extrabold text-blue-900">{{ s.valorOrcamento | currency:'BRL' }}</span>
+          <span class="text-base font-heading font-bold text-foreground">Total</span>
+          <span class="text-2xl font-extrabold font-heading text-primary-hover">{{ s.valorOrcamento | currency:'BRL' }}</span>
         </div>
       </aside>
     </div>
@@ -151,43 +151,43 @@
   @if (etapa() === 'confirmandoPagamento') {
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
     (click)="!enviandoPagamento() && cancelarConfirmacao()">
-    <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl" (click)="$event.stopPropagation()">
-      <p class="text-lg font-semibold text-slate-900">Confirmar pagamento</p>
-      <p class="mt-2 text-sm text-slate-500">
+    <div class="w-full max-w-sm rounded-[20px] border border-white/60 bg-white/90 p-6 text-center shadow-xl backdrop-blur-[35px]" (click)="$event.stopPropagation()">
+      <p class="text-lg font-heading font-bold text-foreground">Confirmar pagamento</p>
+      <p class="mt-2 text-sm text-foreground-muted">
         Revise os dados antes de confirmar o pagamento da solicitação #{{ solicitacao()?.id }}.
       </p>
 
-      <div class="mt-4 rounded-lg bg-blue-50 p-4 text-left">
+      <div class="mt-4 rounded-xl border border-primary/20 bg-primary-subtle/60 p-4 text-left">
         <dl class="space-y-2 text-sm">
           <div class="flex justify-between gap-4">
-            <dt class="text-slate-500">Equipamento</dt>
-            <dd class="text-right font-medium text-slate-900">
+            <dt class="text-foreground-muted">Equipamento</dt>
+            <dd class="text-right font-medium text-foreground">
               {{ solicitacao()?.descricaoEquipamento }}
             </dd>
           </div>
           <div class="flex justify-between gap-4">
-            <dt class="text-slate-500">Valor a Pagar</dt>
-            <dd class="text-right text-lg font-bold text-blue-900">
+            <dt class="text-foreground-muted">Valor a Pagar</dt>
+            <dd class="text-right text-lg font-bold font-heading text-primary-hover">
               {{ solicitacao()?.valorOrcamento | currency:'BRL' }}
             </dd>
           </div>
         </dl>
       </div>
 
-      <p class="mt-3 text-xs text-slate-500">Essa ação não pode ser desfeita.</p>
+      <p class="mt-3 text-xs text-foreground-muted">Essa ação não pode ser desfeita.</p>
 
       @if (erro()) {
-      <p class="mt-3 text-sm font-medium text-red-600" role="alert">{{ erro() }}</p>
+      <p class="mt-3 text-sm font-medium text-danger" role="alert">{{ erro() }}</p>
       }
 
       <div class="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
         <button type="button"
-          class="flex-1 rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+          class="flex-1 rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-5 py-2.5 text-sm font-heading font-bold text-on-primary shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           [disabled]="enviandoPagamento()" (click)="confirmarPagamento()">
           Sim, pagar
         </button>
         <button type="button"
-          class="flex-1 rounded-md border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          class="flex-1 rounded-full border border-border bg-linear-to-b from-surface to-surface-muted px-5 py-2.5 text-sm font-heading font-semibold text-foreground shadow-2xs transition-all hover:border-primary/60 hover:from-white hover:to-primary-subtle/60 hover:text-primary-hover active:scale-95"
           [disabled]="enviandoPagamento()" (click)="cancelarConfirmacao()">
           Cancelar
         </button>
@@ -198,21 +198,21 @@
 
   @if (etapa() === 'pixGerado') {
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
-    <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl">
-      <p class="text-lg font-semibold text-slate-900">Código Pix gerado</p>
-      <p class="mt-2 text-sm text-slate-500">
+    <div class="w-full max-w-sm rounded-[20px] border border-white/60 bg-white/90 p-6 text-center shadow-xl backdrop-blur-[35px]">
+      <p class="text-lg font-heading font-bold text-foreground">Código Pix gerado</p>
+      <p class="mt-2 text-sm text-foreground-muted">
         Use o código abaixo no app do seu banco para pagar
         {{ solicitacao()?.valorOrcamento | currency:'BRL' }}.
       </p>
-
-      <label for="codigo-pix" class="mt-4 block text-left text-sm font-medium text-slate-800">
+      
+      <label for="codigo-pix" class="mt-4 block text-left text-sm font-heading font-semibold text-foreground">
         Pix copia e cola
       </label>
       <textarea id="codigo-pix" readonly rows="4" [value]="codigoPix()"
-        class="mt-1 w-full resize-none break-all rounded-md border border-slate-300 bg-slate-50 p-3 font-mono text-xs text-slate-700 focus:outline-none"></textarea>
+        class="mt-1 w-full resize-none break-all p-3 font-mono text-xs rounded-xl border border-border bg-surface/60 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"></textarea>
 
       <button type="button"
-        class="mt-6 w-full rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600"
+        class="mt-6 w-full rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-5 py-2.5 text-sm font-heading font-bold text-on-primary shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         (click)="voltarParaInicio()">
         Fechar
       </button>
@@ -222,13 +222,13 @@
 
   @if (etapa() === 'pagamentoConfirmado') {
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
-    <div class="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-xl">
-      <p class="text-lg font-semibold text-slate-900">
+    <div class="w-full max-w-sm rounded-[20px] border border-white/60 bg-white/90 p-6 text-center shadow-xl backdrop-blur-[35px]">
+      <p class="text-lg font-heading font-bold text-foreground">
         Pagamento confirmado no valor {{ solicitacao()?.valorOrcamento | currency:'BRL' }}
       </p>
 
       <button type="button"
-        class="mt-6 w-full rounded-md bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600"
+        class="mt-6 w-full rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-5 py-2.5 text-sm font-heading font-bold text-on-primary shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         (click)="voltarParaInicio()">
         OK
       </button>
