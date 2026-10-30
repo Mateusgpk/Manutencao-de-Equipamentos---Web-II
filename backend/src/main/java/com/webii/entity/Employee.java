@@ -27,10 +27,6 @@ public class Employee {
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
-    @Builder.Default
-    @Column(nullable = false)
-    private Boolean ativo = true;
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;

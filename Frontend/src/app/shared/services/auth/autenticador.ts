@@ -15,7 +15,7 @@ export class Autenticador {
   private router = inject(Router)
   private route = inject(ActivatedRoute)
   message!: string;
-  BASE_URL = 'http://localhost:3000/';
+  BASE_URL = 'http://localhost:8080/api/';
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -53,37 +53,11 @@ export class Autenticador {
   }
 
 inseriruser(user: User): Observable<User | boolean> {
-  return this.httpClient.get<User[]>(
+  return this.httpClient.post<User>(
     this.BASE_URL + 'usuarios/',
+    user,
     this.httpOptions
-  ).pipe(
-    switchMap((lista) => {
-      const usuarioEncontrado = lista.find(
-        (u) => u.email === user.email
-      );
-
-      if (usuarioEncontrado) {
-        return of(false);
-      }
-
-      const ids = lista
-        .map((u) => Number(u.id))
-        .filter((id) => !isNaN(id)); 
-
-      user.id = String(
-        ids.length > 0 ? Math.max(...ids) + 1 : 1
-      );
-
-      console.log(user);
-      return this.httpClient.post<User>(
-        this.BASE_URL + 'usuarios/',
-        user,
-        this.httpOptions
-      ).pipe(
-        map(() => user)
-      );
-    })
-  );
+  )
 }
 
   inserirCliente(usuario: Client): Observable<boolean> {

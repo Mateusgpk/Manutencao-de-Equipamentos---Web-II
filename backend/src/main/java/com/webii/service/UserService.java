@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -83,5 +84,14 @@ public class UserService {
                 .role(role)
                 .build();
         return userRepository.save(user);
+    }
+
+    public boolean deletar(long id){
+        Optional<User> usuario = userRepository.findByUserId(id);
+        if (!usuario.isEmpty()) {
+            usuario.get().setAtivo(false);
+            return true;
+        }
+        return false;
     }
 }

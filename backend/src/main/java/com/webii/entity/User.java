@@ -28,6 +28,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;

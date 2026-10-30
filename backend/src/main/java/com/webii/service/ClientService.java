@@ -63,4 +63,9 @@ public class ClientService {
         return clientRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado para este usuário."));
     }
+    public Client deletar(long userId){
+        Client cliete= clientRepository.findByUserId();
+
+
+    }
 }
