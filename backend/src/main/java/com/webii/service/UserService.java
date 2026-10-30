@@ -3,12 +3,15 @@ package com.webii.service;
 import com.webii.entity.User;
 import com.webii.enums.Role;
 import com.webii.repository.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -29,6 +32,18 @@ public class UserService {
             throw new IllegalArgumentException("Usuário ou senha inválidos.");
         }
         return user;
+    }
+
+    public List<User> listarTodos(){
+        return userRepository.findAll();
+    }
+    public User encontrarPorId(long id){
+        Optional<User> usuario = userRepository.findByUserId(id);
+        if (usuario.isEmpty()){
+            return usuario.get();
+        }else {
+            return null;
+        }
     }
 
     public String gerarSenhaAleatoria() {
@@ -74,16 +89,17 @@ public class UserService {
         }
     }
 
-    public User criarUsuario(String email, String senha, Role role) {
-        if (userRepository.existsByEmail(email)) {
+    public User criarUsuario(User usuario) {
+        if (userRepository.existsByEmail(usuario.getEmail())) {
             throw new IllegalArgumentException("E-mail já cadastrado.");
         }
-        User user = User.builder()
-                .email(email)
-                .password(hashSenhaComSalt(senha))
-                .role(role)
-                .build();
-        return userRepository.save(user);
+        return userRepository.save(usuario);
+    }
+
+    public User editarUsuario(User usuario, long id){
+        usuario.setId(id);
+        User editado = userRepository.save(usuario);
+        return editado;
     }
 
     public boolean deletar(long id){

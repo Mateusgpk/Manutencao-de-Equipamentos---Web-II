@@ -17,36 +17,35 @@ import java.util.Optional;
 @RequestMapping("/api/usuarios")
 @CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
-    private final UserService userService;
-    public  UserController (UserRepository userRepository){
-        this.userRepository=userRepository;
+    private final UserService userService ;
+    public  UserController (UserService userService){
+        this.userService=userService;
     }
     @GetMapping
     public ResponseEntity<List<User>> listarTodos(){
-        List<User> listaUsuarios = userRepository.findAll();
+        List<User> listaUsuarios = userService.listarTodos();
         return ResponseEntity.ok(listaUsuarios);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> buscarFuncionario(@PathVariable("id") Long id){
-        Optional<User> usuario = userRepository.findById(id);
-        if (usuario.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<User> buscarUsuario(@PathVariable("id") Long id){
+        User usuario = userService.encontrarPorId(id);
+        if (usuario!=null){
+            return ResponseEntity.ok(usuario);
         }else {
-            return ResponseEntity.ok(usuario.get());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
     @PutMapping("/{id}")
-    public ResponseEntity<User> atualizarFuncionario(@PathVariable("id") Long id,@Valid @RequestBody User usuario){
-        usuario.setId(id);
-        User salvo = userRepository.save(usuario);
+    public ResponseEntity<User> atualizarUsuario(@PathVariable("id") Long id,@Valid @RequestBody User usuario){
+        userService.editarUsuario(usuario,id);
         return ResponseEntity.ok(usuario);
     }
 
     @PostMapping
     public ResponseEntity<Void> cadastrar(@Valid @RequestBody User usuario) {
-        User salvo = userService.save(usuario);
-        return ResponseEntity.created(URI.create("/api/users/" + salvo.getId())).build();
+        User salvo = userService.criarUsuario(usuario);
+        return ResponseEntity.created(URI.create("/api/usuarios/" + salvo.getId())).build();
     }
 
     @DeleteMapping("/{id}")
