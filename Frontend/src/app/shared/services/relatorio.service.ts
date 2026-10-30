@@ -16,6 +16,21 @@ export interface LinhaReceita {
 export class RelatorioService {
   private readonly solicitacaoService = inject(SolicitacaoService);
 
+  /** RF019 - receita agrupada por dia do pagamento */
+  receitaPorDia(inicio: string, fim: string): Observable<LinhaReceita[]> {
+    return this.solicitacaoService.listarTodas().pipe(
+      map((lista) => {
+        const grupos = new Map<string, LinhaReceita>();
+        for (const s of this.pagas(lista)) {
+          const dia = this.dia(s.dataHoraPagamento!);
+          if ((inicio && dia < inicio) || (fim && dia > fim)) continue;
+          this.somar(grupos, dia, this.formatarDia(dia), s.valorOrcamento!);
+        }
+        return [...grupos.values()].sort((a, b) => a.chave.localeCompare(b.chave));
+      }),
+    );
+  }
+
   /** RF020 - receita de sempre, agrupada por categoria. */
   receitaPorCategoria(): Observable<LinhaReceita[]> {
     return this.solicitacaoService.listarTodas().pipe(
