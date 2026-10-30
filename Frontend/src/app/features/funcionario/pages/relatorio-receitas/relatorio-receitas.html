@@ -1,1 +1,59 @@
-<p>relatorio-receitas works!</p>
+<!-- Tela de Relatório de Receitas por Dia (RF019). -->
+<section class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+  <header class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-900">Relatório de Receitas</h1>
+  </header>
+
+  <form class="mb-4 flex flex-wrap items-end gap-3" (ngSubmit)="filtrar()">
+    <div>
+      <label for="inicio" class="block text-xs uppercase text-gray-500 mb-1">Data inicial</label>
+      <input id="inicio" type="date" [formControl]="inicioControl" class="rounded border px-3 py-2 text-sm" />
+    </div>
+    <div>
+      <label for="fim" class="block text-xs uppercase text-gray-500 mb-1">Data final</label>
+      <input id="fim" type="date" [formControl]="fimControl" class="rounded border px-3 py-2 text-sm" />
+    </div>
+    <button type="submit" class="rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600">Filtrar</button>
+    <button type="button" (click)="limpar()" class="rounded bg-gray-100 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Limpar</button>
+    <button type="button" (click)="gerarPdf()" [disabled]="linhas().length === 0"
+      class="ml-auto rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700 disabled:opacity-60">
+      Gerar PDF
+    </button>
+  </form>
+
+  @if (periodoInvalido()) {
+    <p class="mb-4 text-sm text-red-600">A data inicial não pode ser maior que a data final.</p>
+  }
+
+  <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
+    <table class="min-w-full divide-y divide-slate-200 text-sm">
+      <thead class="bg-slate-100 text-left text-xs font-semibold uppercase text-slate-600">
+        <tr>
+          <th class="px-4 py-3">Data</th>
+          <th class="px-4 py-3 text-right">Qtd. de serviços</th>
+          <th class="px-4 py-3 text-right">Receita</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        @for (l of linhas(); track l.chave) {
+          <tr>
+            <td class="px-4 py-3 text-slate-900">{{ l.rotulo }}</td>
+            <td class="px-4 py-3 text-right text-slate-700">{{ l.quantidade }}</td>
+            <td class="px-4 py-3 text-right text-slate-900">{{ moeda(l.total) }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td class="px-4 py-6 text-center text-slate-500" colspan="3">Nenhuma receita no período.</td>
+          </tr>
+        }
+      </tbody>
+      <tfoot class="bg-slate-50 font-semibold text-slate-900">
+        <tr>
+          <td class="px-4 py-3">Total</td>
+          <td class="px-4 py-3 text-right">{{ quantidade() }}</td>
+          <td class="px-4 py-3 text-right">{{ moeda(total()) }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</section>
