@@ -41,12 +41,13 @@ export class Addfuncionario implements OnInit {
         this.FormCadastro.setValue({
           name: funcionario.name,
           email: funcionario.user.email,
-          senha: funcionario.user.password,
+          senha: "",
           dataNascimento: funcionario.dataNascimento
         });
+        console.log("ID do user do funcionário:", this.usuario());
       });
     }
-    console.log("ID do user do funcionário:", this.usuario().user.id);
+    
   }
 
   constructor(private crudfuncionario: Crudfuncionario) {}
@@ -71,6 +72,7 @@ export class Addfuncionario implements OnInit {
         user: new User({id: this.usuario().user.id, email: String(this.FormCadastro.value.email), password: String(this.FormCadastro.value.senha), role: "FUNCIONARIO"}),
 
       });
+      console.log("Funcionário a ser alterado:", funcionario);
       this.crudfuncionario.alterarFuncionario(funcionario);
       console.log('Funcionário alterado com sucesso');
     }

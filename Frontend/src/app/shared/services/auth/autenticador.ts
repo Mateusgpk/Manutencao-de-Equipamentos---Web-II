@@ -76,6 +76,7 @@ inserirFuncionario(usuario: Employee): Observable<boolean> {
   }
   alterarFuncionario(funcionario: Employee): Observable<Employee> {
     funcionario.user.ativo = true;
+    console.log("oiii");
     return this.httpClient.put<Employee>(
       this.BASE_URL + 'employee/' + funcionario.id,
       funcionario,

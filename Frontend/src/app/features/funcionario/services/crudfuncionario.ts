@@ -28,8 +28,10 @@ export class Crudfuncionario {
   })
 }
   alterarFuncionario(employee:Employee):boolean | void {
-    this.loginserver.alterarFuncionario(employee)
-
+     this.loginserver.alterarFuncionario(employee).subscribe( (id) => {
+      console.log("ID do funcionário alterado:", id);
+    });
+  
 
 }
   buscarPorId(id:string|undefined):Observable<Employee>{

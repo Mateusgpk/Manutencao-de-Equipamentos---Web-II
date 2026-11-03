@@ -38,8 +38,7 @@ public class EmployeeService {
     }
 
     public Employee buscarPorId(Long id) {
-        return employeeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
+        return employeeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
     }
     public Employee buscarPorUserId(Long id) {
         return employeeRepository.findByUserId(id)
@@ -48,10 +47,13 @@ public class EmployeeService {
 
     @Transactional
     public Employee atualizar(Long id,Employee funcionario) {
+        System.out.println("ola"+funcionario);
         Employee employee = buscarPorId(id);
         employee.setName(funcionario.getName());
         employee.setDataNascimento(funcionario.getDataNascimento());
-        employee.getUser().setPassword(funcionario.getUser().getPassword());
+        if (!funcionario.getUser().getPassword().isEmpty()) {
+            employee.getUser().setPassword(userService.hashSenhaComSalt(funcionario.getUser().getPassword()));
+        }
         employee.getUser().setEmail(funcionario.getUser().getEmail());
         return employeeRepository.save(employee);
     }

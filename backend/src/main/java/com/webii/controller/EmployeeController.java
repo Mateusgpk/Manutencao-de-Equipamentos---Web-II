@@ -43,7 +43,7 @@ public class EmployeeController {
     @PutMapping("/{id}")
     public ResponseEntity<Employee> atualizarFuncionario(@PathVariable("id") Long id,@Valid @RequestBody Employee employee){
         Employee salvo = employeeService.atualizar(id,employee);
-        return ResponseEntity.ok(employee);
+        return ResponseEntity.ok(salvo);
     }
 
     @PostMapping
