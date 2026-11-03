@@ -1,19 +1,6 @@
 import { Routes } from '@angular/router';
-import { ClienteHome } from './features/cliente/pages/cliente-home/ClienteHome';
-import { Cadastro } from './features/auth/pages/cadastro/cadastro';
-import { SolicitarManutencao } from './features/cliente/pages/solicitar-manutencao/SolicitarManutencao';
-import { Orcamento } from './features/cliente/pages/orcamento/orcamento';
-import { PagarManuntencao } from './features/cliente/pages/pagar-manuntencao/PagarManuntencao';
-import { FuncionarioHome } from './features/funcionario/pages/funcionario-home/FuncionarioHome';
-import { EfetuarOrcamento } from './features/funcionario/pages/efetuar-orcamento/EfetuarOrcamento';
-import { EfetuarManutencao } from './features/funcionario/pages/efetuar-manutencao/EfetuarManutencao';
-import { Categorias } from './features/funcionario/pages/categorias/categorias';
-import { Layout } from './features/funcionario/components/layout/layout';
-import { Funcionarios } from './features/funcionario/pages/funcionarios/funcionarios';
-import { Addfuncionario } from './features/funcionario/pages/addfuncionario/addfuncionario';
-import { RelatorioReceitas } from './features/funcionario/pages/relatorio-receitas/relatorio-receitas';
-import { RelatorioCategorias } from './features/funcionario/pages/relatorio-categorias/relatorio-categorias';
 import { autenticadorGuard } from './shared/services/auth/autenticador-guard';
+import { ModuleWithComponentFactories } from '@angular/core';
 
 export const routes: Routes = [
   {
@@ -23,11 +10,11 @@ export const routes: Routes = [
   },
     {
     path: 'login',
-    component: Cadastro,
+    loadComponent: () => import('./features/auth/pages/cadastro/cadastro').then(modulo => modulo.Cadastro),
   },
   {
     path: 'home',
-    component: ClienteHome,
+    loadComponent: () => import('./features/cliente/pages/cliente-home/ClienteHome').then(modulo => modulo.ClienteHome),
     canActivate: [autenticadorGuard], 
     data: {
       role: 'CLIENTE'
@@ -35,11 +22,11 @@ export const routes: Routes = [
   },
   {
     path: 'cadastro',
-    component: Cadastro,
+    loadComponent: () => import('./features/auth/pages/cadastro/cadastro').then(modulo => modulo.Cadastro),
   },
   {
     path: 'orcamento/:id',
-    component: Orcamento,
+   loadComponent: () => import('./features/cliente/pages/orcamento/orcamento').then(modulo => modulo.Orcamento),
     canActivate: [autenticadorGuard], 
     data: {
       role: 'CLIENTE'
@@ -47,17 +34,17 @@ export const routes: Routes = [
   },
   {
     path: 'pagar-servico/:id',
-    component: PagarManuntencao,
+    loadComponent: () => import('./features/cliente/pages/pagar-manuntencao/PagarManuntencao').then(modulo => modulo.PagarManuntencao),
     canActivate: [autenticadorGuard], 
     data: {
       role: 'CLIENTE'
     }
   },
 
-  {path: 'employee', component: Layout, children: [
+  {path: 'employee',loadComponent: () => import('./features/funcionario/components/layout/layout').then(modulo => modulo.Layout), children: [
       {
         path: 'home',
-        component: FuncionarioHome,
+        loadComponent: () => import ('./features/funcionario/pages/funcionario-home/FuncionarioHome').then(modulo => modulo.FuncionarioHome),
         canActivate: [autenticadorGuard], 
         data: {
           role: 'FUNCIONARIO'
@@ -65,7 +52,7 @@ export const routes: Routes = [
       },
       { 
         path: 'orcamento/:id', 
-        component: EfetuarOrcamento, 
+       loadComponent: () => import('./features/funcionario/pages/efetuar-orcamento/EfetuarOrcamento').then(modulo => modulo.EfetuarOrcamento),
         canActivate: [autenticadorGuard], 
         data: {
           role: 'FUNCIONARIO'
@@ -73,7 +60,7 @@ export const routes: Routes = [
       },
       { 
         path: 'manutencao/:id', 
-        component: EfetuarManutencao, 
+        loadComponent: () => import('./features/funcionario/pages/efetuar-manutencao/EfetuarManutencao').then(modulo => modulo.EfetuarManutencao),
         canActivate: [autenticadorGuard], 
         data: {
           role: 'FUNCIONARIO'
@@ -81,7 +68,7 @@ export const routes: Routes = [
       },
       {
         path: 'categories',
-        component: Categorias,
+        loadComponent: () => import('./features/funcionario/pages/categorias/categorias').then(modulo => modulo.Categorias),
         canActivate: [autenticadorGuard], 
         data: {
           role: 'FUNCIONARIO'
@@ -89,7 +76,7 @@ export const routes: Routes = [
       },
       {
         path: 'crud-funcionario',
-        component: Funcionarios,
+        loadComponent: () => import('./features/funcionario/pages/funcionarios/funcionarios').then(modulo => modulo.Funcionarios),
         canActivate: [autenticadorGuard], 
         data: {
           role: 'FUNCIONARIO'
@@ -98,7 +85,7 @@ export const routes: Routes = [
       ,
       {
         path: 'add-funcionario',
-        component: Addfuncionario,
+        loadComponent: () => import('./features/funcionario/pages/addfuncionario/addfuncionario').then(modulo => modulo.Addfuncionario),
         canActivate: [autenticadorGuard], 
         data: {
           role: 'FUNCIONARIO'
@@ -106,7 +93,7 @@ export const routes: Routes = [
       },
       {
         path: 'edit-funcionario/:id',
-        component: Addfuncionario,
+        loadComponent: () => import('./features/funcionario/pages/addfuncionario/addfuncionario').then(modulo => modulo.Addfuncionario),
         canActivate: [autenticadorGuard], 
         data: {
           role: 'FUNCIONARIO'
@@ -114,13 +101,13 @@ export const routes: Routes = [
       },
       {
         path: 'relatorios/receitas',
-        component: RelatorioReceitas,
+        loadComponent: () => import('./features/funcionario/pages/relatorio-receitas/relatorio-receitas').then(modulo => modulo.RelatorioReceitas),
         canActivate: [autenticadorGuard],
         data: { role: 'FUNCIONARIO' }
       },
       {
         path: 'relatorios/categorias',
-        component: RelatorioCategorias,
+        loadComponent: () => import('./features/funcionario/pages/relatorio-categorias/relatorio-categorias').then(modulo => modulo.RelatorioCategorias),
         canActivate: [autenticadorGuard],
         data: { role: 'FUNCIONARIO' }
       },
@@ -128,7 +115,7 @@ export const routes: Routes = [
   },
   {
     path: 'solicitar-manutencao',
-    component: SolicitarManutencao,
+    loadComponent: () => import('./features/cliente/pages/solicitar-manutencao/SolicitarManutencao').then(modulo => modulo.SolicitarManutencao),
   },
   {
     path: '**',
