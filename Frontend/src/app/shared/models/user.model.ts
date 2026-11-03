@@ -1,10 +1,12 @@
+// shared/models/user.model.ts
 export class User {
-    id!: string ;
-    active:boolean=true;
+    id?: number;
     email!: string;
     password!: string;
-    role!: string;
-    constructor (dados: Partial<User>){
+    ativo?: boolean; 
+    role!: string; 
+
+    constructor(dados: Partial<User>) {
         Object.assign(this, dados);
     }
 }

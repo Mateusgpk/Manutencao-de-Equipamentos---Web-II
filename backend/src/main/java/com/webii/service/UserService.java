@@ -27,7 +27,7 @@ public class UserService {
     public User autenticar(String email, String senha) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário ou senha inválidos."));
-
+        System.out.println(hashSenhaComSalt(senha));
         if (!verificarSenha(senha, user.getPassword())) {
             throw new IllegalArgumentException("Usuário ou senha inválidos.");
         }
@@ -38,7 +38,7 @@ public class UserService {
         return userRepository.findAll();
     }
     public User encontrarPorId(long id){
-        Optional<User> usuario = userRepository.findByUserId(id);
+        Optional<User> usuario = userRepository.findByid(id);
         if (usuario.isEmpty()){
             return usuario.get();
         }else {
@@ -89,10 +89,14 @@ public class UserService {
         }
     }
 
-    public User criarUsuario(User usuario) {
-        if (userRepository.existsByEmail(usuario.getEmail())) {
+    public User criarUsuario(String email, Role role) {
+        if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("E-mail já cadastrado.");
         }
+
+        String senha = gerarSenhaAleatoria();
+        User usuario = User.builder().email(email).password(hashSenhaComSalt(senha)).role(role).build();
+
         return userRepository.save(usuario);
     }
 
@@ -103,7 +107,7 @@ public class UserService {
     }
 
     public boolean deletar(long id){
-        Optional<User> usuario = userRepository.findByUserId(id);
+        Optional<User> usuario = userRepository.findByid(id);
         if (!usuario.isEmpty()) {
             usuario.get().setAtivo(false);
             return true;

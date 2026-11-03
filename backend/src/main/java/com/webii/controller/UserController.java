@@ -1,6 +1,7 @@
 package com.webii.controller;
 
 
+import com.webii.dto.LoginDTO;
 import com.webii.entity.User;
 
 import com.webii.repository.UserRepository;
@@ -21,6 +22,16 @@ public class UserController {
     public  UserController (UserService userService){
         this.userService=userService;
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody LoginDTO login){
+
+        System.out.println(login.getEmail());
+        System.out.println(login.getSenha());
+        User usuario = userService.autenticar(login.getEmail(),login.getSenha());
+        return ResponseEntity.ok(usuario);
+    }
+
     @GetMapping
     public ResponseEntity<List<User>> listarTodos(){
         List<User> listaUsuarios = userService.listarTodos();
@@ -42,11 +53,7 @@ public class UserController {
         return ResponseEntity.ok(usuario);
     }
 
-    @PostMapping
-    public ResponseEntity<Void> cadastrar(@Valid @RequestBody User usuario) {
-        User salvo = userService.criarUsuario(usuario);
-        return ResponseEntity.created(URI.create("/api/usuarios/" + salvo.getId())).build();
-    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deletar(@PathVariable("id") Long id){

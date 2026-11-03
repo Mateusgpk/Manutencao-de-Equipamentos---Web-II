@@ -9,6 +9,8 @@ import com.webii.repository.ClientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class ClientService {
 
@@ -33,7 +35,7 @@ public class ClientService {
 
         ViaCepResponseDTO enderecoViaCep = viaCepService.buscarEnderecoPorCep(dto.getCep());
         String senhaPlana = userService.gerarSenhaAleatoria();
-        User user = userService.criarUsuario(dto.getEmail(), senhaPlana, Role.CLIENTE);
+        User user = userService.criarUsuario(dto.getEmail(), Role.CLIENTE);
 
         Client cliente = Client.builder()
                 .name(dto.getName())
@@ -64,8 +66,11 @@ public class ClientService {
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado para este usuário."));
     }
     public Client deletar(long userId){
-        Client cliete= clientRepository.findByUserId();
-
-
+        Optional<Client> cliete= clientRepository.findByUserId(userId);
+        if (!cliete.isEmpty()){
+            cliete.get().getUser().setAtivo(false);
+            return cliete.get();
+        }
+        return null;
     }
 }

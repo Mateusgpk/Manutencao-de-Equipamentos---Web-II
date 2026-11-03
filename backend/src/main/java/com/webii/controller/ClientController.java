@@ -39,6 +39,15 @@ public class ClientController {
             return ResponseEntity.ok(cliente.get());
         }
     }
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<Client> buscarClientePorUsuario(@PathVariable("id") Long id){
+        Optional<Client> cliente = clientRepository.findByUserId(id);
+        if (cliente.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }else {
+            return ResponseEntity.ok(cliente.get());
+        }
+    }
 
     @PostMapping
     public ResponseEntity<Void> cadastrar(@Valid @RequestBody Client client) {

@@ -10,7 +10,7 @@ import { catchError, throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class Crudfuncionario {
-  BASE_URL = 'http://localhost:3000/';
+  BASE_URL = 'http://localhost:8080/api/';
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -20,7 +20,7 @@ export class Crudfuncionario {
   private httpClient = inject(HttpClient);
   private loginserver = inject(Autenticador)
   getallFuncionario(): Observable <Employee[]>{
-    return this.httpClient.get<Employee[]>(this.BASE_URL+"funcionarios/",this.httpOptions).pipe(map((lista) => lista.filter((u)=>u.user.active===true)))
+    return this.httpClient.get<Employee[]>(this.BASE_URL+"employee",this.httpOptions)
   }
   addFuncionario(employee:Employee):boolean | void {
     this.loginserver.inserirFuncionario(employee).subscribe( (id) => {
@@ -28,39 +28,15 @@ export class Crudfuncionario {
   })
 }
   alterarFuncionario(employee:Employee):boolean | void {
-    this.loginserver.alterarFuncionario(employee).subscribe( (id) => {
-          
-    this.loginserver.alterarUser(employee.user).subscribe( (id) => {
-      return id;
-  })
-      return id;
-  })
+    this.loginserver.alterarFuncionario(employee)
 
 
 }
   buscarPorId(id:string|undefined):Observable<Employee>{
-    return this.httpClient.get<Employee>(this.BASE_URL + 'funcionarios/'+id, this.httpOptions)
+    return this.httpClient.get<Employee>(this.BASE_URL + 'employee/'+id, this.httpOptions)
   }
   desactiveFuncionario(id:string|undefined):Observable<User>{
-    console.log("deu boa 1")
-    console.log(id)
-    return this.httpClient.get<Employee>(this.BASE_URL + 'funcionarios/'+id, this.httpOptions).pipe(switchMap((funcionario) => {
-      console.log("deu boa 2")
-      funcionario.user.active=false
-      const funcionariouserid=funcionario.user.id
-      return this.httpClient.put<Employee>(this.BASE_URL + 'funcionarios/'+id,funcionario,this.httpOptions)
-      .pipe(
-       
-        switchMap(() =>this.httpClient.get<User>(this.BASE_URL+'usuarios/'+funcionariouserid,this.httpOptions)),
-        switchMap((user)=>{
-           console.log("deu boa 3")
-          user.active=false;
-          return this.httpClient.put<User>(this.BASE_URL+'usuarios/'+funcionariouserid,user,this.httpOptions)
-        }
-      )
-    )
-  }
-))
+    return this.httpClient.delete<User>(this.BASE_URL + 'employee/'+id+ '/' + this.loginserver.usuarioLogado?.id, this.httpOptions)
       
 
   }

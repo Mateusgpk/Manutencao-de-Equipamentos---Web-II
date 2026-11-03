@@ -26,29 +26,18 @@ export class Autenticador {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   login(login: User): Observable<Client | Employee | null> {
-    return this.httpClient.get<User[]>(this.BASE_URL + 'usuarios/', this.httpOptions).pipe(
-      switchMap((lista) => {
-        let usu = lista.find((u) => u.email === login.email && u.password === login.password);
-        if (usu && usu.active == true) {
-          if (usu.role === 'EMPLOYEE') {
-            return this.httpClient.get<Employee[]>(this.BASE_URL + 'funcionarios/', this.httpOptions)
-              .pipe(
-                map((lista) => {
-                  let igual = lista.find((u) => u.user.id == usu.id);
-                  return igual || null;
-                }),
-              );
-          } else {
-            return this.httpClient.get<Client[]>(this.BASE_URL + 'clientes/', this.httpOptions).pipe(
-              map((lista) => {
-                let igual = lista.find((u) => u.user.id == usu.id);
-                return igual || null;
-              }),
-            );
-          }
+
+    return this.httpClient.post<User>(this.BASE_URL + 'usuarios/login',  {email: login.email, senha: login.password }, this.httpOptions).pipe(
+      switchMap((user) => {
+        if (user) {
+          if (user.role === 'FUNCIONARIO') {
+            return this.httpClient.get<Employee>(this.BASE_URL + 'employee/usuario/' + user.id, this.httpOptions)
+        } else if (user.role === 'CLIENTE') {
+            return this.httpClient.get<Client>(this.BASE_URL + 'clients/usuario/' + user.id, this.httpOptions)
         }
+      }
         return of(null);
-      }),
+      })
     );
   }
 
@@ -76,26 +65,7 @@ inseriruser(user: User): Observable<User | boolean> {
 
 
 inserirFuncionario(usuario: Employee): Observable<boolean> {
-  return this.inseriruser(usuario.user).pipe(
-    switchMap((userFoiInserido) => {
-      if (!userFoiInserido) return of(false);
-
-   
-      return this.httpClient.get<Employee[]>(this.BASE_URL + 'funcionarios/', this.httpOptions).pipe(
-        switchMap((listaFunc) => {
-          const ids = listaFunc.map(f => Number(f.id)).filter(id => !isNaN(id));
-          usuario.id = String(ids.length > 0 ? Math.max(...ids) + 1 : 1);
-          if (userFoiInserido instanceof Employee) {
-            usuario.user.id = String(userFoiInserido.id);
-          }
-          
-
-          return this.httpClient.post<Employee>(this.BASE_URL + 'funcionarios/', usuario, this.httpOptions)
-            .pipe(map(() => true));
-        })
-      );
-    })
-  );
+    return this.httpClient.post<Employee>(this.BASE_URL + 'employee', usuario, this.httpOptions).pipe(map(() => true));
 }
   alterarUser(usuario: User): Observable<User> {
     return this.httpClient.put<User>(
@@ -105,8 +75,9 @@ inserirFuncionario(usuario: Employee): Observable<boolean> {
     );
   }
   alterarFuncionario(funcionario: Employee): Observable<Employee> {
+    funcionario.user.ativo = true;
     return this.httpClient.put<Employee>(
-      this.BASE_URL + 'funcionarios/' + funcionario.id,
+      this.BASE_URL + 'employee/' + funcionario.id,
       funcionario,
       this.httpOptions,
     );
@@ -133,12 +104,14 @@ inserirFuncionario(usuario: Employee): Observable<boolean> {
   }
 
   autentica(){
-      if (this.usuarioLogado) {
+    if (this.usuarioLogado) {
+    console.log(this.usuarioLogado.user.role)
     console.log("estou logado")
-    if (this.usuarioLogado.user.role === "CLIENT"){
+    if (this.usuarioLogado.user.role === "CLIENTE"){
       console.log("sou cliente")
       this.router.navigate( ["/home"] );
-    }else{
+    }else if (this.usuarioLogado.user.role === "FUNCIONARIO"){
+      console.log("sou funcionario")
       this.router.navigate( ["/employee/home"] );
     }
 

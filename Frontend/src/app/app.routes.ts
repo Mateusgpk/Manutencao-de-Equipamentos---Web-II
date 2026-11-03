@@ -30,7 +30,7 @@ export const routes: Routes = [
     component: ClienteHome,
     canActivate: [autenticadorGuard], 
     data: {
-      role: 'CLIENT'
+      role: 'CLIENTE'
     }
   },
   {
@@ -42,7 +42,7 @@ export const routes: Routes = [
     component: Orcamento,
     canActivate: [autenticadorGuard], 
     data: {
-      role: 'CLIENT'
+      role: 'CLIENTE'
     }
   },
   {
@@ -50,7 +50,7 @@ export const routes: Routes = [
     component: PagarManuntencao,
     canActivate: [autenticadorGuard], 
     data: {
-      role: 'CLIENT'
+      role: 'CLIENTE'
     }
   },
 
@@ -60,7 +60,7 @@ export const routes: Routes = [
         component: FuncionarioHome,
         canActivate: [autenticadorGuard], 
         data: {
-          role: 'EMPLOYEE'
+          role: 'FUNCIONARIO'
         }
       },
       { 
@@ -68,7 +68,7 @@ export const routes: Routes = [
         component: EfetuarOrcamento, 
         canActivate: [autenticadorGuard], 
         data: {
-          role: 'EMPLOYEE'
+          role: 'FUNCIONARIO'
         }
       },
       { 
@@ -76,7 +76,7 @@ export const routes: Routes = [
         component: EfetuarManutencao, 
         canActivate: [autenticadorGuard], 
         data: {
-          role: 'EMPLOYEE'
+          role: 'FUNCIONARIO'
         }
       },
       {
@@ -84,7 +84,7 @@ export const routes: Routes = [
         component: Categorias,
         canActivate: [autenticadorGuard], 
         data: {
-          role: 'EMPLOYEE'
+          role: 'FUNCIONARIO'
         }
       },
       {
@@ -92,7 +92,7 @@ export const routes: Routes = [
         component: Funcionarios,
         canActivate: [autenticadorGuard], 
         data: {
-          role: 'EMPLOYEE'
+          role: 'FUNCIONARIO'
         }
       }
       ,
@@ -101,7 +101,7 @@ export const routes: Routes = [
         component: Addfuncionario,
         canActivate: [autenticadorGuard], 
         data: {
-          role: 'EMPLOYEE'
+          role: 'FUNCIONARIO'
         }
       },
       {
@@ -109,20 +109,20 @@ export const routes: Routes = [
         component: Addfuncionario,
         canActivate: [autenticadorGuard], 
         data: {
-          role: 'EMPLOYEE'
+          role: 'FUNCIONARIO'
         }
       },
       {
         path: 'relatorios/receitas',
         component: RelatorioReceitas,
         canActivate: [autenticadorGuard],
-        data: { role: 'EMPLOYEE' }
+        data: { role: 'FUNCIONARIO' }
       },
       {
         path: 'relatorios/categorias',
         component: RelatorioCategorias,
         canActivate: [autenticadorGuard],
-        data: { role: 'EMPLOYEE' }
+        data: { role: 'FUNCIONARIO' }
       },
     ]
   },

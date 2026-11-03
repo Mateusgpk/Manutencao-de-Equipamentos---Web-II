@@ -22,13 +22,11 @@ public class EmployeeService {
     }
 
     @Transactional
-    public Employee criar(String name, String email, LocalDate dataNascimento, String senha) {
-        User user = userService.criarUsuario(email, senha, Role.FUNCIONARIO);
-
+    public Employee criar(Employee funcionario) {
+        User user = userService.criarUsuario(funcionario.getUser().getEmail(), Role.FUNCIONARIO);
         Employee employee = Employee.builder()
-                .name(name)
-                .dataNascimento(dataNascimento)
-                .ativo(true)
+                .name(funcionario.getName())
+                .dataNascimento(funcionario.getDataNascimento())
                 .user(user)
                 .build();
 
@@ -36,19 +34,25 @@ public class EmployeeService {
     }
 
     public List<Employee> listarAtivos() {
-        return employeeRepository.findByAtivoTrue();
+        return employeeRepository.findAll().stream().filter(e -> e.getUser().getAtivo()).toList();
     }
 
     public Employee buscarPorId(Long id) {
         return employeeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
     }
+    public Employee buscarPorUserId(Long id) {
+        return employeeRepository.findByUserId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
+    }
 
     @Transactional
-    public Employee atualizar(Long id, String name, LocalDate dataNascimento) {
+    public Employee atualizar(Long id,Employee funcionario) {
         Employee employee = buscarPorId(id);
-        employee.setName(name);
-        employee.setDataNascimento(dataNascimento);
+        employee.setName(funcionario.getName());
+        employee.setDataNascimento(funcionario.getDataNascimento());
+        employee.getUser().setPassword(funcionario.getUser().getPassword());
+        employee.getUser().setEmail(funcionario.getUser().getEmail());
         return employeeRepository.save(employee);
     }
 
@@ -58,13 +62,13 @@ public class EmployeeService {
             throw new IllegalArgumentException("Você não pode remover a si mesmo.");
         }
 
-        List<Employee> ativos = employeeRepository.findByAtivoTrue();
+        List<Employee> ativos = employeeRepository.findAll().stream().filter(e -> e.getUser().getAtivo()).toList();
         if (ativos.size() <= 1) {
             throw new IllegalArgumentException("Não é possível remover o único funcionário ativo no sistema.");
         }
 
         Employee employee = buscarPorId(idParaRemover);
-        employee.setAtivo(false);
+        employee.getUser().setAtivo(false);
         employeeRepository.save(employee);
     }
 }

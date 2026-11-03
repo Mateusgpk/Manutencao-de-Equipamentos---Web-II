@@ -32,6 +32,13 @@ public class User {
     @Column(nullable = false)
     private Boolean ativo = true;
 
+    @PrePersist
+    public void prePersist() {
+        if (this.ativo == null) {
+            this.ativo = true;
+        }
+    }
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;

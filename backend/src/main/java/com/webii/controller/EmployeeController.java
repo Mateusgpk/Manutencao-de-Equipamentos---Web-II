@@ -3,6 +3,7 @@ package com.webii.controller;
 import com.webii.entity.Client;
 import com.webii.entity.Employee;
 import com.webii.repository.EmployeeRepository;
+import com.webii.service.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,36 +18,43 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
 
-    private final EmployeeRepository employeeRepository;
-    public  EmployeeController (EmployeeRepository employeeRepository){
-        this.employeeRepository=employeeRepository;
+
+    private final EmployeeService employeeService;
+    public  EmployeeController ( EmployeeService employeeService){
+        this.employeeService = employeeService;
     }
     @GetMapping
     public ResponseEntity<List<Employee>> listarTodos(){
-        List<Employee> listaFuncionarios = employeeRepository.findAll();
+        List<Employee> listaFuncionarios = employeeService.listarAtivos();
         return ResponseEntity.ok(listaFuncionarios);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> buscarFuncionario(@PathVariable("id") Long id){
-        Optional<Employee> funcionario = employeeRepository.findByUserId(id);
-        if (funcionario.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }else {
-            return ResponseEntity.ok(funcionario.get());
-        }
+        Employee funcionario = employeeService.buscarPorId(id);
+        return ResponseEntity.ok(funcionario);
     }
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<Employee> buscarFuncionarioPorUsuario(@PathVariable("id") Long id){
+        Employee funcionario = employeeService.buscarPorUserId(id);
+        return ResponseEntity.ok(funcionario);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> atualizarFuncionario(@PathVariable Long id,@Valid @RequestBody Employee employee){
-        employee.setId(id);
-        Employee salvo = employeeRepository.save(employee);
+    public ResponseEntity<Employee> atualizarFuncionario(@PathVariable("id") Long id,@Valid @RequestBody Employee employee){
+        Employee salvo = employeeService.atualizar(id,employee);
         return ResponseEntity.ok(employee);
     }
 
     @PostMapping
     public ResponseEntity<Void> cadastrar(@Valid @RequestBody Employee employee) {
-        Employee salvo = employeeRepository.save(employee);
+        Employee salvo = employeeService.criar(employee);
         return ResponseEntity.created(URI.create("/api/employee/" + salvo.getId())).build();
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletar(@Valid @PathVariable("id") Long id,Long idLogado){
+        employeeService.desativar(id, idLogado);
     }
 
 }

@@ -12,12 +12,16 @@ import { AsyncPipe } from '@angular/common';
   templateUrl: './funcionarios.html',
   styleUrl: './funcionarios.css',
 })
-export class Funcionarios {
+export class Funcionarios implements OnInit {
 
   private recarregar$ = new BehaviorSubject<void>(undefined);
   funcionarios$: Observable<Employee[]> = this.recarregar$.pipe(
     switchMap(() => this.crudfuncionario.getallFuncionario())
   );
+
+  ngOnInit(): void {
+    this.recarregar$.next();
+  }
 
   constructor (private crudfuncionario: Crudfuncionario){};
 
