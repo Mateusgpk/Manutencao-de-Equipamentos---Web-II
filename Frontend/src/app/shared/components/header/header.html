@@ -17,7 +17,21 @@
         routerLink="/login">
         Acessar Painel
       </a>
-      @if (logado) { <button class="fa fa-user" (click)="acao()"></button>}
+      
+
+
+      <div class="dropdown">
+        @if (logado) { <button class="fa fa-user" (click)="toggleMenu()"></button>
+        
+        @if (menuAberto) {
+        <ul class="menu-opcoes">
+          <li class="font-semibold">{{this.usuario?.name}}</li>
+          <li class="font-semibold">{{this.usuario?.user?.role}}</li>
+          <li><button class="cursor-pointer" (click)="acao()">Sair</button></li>
+        </ul>}}
+      </div>
     </nav>
+
+
   </div>
 </header>
