@@ -1,6 +1,8 @@
 package com.webii.service;
 
 import com.webii.entity.Employee;
+import com.webii.entity.User;
+import com.webii.enums.Role;
 import com.webii.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,46 @@ public class EmployeeService
 {
     @Autowired
     private EmployeeRepository employeeRepository;
+    private UserService userService;
 
-    public List<Employee> findAllActive()
-    {
-        return employeeRepository.findByUserActiveTrue();
+
+    @Transactional
+    public Employee criar(Employee funcionario) {
+
+        User user = userService.criarUsuario(funcionario.getUser().getEmail(), Role.FUNCIONARIO);
+        Employee employee = Employee.builder()
+                .name(funcionario.getName())
+                .dataNascimento(funcionario.getDataNascimento())
+                .user(user)
+                .build();
+
+        return employeeRepository.save(employee);
+    }
+
+    public List<Employee> listarAtivos() {
+        return employeeRepository.findAll().stream().filter(e -> e.getUser().getAtivo()).toList();
+    }
+
+    @Transactional
+    public Employee atualizar(Long id,Employee funcionario) {
+        System.out.println("ola"+funcionario);
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado."));
+        employee.setName(funcionario.getName());
+        employee.setDataNascimento(funcionario.getDataNascimento());
+        if (!funcionario.getUser().getPassword().isEmpty()) {
+            employee.getUser().setPassword(userService.hashSenhaComSalt(funcionario.getUser().getPassword()));
+        }
+        employee.getUser().setEmail(funcionario.getUser().getEmail());
+        return employeeRepository.save(employee);
+    }
+
+    public Employee buscarPorId(Long id) {
+        return employeeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
+    }
+    public Employee buscarPorUserId(Long id) {
+        return employeeRepository.findByUserId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
     }
 
     @Transactional
@@ -35,7 +73,7 @@ public class EmployeeService
             throw new IllegalStateException("Não é possível remover o único funcionário ativo no sistema.");
         }
 
-        employee.getUser().setActive(false);
+        employee.getUser().setAtivo(false);
         employeeRepository.save(employee);
     }
 }

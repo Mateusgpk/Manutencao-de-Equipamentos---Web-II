@@ -54,7 +54,7 @@ public class EmployeeController {
 
     @DeleteMapping("/{id}/{iduser}")
     public void deletar(@Valid @PathVariable("id") Long id,@Valid @PathVariable("iduser") Long idLogado){
-        employeeService.desativar(id, idLogado);
+        employeeService.deleteEmployee(id, idLogado);
     }
 
 }
