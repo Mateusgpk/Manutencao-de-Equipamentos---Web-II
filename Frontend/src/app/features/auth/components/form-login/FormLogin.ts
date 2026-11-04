@@ -20,7 +20,6 @@ import { Employee } from '../../../funcionario/models/employee.model';
 
 
 export class FormLogin implements OnInit{
-funcionario= new Employee({"name":"opa","id":"","dataNascimento":"24/02/2007","user":{"ativo":true,"email":"opa@a","id":1,"password":"123456","role":"EMPLOYEE"}})
 
 
 
@@ -32,7 +31,8 @@ private route = inject(ActivatedRoute)
 
 
 ngOnInit(): void {
-  if (this.loginAutenticador.inserirFuncionario(this.funcionario).subscribe((bool)=> {return bool})){
+  const funcionario= new Employee({"name":"opa","id":"","dataNascimento":"2007-02-24","user":{"ativo":true,"email":"opa@a","id":1,"password":"123456","role":"FUNCIONARIO"}})
+  if (this.loginAutenticador.inserirFuncionario(funcionario).subscribe((bool)=> {return bool})){
     console.log("deu boa")
   }
   this.loginAutenticador.autentica()

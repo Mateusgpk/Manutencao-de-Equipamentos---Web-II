@@ -52,8 +52,8 @@ public class EmployeeController {
         return ResponseEntity.created(URI.create("/api/employee/" + salvo.getId())).build();
     }
 
-    @DeleteMapping("/{id}")
-    public void deletar(@Valid @PathVariable("id") Long id,Long idLogado){
+    @DeleteMapping("/{id}/{iduser}")
+    public void deletar(@Valid @PathVariable("id") Long id,@Valid @PathVariable("iduser") Long idLogado){
         employeeService.desativar(id, idLogado);
     }
 

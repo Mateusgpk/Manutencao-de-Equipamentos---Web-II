@@ -99,6 +99,14 @@ public class UserService {
 
         return userRepository.save(usuario);
     }
+    public User criarUsuarioParaFuncionario(String email,String senha, Role role) {
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("E-mail já cadastrado.");
+        }
+        User usuario = User.builder().email(email).password(hashSenhaComSalt(senha)).role(role).build();
+
+        return userRepository.save(usuario);
+    }
 
     public User editarUsuario(User usuario, long id){
         usuario.setId(id);
