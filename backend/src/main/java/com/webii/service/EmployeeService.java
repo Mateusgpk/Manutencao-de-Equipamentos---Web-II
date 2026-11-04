@@ -1,76 +1,41 @@
 package com.webii.service;
 
 import com.webii.entity.Employee;
-import com.webii.entity.User;
-import com.webii.enums.Role;
 import com.webii.repository.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class EmployeeService {
+public class EmployeeService
+{
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-    private final EmployeeRepository employeeRepository;
-    private final UserService userService;
-
-    public EmployeeService(EmployeeRepository employeeRepository, UserService userService) {
-        this.employeeRepository = employeeRepository;
-        this.userService = userService;
+    public List<Employee> findAllActive()
+    {
+        return employeeRepository.findByUserActiveTrue();
     }
 
     @Transactional
-    public Employee criar(Employee funcionario) {
-        User user = userService.criarUsuario(funcionario.getUser().getEmail(), Role.FUNCIONARIO);
-        Employee employee = Employee.builder()
-                .name(funcionario.getName())
-                .dataNascimento(funcionario.getDataNascimento())
-                .user(user)
-                .build();
+    public void deleteEmployee(Long employeeId, Long loggedUserId)
+    {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado."));
 
-        return employeeRepository.save(employee);
-    }
-
-    public List<Employee> listarAtivos() {
-        return employeeRepository.findAll().stream().filter(e -> e.getUser().getAtivo()).toList();
-    }
-
-    public Employee buscarPorId(Long id) {
-        return employeeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
-    }
-    public Employee buscarPorUserId(Long id) {
-        return employeeRepository.findByUserId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
-    }
-
-    @Transactional
-    public Employee atualizar(Long id,Employee funcionario) {
-        System.out.println("ola"+funcionario);
-        Employee employee = buscarPorId(id);
-        employee.setName(funcionario.getName());
-        employee.setDataNascimento(funcionario.getDataNascimento());
-        if (!funcionario.getUser().getPassword().isEmpty()) {
-            employee.getUser().setPassword(userService.hashSenhaComSalt(funcionario.getUser().getPassword()));
-        }
-        employee.getUser().setEmail(funcionario.getUser().getEmail());
-        return employeeRepository.save(employee);
-    }
-
-    @Transactional
-    public void desativar(Long idParaRemover, Long idFuncionarioLogado) {
-        if (idParaRemover.equals(idFuncionarioLogado)) {
-            throw new IllegalArgumentException("Você não pode remover a si mesmo.");
+        if (employee.getUser().getId().equals(loggedUserId))
+        {
+            throw new IllegalStateException("Você não pode remover o seu próprio perfil.");
         }
 
-        List<Employee> ativos = employeeRepository.findAll().stream().filter(e -> e.getUser().getAtivo()).toList();
-        if (ativos.size() <= 1) {
-            throw new IllegalArgumentException("Não é possível remover o único funcionário ativo no sistema.");
+        if (employeeRepository.countByUserActiveTrue() <= 1)
+        {
+            throw new IllegalStateException("Não é possível remover o único funcionário ativo no sistema.");
         }
 
-        Employee employee = buscarPorId(idParaRemover);
-        employee.getUser().setAtivo(false);
+        employee.getUser().setActive(false);
         employeeRepository.save(employee);
     }
 }
