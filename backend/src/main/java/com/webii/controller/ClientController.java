@@ -1,12 +1,19 @@
 package com.webii.controller;
 
 import com.webii.entity.Client;
+
 import com.webii.repository.ClientRepository;
+
 import jakarta.validation.Valid;
+
 import java.net.URI;
+
 import java.net.http.HttpResponse;
+
 import java.util.ArrayList;
+
 import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -24,11 +31,13 @@ public class ClientController {
         this.clientRepository = clientRepository;
     }
 
+
     @GetMapping
     public  ResponseEntity<List<Client>> listarTodos(){
         List<Client> listaClientes = clientRepository.findAll();
         return ResponseEntity.ok(listaClientes);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Client> buscarCliente(@PathVariable("id") Long id){
@@ -49,6 +58,7 @@ public class ClientController {
         }
     }
 
+    
     @PostMapping
     public ResponseEntity<Void> cadastrar(@Valid @RequestBody Client client) {
         Client salvo = clientRepository.save(client);

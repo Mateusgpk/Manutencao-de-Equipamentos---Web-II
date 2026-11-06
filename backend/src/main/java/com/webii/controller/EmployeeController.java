@@ -1,12 +1,19 @@
 package com.webii.controller;
 
 import com.webii.entity.Client;
+
 import com.webii.entity.Employee;
+
 import com.webii.repository.EmployeeRepository;
+
 import com.webii.service.EmployeeService;
+
 import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -40,11 +47,13 @@ public class EmployeeController {
         return ResponseEntity.ok(funcionario);
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<Employee> atualizarFuncionario(@PathVariable("id") Long id,@Valid @RequestBody Employee employee){
         Employee salvo = employeeService.atualizar(id,employee);
         return ResponseEntity.ok(salvo);
     }
+
 
     @PostMapping
     public ResponseEntity<Void> cadastrar(@Valid @RequestBody Employee employee) {
@@ -52,6 +61,7 @@ public class EmployeeController {
         return ResponseEntity.created(URI.create("/api/employee/" + salvo.getId())).build();
     }
 
+    
     @DeleteMapping("/{id}/{iduser}")
     public void deletar(@Valid @PathVariable("id") Long id,@Valid @PathVariable("iduser") Long idLogado){
         employeeService.deleteEmployee(id, idLogado);

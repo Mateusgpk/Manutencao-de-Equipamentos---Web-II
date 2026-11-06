@@ -1,11 +1,17 @@
 package com.webii.controller;
 
 import com.webii.entity.Category;
+
 import com.webii.repository.CategoryRepository;
+
 import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -21,10 +27,12 @@ public class CategoryController {
         this.categoryRepository = categoryRepository;
     }
 
+
     @GetMapping
     public List<Category> getAll() {
         return categoryRepository.findByAtivoTrueOrderByNameAsc();
     }
+
 
     @GetMapping("/{id}")
     public Category getById(@PathVariable Long id) {
@@ -32,6 +40,7 @@ public class CategoryController {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Categoria não encontrada."));
     }
+
 
     @PostMapping
     public ResponseEntity<Category> create(@Valid @RequestBody Category category) {
@@ -49,6 +58,7 @@ public class CategoryController {
                 .body(categoryRepository.save(category));
     }
 
+    
     @PutMapping("/{id}")
     public Category update(@PathVariable Long id, @Valid @RequestBody Category updated) {
         Category existing = categoryRepository.findByIdAndAtivoTrue(id)

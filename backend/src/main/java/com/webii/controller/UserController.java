@@ -5,10 +5,15 @@ import com.webii.dto.LoginDTO;
 import com.webii.entity.User;
 
 import com.webii.repository.UserRepository;
+
 import com.webii.service.UserService;
+
 import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -23,6 +28,7 @@ public class UserController {
         this.userService=userService;
     }
 
+
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody LoginDTO login){
 
@@ -32,12 +38,14 @@ public class UserController {
         return ResponseEntity.ok(usuario);
     }
 
+
     @GetMapping
     public ResponseEntity<List<User>> listarTodos(){
         List<User> listaUsuarios = userService.listarTodos();
         return ResponseEntity.ok(listaUsuarios);
     }
 
+    
     @GetMapping("/{id}")
     public ResponseEntity<User> buscarUsuario(@PathVariable("id") Long id){
         User usuario = userService.encontrarPorId(id);
