@@ -14,14 +14,24 @@ import java.util.List;
 public class EmployeeService
 {
     @Autowired
-    private EmployeeRepository employeeRepository;
-    private UserService userService;
+    private final EmployeeRepository employeeRepository;
+    private final UserService userService;
+
+    public EmployeeService(EmployeeRepository employeeRepository, UserService userService) {
+        this.employeeRepository = employeeRepository;
+        this.userService = userService;
+    }
 
 
     @Transactional
     public Employee criar(Employee funcionario) {
 
-        User user = userService.criarUsuario(funcionario.getUser().getEmail(), Role.FUNCIONARIO);
+        User user = user.service.criarUsuarioParaFuncionario(
+            funcionario.getUser().getEmail(),
+            funcionario.getUser().getPassword(),
+            Role.FUNCIONARIO
+        );
+
         Employee employee = Employee.builder()
                 .name(funcionario.getName())
                 .dataNascimento(funcionario.getDataNascimento())
@@ -42,8 +52,12 @@ public class EmployeeService
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado."));
         employee.setName(funcionario.getName());
         employee.setDataNascimento(funcionario.getDataNascimento());
-        if (!funcionario.getUser().getPassword().isEmpty()) {
-            employee.getUser().setPassword(userService.hashSenhaComSalt(funcionario.getUser().getPassword()));
+        if (funcionario.getUser().getPassword().isBlank()) {
+            employee.getUser().setPassword(
+                userService.hashSenhaComSalt(
+                    funcionario.getUser().getPassword()
+                )
+            );
         }
         employee.getUser().setEmail(funcionario.getUser().getEmail());
         return employeeRepository.save(employee);
@@ -68,7 +82,7 @@ public class EmployeeService
             throw new IllegalStateException("Você não pode remover o seu próprio perfil.");
         }
 
-        if (employeeRepository.countByUserActiveTrue() <= 1)
+        if (employeeRepository.countByUser_AtivoTrue() <= 1)
         {
             throw new IllegalStateException("Não é possível remover o único funcionário ativo no sistema.");
         }

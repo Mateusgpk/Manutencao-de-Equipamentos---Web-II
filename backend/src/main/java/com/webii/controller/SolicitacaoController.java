@@ -85,7 +85,7 @@ public class SolicitacaoController {
     }
 
     @PatchMapping("/{id}/aprovacao")
-    public Solicitacao rejeitarServico(
+    public Solicitacao aprovarServico(
         @PathVariable Long id) {
         return solicitacaoService.aprovarServico(id);
         }
