@@ -6,8 +6,11 @@ import com.webii.entity.Client;
 import com.webii.entity.User;
 import com.webii.enums.Role;
 import com.webii.repository.ClientRepository;
+import com.webii.util.CpfUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -29,31 +32,53 @@ public class ClientService {
 
     @Transactional
     public Client autocadastro(AutoCadastroDTO dto) {
-        if (clientRepository.existsByCpf(dto.getCpf())) {
-            throw new IllegalArgumentException("CPF já cadastrado.");
+        String cpf = dto.getCpf().replaceAll("\\D", "");
+        String cep = dto.getCep().replaceAll("\\D", "");
+        if (!CpfUtil.valido(cpf)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CPF inválido.");
+        }
+        if (clientRepository.existsByCpf(cpf)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "CPF já cadastrado.");
         }
 
-        ViaCepResponseDTO enderecoViaCep = viaCepService.buscarEnderecoPorCep(dto.getCep());
+        ViaCepResponseDTO enderecoViaCep = viaCepService.buscarEnderecoPorCep(cep);
+        String endereco = preencher(dto.getEndereco(), enderecoViaCep.getLogradouro(), "endereço");
+        String bairro = preencher(dto.getBairro(), enderecoViaCep.getBairro(), "bairro");
+        String cidade = preencher(dto.getCidade(), enderecoViaCep.getLocalidade(), "cidade");
+        String estado = preencher(dto.getEstado(), enderecoViaCep.getUf(), "estado");
         String senhaPlana = userService.gerarSenhaAleatoria();
-        User user = userService.criarUsuario(dto.getEmail(), Role.CLIENTE);
+        User user;
+        try {
+            user = userService.criarUsuario(dto.getEmail().trim(), senhaPlana, Role.CLIENTE);
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);
+        }
 
         Client cliente = Client.builder()
-                .name(dto.getName())
-                .cpf(dto.getCpf())
-                .telefone(dto.getTelefone())
-                .cep(dto.getCep())
-                .endereco(enderecoViaCep.getLogradouro())
-                .bairro(enderecoViaCep.getBairro())
-                .cidade(enderecoViaCep.getLocalidade())
-                .estado(enderecoViaCep.getUf())
-                .numero(dto.getNumero())
-                .complemento(dto.getComplemento())
+                .name(dto.getName().trim())
+                .cpf(cpf)
+                .telefone(dto.getTelefone().trim())
+                .cep(cep)
+                .endereco(endereco)
+                .bairro(bairro)
+                .cidade(cidade)
+                .estado(estado)
+                .numero(dto.getNumero().trim())
+                .complemento(dto.getComplemento() == null ? null : dto.getComplemento().trim())
                 .user(user)
                 .build();
 
         Client salvo = clientRepository.save(cliente);
-        emailService.enviarSenhaAutocadastro(dto.getEmail(), senhaPlana);
+        emailService.enviarSenhaAutocadastro(dto.getEmail().trim(), senhaPlana);
         return salvo;
+    }
+
+    private String preencher(String informado, String viaCep, String campo) {
+        String valor = informado != null && !informado.isBlank() ? informado : viaCep;
+        if (valor == null || valor.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe o " + campo + " do endereço.");
+        }
+        return valor.trim();
     }
 
     public Client buscarPorId(Long id) {
