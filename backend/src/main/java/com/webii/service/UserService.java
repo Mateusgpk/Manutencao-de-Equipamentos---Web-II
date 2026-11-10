@@ -90,11 +90,13 @@ public class UserService {
     }
 
     public User criarUsuario(String email, Role role) {
+        return criarUsuario(email, gerarSenhaAleatoria(), role);
+    }
+    public User criarUsuario(String email, String senha, Role role) {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("E-mail já cadastrado.");
         }
 
-        String senha = gerarSenhaAleatoria();
         User usuario = User.builder().email(email).password(hashSenhaComSalt(senha)).role(role).build();
 
         return userRepository.save(usuario);

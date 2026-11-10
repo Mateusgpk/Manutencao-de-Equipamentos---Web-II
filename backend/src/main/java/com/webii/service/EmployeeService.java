@@ -26,7 +26,7 @@ public class EmployeeService
     @Transactional
     public Employee criar(Employee funcionario) {
 
-        User user = user.service.criarUsuarioParaFuncionario(
+        User user = userService.criarUsuarioParaFuncionario(
             funcionario.getUser().getEmail(),
             funcionario.getUser().getPassword(),
             Role.FUNCIONARIO
