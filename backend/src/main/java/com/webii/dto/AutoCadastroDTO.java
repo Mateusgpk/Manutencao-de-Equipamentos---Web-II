@@ -2,6 +2,8 @@ package com.webii.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -16,9 +18,9 @@ public class AutoCadastroDTO {
     @NotBlank @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9\\d{4}-?\\d{4}$")
     private String telefone;
 
-    @NotBlank @Pattern(regexp = "^\\d{5}-?\\d{3}$") private String cep;
+    @NotBlank @Pattern (regexp = "^\\d{5}-?\\d{3}$") private String cep;
 
-    @NotBlank @Size(max = 20) private String numero
+    @NotBlank @Size (max = 20) private String numero;
     @Size(max = 120) private String complemento;
     @Size(max = 255) private String endereco;
     @Size(max = 120) private String bairro;
