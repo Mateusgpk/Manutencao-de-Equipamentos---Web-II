@@ -1,12 +1,26 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import {
-  EstadoSolicitacao,
-  Solicitacao,
-} from '../models/solicitacao.model';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, map, of } from 'rxjs';
+import { EstadoSolicitacao, Solicitacao, SolicitacaoApi, } from '../models/solicitacao.model';
+
+/** Converte a data do backend em Date. */
+function paraData(valor: unknown): Date | undefined {
+  if (Array.isArray(valor)) {
+    const [ano, mes, dia, hora = 0, minuto = 0, segundo = 0] = valor as number[];
+    return new Date(ano, mes - 1, dia, hora, minuto, segundo);
+  }
+  if (typeof valor === 'string' && valor) {
+    return new Date(valor);
+  }
+  return undefined;
+}
+
 
 @Injectable({ providedIn: 'root' })
 export class SolicitacaoService {
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = 'http://localhost:8080/api/solicitacoes';
+
   private readonly solicitacoes = signal<Solicitacao[]>([
     {
       id: 1,
@@ -187,54 +201,76 @@ export class SolicitacaoService {
     },
   ]);
 
+  /** Converte a solicitação do backend para o formato usado pelas telas. */
+  private converterDoBackend(api: SolicitacaoApi): Solicitacao {
+    const c = api.cliente;
+    return {
+      id: api.id,
+      dataHoraAbertura: paraData(api.dataHoraAbertura) ?? new Date(),
+      descricaoEquipamento: api.descricaoEquipamento,
+      categoriaEquipamento: api.categoriaEquipamento?.name ?? '',
+      descricaoDefeito: api.descricaoDefeito,
+      estado: api.estado,
+
+      clienteNome: c?.name ?? '',
+      clienteCpf: c?.cpf ?? '',
+      clienteTelefone: c?.telefone ?? '',
+      clienteEndereco: c ? `${c.endereco}, ${c.numero} - ${c.cidade}/${c.estado}` : '',
+
+      valorOrcamento: api.valorOrcamento ?? undefined,
+      dataHoraOrcamento: paraData(api.dataHoraOrcamento),
+      funcionarioOrcamento: api.funcionarioOrcamento?.name,
+
+      motivoRejeicao: api.motivoRejeicao ?? undefined,
+      dataHoraPagamento: paraData(api.dataHoraPagamento),
+
+      descricaoManutencao: api.descricaoManutencao ?? undefined,
+      orientacoesCliente: api.orientacoesCliente ?? undefined,
+      dataHoraManutencao: paraData(api.dataHoraManutencao),
+      funcionarioManutencao: api.funcionarioManutencao?.name,
+
+      funcionarioDestino: api.funcionarioDestino?.name,
+
+      historico: (api.historico ?? []).map((h) => ({
+        dataHora: paraData(h.dataHora) ?? new Date(),
+        estado: h.estado,
+        funcionario: h.funcionario?.name,
+        observacao: h.observacao ?? undefined,
+        funcionarioDestino: h.funcionarioDestino?.name,
+      })),
+    };
+  }
+
+  getByIdNoBackend(id: number): Observable<Solicitacao | undefined> {
+    return this.http.get<SolicitacaoApi>(`${this.apiUrl}/${id}`).pipe(
+      map((api) => this.converterDoBackend(api)),
+      catchError(() => of(undefined)),
+    );
+  }
+
+  aprovarServico(id: number): Observable<Solicitacao | undefined> {
+    return this.http
+      .patch<SolicitacaoApi>(`${this.apiUrl}/${id}/aprovacao`, {})
+      .pipe(map((api) => this.converterDoBackend(api)));
+  }
+
+  rejeitarServico(id: number, motivo: string): Observable<Solicitacao | undefined> {
+    return this.http
+      .patch<SolicitacaoApi>(`${this.apiUrl}/${id}/rejeicao`, { motivo })
+      .pipe(map((api) => this.converterDoBackend(api)));
+  }
+
+  pagarServico(id: number): Observable<Solicitacao | undefined> {
+    return this.http
+      .patch<SolicitacaoApi>(`${this.apiUrl}/${id}/pagamento`, {})
+      .pipe(map((api) => this.converterDoBackend(api)));
+  }
+
   listarTodas(): Observable<Solicitacao[]> { return of([...this.solicitacoes()]); }
 
   /** Busca uma solicitação pelo id (RF005 / RF008). */
   getById(id: number): Observable<Solicitacao | undefined> {
     return of(this.solicitacoes().find((s) => s.id === id));
-  }
-
-  /** RF006 - Aprovar Serviço: solicitação passa para o estado APROVADA. */
-  aprovarServico(id: number): Observable<Solicitacao | undefined> {
-    this.solicitacoes.update((lista) =>
-      lista.map((s) =>
-        s.id === id
-          ? {
-              ...s,
-              estado: EstadoSolicitacao.APROVADA,
-              historico: [
-                ...s.historico,
-                { dataHora: new Date(), estado: EstadoSolicitacao.APROVADA },
-              ],
-            }
-          : s,
-      ),
-    );
-    return this.getById(id);
-  }
-
-  /** RF007 - Rejeitar Serviço: solicitação passa para o estado REJEITADA, com motivo. */
-  rejeitarServico(id: number, motivo: string): Observable<Solicitacao | undefined> {
-    this.solicitacoes.update((lista) =>
-      lista.map((s) =>
-        s.id === id
-          ? {
-              ...s,
-              estado: EstadoSolicitacao.REJEITADA,
-              motivoRejeicao: motivo,
-              historico: [
-                ...s.historico,
-                {
-                  dataHora: new Date(),
-                  estado: EstadoSolicitacao.REJEITADA,
-                  observacao: motivo,
-                },
-              ],
-            }
-          : s,
-      ),
-    );
-    return this.getById(id);
   }
 
   /** RF009 - Resgatar Serviço: solicitação REJEITADA volta para APROVADA. */
@@ -284,29 +320,6 @@ export class SolicitacaoService {
                   estado: EstadoSolicitacao.ORCADA,
                   funcionario: funcionario
                 },
-              ],
-            }
-          : s,
-      ),
-    );
-
-    return this.getById(id);
-  }
-
-  /** RF010 - Pagar Serviço: solicitação ARRUMADA passa para PAGA, registrando data/hora do pagamento. */
-  pagarServico(id: number): Observable<Solicitacao | undefined> {
-    const agora = new Date();
-
-    this.solicitacoes.update((lista) =>
-      lista.map((s) =>
-        s.id === id && s.estado === EstadoSolicitacao.ARRUMADA
-          ? {
-              ...s,
-              estado: EstadoSolicitacao.PAGA,
-              dataHoraPagamento: agora,
-              historico: [
-                ...s.historico,
-                { dataHora: agora, estado: EstadoSolicitacao.PAGA },
               ],
             }
           : s,

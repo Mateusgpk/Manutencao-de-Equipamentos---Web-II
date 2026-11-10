@@ -1,4 +1,4 @@
-<section class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+<section class="mx-auto w-full max-w-6xl px-8 py-10">
   @switch (etapa()) {
   @case ('carregando') {
   <p class="text-center text-foreground-muted">Carregando orçamento...</p>
@@ -21,20 +21,20 @@
   <a routerLink="/home" class="text-sm font-heading font-semibold text-primary-hover transition hover:text-primary">Voltar</a>
 
   <header class="mt-4">
-    <h1 class="text-2xl font-extrabold font-heading bg-linear-to-b from-primary to-primary-hover bg-clip-text text-transparent drop-shadow-xs">Aprovação de Orçamento</h1>
+    <h1 class="text-2xl font-extrabold font-heading text-primary-hover">Aprovação de Orçamento</h1>
     <p class="mt-1 text-sm text-foreground-muted">
       Analise os dados da solicitação e o orçamento apresentado. Em seguida, aprove ou rejeite o serviço.
     </p>
   </header>
 
-  <div class="mt-6 grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:items-start">
-    <div class="glass-card rounded-[20px] border border-white/50 bg-white/40 backdrop-blur-[35px] shadow-glass p-6">
+  <div class="mt-6 grid grid-cols-[360px_minmax(0,1fr)] gap-6 items-start">
+    <div class="rounded-[20px] border border-border bg-surface p-6">
       <h2 class="text-lg font-heading font-bold text-foreground">Dados da solicitação</h2>
 
       <div class="mt-5 space-y-5">
         <div>
           <p class="text-xs font-heading font-bold uppercase tracking-wide text-foreground-muted">Nº da Solicitação</p>
-          <p class="text-3xl font-extrabold font-heading bg-linear-to-b from-primary to-primary-hover bg-clip-text text-transparent drop-shadow-xs">#{{ s.id }}</p>
+          <p class="text-3xl font-extrabold font-heading text-primary-hover">#{{ s.id }}</p>
         </div>
 
         <div>
@@ -68,7 +68,7 @@
     </div>
 
     <div class="space-y-6">
-      <div class="glass-card rounded-[20px] border border-white/50 bg-white/40 backdrop-blur-[35px] shadow-glass p-6">
+      <div class="rounded-[20px] border border-border bg-surface p-6">
         <h2 class="text-lg font-heading font-bold text-foreground">Descrição da solicitação</h2>
         <p class="mt-3 rounded-xl border border-primary/20 bg-primary-subtle/40 p-4 text-sm text-foreground">{{ s.descricaoDefeito }}</p>
 
@@ -78,10 +78,10 @@
         </div>
       </div>
 
-      <div class="glass-card rounded-[20px] border border-white/50 bg-white/40 backdrop-blur-[35px] shadow-glass p-6">
+      <div class="rounded-[20px] border border-border bg-surface p-6">
         <h2 class="text-lg font-heading font-bold text-foreground">Orçamento</h2>
 
-        <div class="mt-4 rounded-xl border border-primary/20 bg-primary-subtle/60 p-5 shadow-inner">
+        <div class="mt-4 rounded-xl border border-primary/20 bg-primary-subtle/60 p-5">
           <p class="text-sm text-foreground-muted">Valor do orçamento</p>
           <p class="mt-1 text-3xl font-extrabold font-heading text-primary-hover">
             {{s.valorOrcamento | currency:'BRL'}}
@@ -89,7 +89,7 @@
         </div>
 
         @if (etapa() === 'orcamento') {
-        <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="mt-8 grid grid-cols-2 gap-4">
           <button type="button"
             class="rounded-full border border-accent bg-linear-to-b from-accent-subtle to-accent px-5 py-3 text-sm font-heading font-bold text-on-accent shadow-md shadow-accent/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
             (click)="abrirConfirmacaoAprovacao()">
@@ -109,7 +109,7 @@
             Motivo da rejeição
           </label>
           <textarea id="motivo" rows="4"
-            class="mt-2 w-full p-3 text-sm rounded-xl border border-border bg-surface/80 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            class="mt-2 w-full rounded-xl border border-border bg-surface/80 p-3 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             placeholder="Explique o motivo da rejeição do orçamento..." [formControl]="motivoRejeicaoControl"></textarea>
 
           @if (motivoRejeicaoControl.invalid && motivoRejeicaoControl.touched) {
@@ -118,7 +118,7 @@
           </p>
           }
 
-          <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <div class="mt-4 flex flex-row justify-end gap-3">
             <button type="button"
               class="rounded-full border border-border bg-linear-to-b from-surface to-surface-muted px-5 py-2.5 text-sm font-heading font-semibold text-foreground shadow-2xs transition-all hover:border-primary/60 hover:from-white hover:to-primary-subtle/60 hover:text-primary-hover active:scale-95"
               (click)="cancelarRejeicao()">
@@ -139,9 +139,8 @@
   }
   }
   @if (etapa() === 'confirmandoAprovacao') {
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
-    (click)="!enviandoAprovacao() && cancelarAprovacao()">
-    <div class="w-full max-w-sm rounded-[20px] border border-white/60 bg-white/90 p-6 text-center shadow-xl backdrop-blur-[35px]" (click)="$event.stopPropagation()">
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
+    <div class="w-full max-w-sm rounded-[20px] border border-border bg-white p-6 text-center">
       <p class="text-lg font-heading font-bold text-foreground">Revise antes de confirmar</p>
       <p class="mt-2 text-sm text-foreground-muted">
         Você está aprovando o serviço para a solicitação #{{ solicitacao()?.id }}.
@@ -170,7 +169,7 @@
       <p class="mt-3 text-sm font-medium text-danger" role="alert">{{ erro() }}</p>
       }
 
-      <div class="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
+      <div class="mt-6 flex flex-row-reverse gap-3">
         <button type="button"
           class="flex-1 rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-5 py-2.5 text-sm font-heading font-bold text-on-primary shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           [disabled]="enviandoAprovacao()" (click)="confirmarAprovacaoDefinitiva()">
@@ -189,7 +188,7 @@
   @if (etapa() === 'confirmandoRejeicao') {
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
     (click)="!enviandoRejeicao() && voltarParaMotivo()">
-    <div class="w-full max-w-sm rounded-[20px] border border-white/60 bg-white/90 p-6 text-center shadow-xl backdrop-blur-[35px]" (click)="$event.stopPropagation()">
+    <div class="w-full max-w-sm rounded-[20px] border border-border bg-white p-6 text-center" (click)="$event.stopPropagation()">
       <p class="text-lg font-heading font-bold text-foreground">
         Tem certeza que deseja rejeitar este orçamento?
       </p>
@@ -199,7 +198,7 @@
       <p class="mt-3 text-sm font-medium text-danger" role="alert">{{ erro() }}</p>
       }
 
-      <div class="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
+      <div class="mt-6 flex flex-row-reverse gap-3">
         <button type="button"
           class="flex-1 rounded-full border border-danger bg-linear-to-b from-[#FFE1DE] to-danger px-5 py-2.5 text-sm font-heading font-bold text-white shadow-md shadow-danger/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-danger focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           [disabled]="enviandoRejeicao()" (click)="confirmarRejeicaoDefinitiva()">
@@ -217,7 +216,7 @@
 
   @if (etapa() === 'servicoAprovado' || etapa() === 'servicoRejeitado') {
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
-    <div class="w-full max-w-sm rounded-[20px] border border-white/60 bg-white/90 p-6 text-center shadow-xl backdrop-blur-[35px]">
+    <div class="w-full max-w-sm rounded-[20px] border border-border bg-white p-6 text-center">
       @if (etapa() === 'servicoAprovado') {
       <p class="text-lg font-heading font-bold text-foreground">
         Serviço Aprovado no Valor {{ solicitacao()?.valorOrcamento | currency:'BRL' }}

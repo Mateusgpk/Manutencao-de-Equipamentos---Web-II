@@ -1,16 +1,11 @@
-import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe, CurrencyPipe } from '@angular/common';
-
-import {
-  ESTADO_SOLICITACAO_LABEL,
-  EstadoSolicitacao,
-  Solicitacao,
-} from '../../../../shared/models/solicitacao.model';
+import { ESTADO_SOLICITACAO_LABEL, EstadoSolicitacao, Solicitacao, } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
 
-/** Passos pelos quais a tela pode passar (RF005 -> RF006 / RF007). */
+/** Passos pelos quais a tela pode passar . */
 type Etapa =
   | 'carregando'
   | 'naoEncontrada'
@@ -41,7 +36,7 @@ export class Orcamento implements OnInit {
   protected readonly enviandoAprovacao = signal(false);
   protected readonly erro = signal('');
 
-  /** RF007 - motivo da rejeição, validado como obrigatório. */
+  /** Motivo da rejeição, validado como obrigatório. */
   protected readonly motivoRejeicaoControl = new FormControl('', {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(5)],
@@ -55,7 +50,7 @@ export class Orcamento implements OnInit {
       return;
     }
 
-    this.solicitacaoService.getById(id).subscribe((solicitacao) => {
+    this.solicitacaoService.getByIdNoBackend(id).subscribe((solicitacao) => {
       if (!solicitacao || solicitacao.estado !== EstadoSolicitacao.ORCADA) {
         this.etapa.set('naoEncontrada');
         return;
@@ -66,12 +61,10 @@ export class Orcamento implements OnInit {
     });
   }
 
-  /** RF006 - Aprovar Serviço. */
-  /** Abre a mini revisão antes de aprovar de fato o serviço (RF006). */
+   /** Mini revisão. */
   protected abrirConfirmacaoAprovacao(): void {
     this.erro.set('');
     this.etapa.set('confirmandoAprovacao');
-
   }
 
   /** Fecha a mini revisão e volta para a tela de orçamento, sem aprovar nada. */
@@ -103,7 +96,7 @@ export class Orcamento implements OnInit {
     });
   }
 
-  /** Abre o formulário de motivo, primeiro passo do RF007. */
+  /** Abre o formulário de motivo. */
   protected abrirRejeicaoServico(): void {
     this.motivoRejeicaoControl.reset('');
     this.etapa.set('motivoRejeicao');
@@ -113,7 +106,7 @@ export class Orcamento implements OnInit {
     this.etapa.set('orcamento');
   }
 
-  /** RF007 - Valida o motivo e pede confirmação antes de rejeitar de fato. */
+  /** Valida o motivo e pede confirmação antes de rejeitar de fato. */
   protected confirmarRejeicaoServico(): void {
     this.motivoRejeicaoControl.markAsTouched();
 
@@ -125,20 +118,12 @@ export class Orcamento implements OnInit {
 
   }
 
-  /** Permite fechar a confirmação de rejeição apertando Esc, sem precisar do mouse. */
-  @HostListener('document:keydown.escape')
-  protected aoPressionarEsc(): void {
-    if (this.etapa() === 'confirmandoRejeicao' && !this.enviandoRejeicao()) {
-      this.voltarParaMotivo();
-    }
-  }
-
   /** Volta para o formulário de motivo, caso o usuário queira revisar o texto. */
   protected voltarParaMotivo(): void {
     this.etapa.set('motivoRejeicao');
   }
 
-  /** RF007 - Rejeitar Serviço, após o usuário confirmar a ação. */
+  /** Rejeitar Serviço. */
   protected confirmarRejeicaoDefinitiva(): void {
     const atual = this.solicitacao();
     if (!atual) {
@@ -173,7 +158,6 @@ export class Orcamento implements OnInit {
     this.erro.set(`Não foi possível ${acao} o serviço. Verifique a conexão e tente novamente.`);
   }
 
-  /** Ao clicar OK nas mensagens de sucesso, volta para a Página Inicial do Cliente (RF003). */
   protected voltarParaInicio(): void {
     this.router.navigate(['/home']);
   }

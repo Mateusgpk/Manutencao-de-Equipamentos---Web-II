@@ -66,3 +66,45 @@ export interface Solicitacao {
 
   historico: HistoricoSolicitacao[];
 }
+
+export interface FuncionarioApi {
+  id: number;
+  name: string;
+}
+
+export interface HistoricoApi {
+  dataHora: unknown;
+  estado: EstadoSolicitacao;
+  funcionario?: FuncionarioApi | null;
+  observacao?: string | null;
+  funcionarioDestino?: FuncionarioApi | null;
+}
+
+export interface SolicitacaoApi {
+  id: number;
+  dataHoraAbertura: unknown;
+  descricaoEquipamento: string;
+  categoriaEquipamento: { name: string };
+  descricaoDefeito: string;
+  estado: EstadoSolicitacao;
+  cliente: {
+    name: string;
+    cpf: string;
+    telefone: string;
+    endereco: string;
+    numero: string;
+    cidade: string;
+    estado: string;
+  };
+  valorOrcamento?: number | null;
+  dataHoraOrcamento?: unknown;
+  funcionarioOrcamento?: FuncionarioApi | null;
+  motivoRejeicao?: string | null;
+  dataHoraPagamento?: unknown;
+  descricaoManutencao?: string | null;
+  orientacoesCliente?: string | null;
+  dataHoraManutencao?: unknown;
+  funcionarioManutencao?: FuncionarioApi | null;
+  funcionarioDestino?: FuncionarioApi | null;
+  historico?: HistoricoApi[] | null;
+}

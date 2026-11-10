@@ -2,15 +2,10 @@ import { Component, HostListener, computed, inject, OnInit, signal } from '@angu
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
- 
-import {
-  ESTADO_SOLICITACAO_LABEL,
-  EstadoSolicitacao,
-  Solicitacao,
-} from '../../../../shared/models/solicitacao.model';
+import { ESTADO_SOLICITACAO_LABEL, EstadoSolicitacao, Solicitacao, } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
  
-/** Passos pelos quais a tela pode passar (RF010). */
+/** Passos pelos quais a tela pode passar. */
 type Etapa =
   | 'carregando'
   | 'naoEncontrada'
@@ -19,7 +14,7 @@ type Etapa =
   | 'pagamentoConfirmado'
   | 'pixGerado';
  
-/** Confere se o cartão não está vencido (vale até o fim do mês informado). */
+/** Confere se o cartão não está vencido. */
 function validadeCartaoValidator(control: AbstractControl): ValidationErrors | null {
   const partes = /^(\d{2})\/(\d{2})$/.exec(control.value ?? '');
   if (!partes) {
@@ -55,7 +50,7 @@ export class PagarManuntencao implements OnInit {
   /** Forma de pagamento escolhida. */
   protected readonly metodo = signal<'cartao' | 'pix'>('cartao');
 
-  /** Formulário do cartão (os dados ficam só no front, nada é enviado). */
+  /** Formulário do cartão. */
   protected readonly cartaoForm = new FormGroup({
     numero: new FormControl('', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{4} \d{4}$/)]),
     validade: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), validadeCartaoValidator]),
@@ -84,7 +79,7 @@ export class PagarManuntencao implements OnInit {
       return;
     }
  
-    this.solicitacaoService.getById(id).subscribe((solicitacao) => {
+    this.solicitacaoService.getByIdNoBackend(id).subscribe((solicitacao) => {
       if (!solicitacao || solicitacao.estado !== EstadoSolicitacao.ARRUMADA) {
         this.etapa.set('naoEncontrada');
         return;
@@ -123,7 +118,6 @@ export class PagarManuntencao implements OnInit {
     return campo.invalid && campo.touched;
   }
 
-  /** Abre a confirmacao, primeiro passo do RF010. */
   protected abrirConfirmacaoPagamento(): void {
     if (this.metodo() === 'cartao' && this.cartaoForm.invalid) {
       this.cartaoForm.markAllAsTouched();
@@ -132,14 +126,6 @@ export class PagarManuntencao implements OnInit {
 
     this.erro.set('');
     this.etapa.set('confirmandoPagamento');
-  }
-
-  /** Permite fechar a confirmacao de pagamento apertando Esc, sem precisar do mouse. */
-  @HostListener('document:keydown.escape')
-  protected aoPressionarEsc(): void {
-    if (this.etapa() === 'confirmandoPagamento' && !this.enviandoPagamento()) {
-      this.cancelarConfirmacao();
-    }
   }
 
   /** Volta para a tela de pagamento, caso o usuario desista de confirmar. */
@@ -178,7 +164,7 @@ export class PagarManuntencao implements OnInit {
     this.erro.set('Não foi possível registrar o pagamento. Verifique a conexão e tente novamente.');
   }
 
-  /** Ao fechar o modal (sucesso ou código Pix), volta para a Pagina Inicial do Cliente. */
+  /** Volta para a Pagina Inicial do Cliente. */
   protected voltarParaInicio(): void {
     this.router.navigate(['/home']);
   }
