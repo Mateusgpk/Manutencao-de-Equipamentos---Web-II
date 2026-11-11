@@ -27,13 +27,12 @@ export class Crudfuncionario {
       return id;
   })
 }
-  alterarFuncionario(employee:Employee):boolean | void {
-     this.loginserver.alterarFuncionario(employee).subscribe( (id) => {
-      console.log("ID do funcionário alterado:", id);
-    });
-  
+  alterarFuncionario(employee:Employee):Observable<boolean> {
+     return this.loginserver.alterarFuncionario(employee).pipe(
+      map(() => true)
+    );
+   }
 
-}
   buscarPorId(id:string|undefined):Observable<Employee>{
     return this.httpClient.get<Employee>(this.BASE_URL + 'employee/'+id, this.httpOptions)
   }

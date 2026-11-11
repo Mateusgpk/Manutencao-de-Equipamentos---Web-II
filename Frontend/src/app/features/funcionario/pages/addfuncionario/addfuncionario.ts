@@ -24,7 +24,7 @@ export class Addfuncionario implements OnInit {
   FormCadastro = new FormGroup({
     name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required,]),
-    senha: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    senha: new FormControl('', [ Validators.minLength(4),Validators.maxLength(4)]),
     dataNascimento: new FormControl('', [Validators.required]),
   });
   ngOnInit(): void {
@@ -63,6 +63,7 @@ export class Addfuncionario implements OnInit {
         });
         if (this.crudfuncionario.addFuncionario(funcionario)) {
           console.log('Funcionário adicionado com sucesso');
+          this.router.navigate(['/employee/crud-funcionario']);
         } else {
           console.log('Erro ao adicionar funcionário');
         }
@@ -73,14 +74,19 @@ export class Addfuncionario implements OnInit {
 
       });
       console.log("Funcionário a ser alterado:", funcionario);
-      this.crudfuncionario.alterarFuncionario(funcionario);
-      console.log('Funcionário alterado com sucesso');
+      this.crudfuncionario.alterarFuncionario(funcionario).subscribe({
+        next: () => {
+          console.log('Funcionário alterado com sucesso');
+          this.router.navigate(['/employee/crud-funcionario']);
+        },
+        error: () => {
+          console.log('Erro ao alterar funcionário');
+        }
+      });
     }
     } else {
       console.log('Formulário inválido');
     }
-
-    this.router.navigate(['/employee/crud-funcionario']);
   }
 
 

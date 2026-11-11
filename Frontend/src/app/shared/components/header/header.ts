@@ -17,10 +17,12 @@ export class Header {
     return !!this.autentica.usuarioLogado;
   }
   usuario = this.autentica.usuarioLogado;
+  
   menuAberto: boolean = false;
 
   toggleMenu() {
     this.menuAberto = !this.menuAberto;
+    console.log(this.usuario)
   }
   acao(){
     this.autentica.logout()
