@@ -2,11 +2,12 @@ import { Component, Input, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { MascaraCPFDirective } from '../../directives/mascara-cpf';
 import { MascaraTelefoneDirective } from '../../directives/mascara-telefone';
+import { MascaraCEPDirective } from '../../directives/mascara-cep';
 
 @Component({
   selector: 'app-input-texto',
   standalone: true,
-  imports: [ReactiveFormsModule, MascaraCPFDirective, MascaraTelefoneDirective],
+  imports: [ReactiveFormsModule, MascaraCPFDirective, MascaraTelefoneDirective, MascaraCEPDirective],
   templateUrl: './input-texto.html',
   styleUrl: './input-texto.css',
 })
