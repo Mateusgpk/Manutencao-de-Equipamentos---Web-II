@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
-import { EstadoSolicitacao, Solicitacao, SolicitacaoApi, } from '../models/solicitacao.model';
+import { EstadoSolicitacao, NovaSolicitacao, Solicitacao, SolicitacaoApi, } from '../models/solicitacao.model';
 
 /** Converte a data do backend em Date. */
 function paraData(valor: unknown): Date | undefined {
@@ -246,6 +246,13 @@ export class SolicitacaoService {
       map((api) => this.converterDoBackend(api)),
       catchError(() => of(undefined)),
     );
+  }
+
+  /** Abre a solicitação no estado ABERTA. */
+  criar(clienteId: number, dados: NovaSolicitacao): Observable<Solicitacao> {
+    return this.http
+      .post<SolicitacaoApi>(this.apiUrl, dados, { params: { clienteId } })
+      .pipe(map((api) => this.converterDoBackend(api)));
   }
 
   aprovarServico(id: number): Observable<Solicitacao | undefined> {

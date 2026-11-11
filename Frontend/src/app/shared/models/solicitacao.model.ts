@@ -108,3 +108,10 @@ export interface SolicitacaoApi {
   funcionarioDestino?: FuncionarioApi | null;
   historico?: HistoricoApi[] | null;
 }
+
+/** Dados enviados na abertura da solicitação */
+export interface NovaSolicitacao {
+  descricaoEquipamento: string;
+  categoriaId: number;
+  descricaoDefeito: string;
+}
