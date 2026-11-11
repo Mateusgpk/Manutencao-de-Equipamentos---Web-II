@@ -1,6 +1,5 @@
-import { Component, HostListener, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ESTADO_SOLICITACAO_LABEL, EstadoSolicitacao, Solicitacao, } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
@@ -11,27 +10,11 @@ type Etapa =
   | 'naoEncontrada'
   | 'pagamento'
   | 'confirmandoPagamento'
-  | 'pagamentoConfirmado'
-  | 'pixGerado';
- 
-/** Confere se o cartão não está vencido. */
-function validadeCartaoValidator(control: AbstractControl): ValidationErrors | null {
-  const partes = /^(\d{2})\/(\d{2})$/.exec(control.value ?? '');
-  if (!partes) {
-    return null;
-  }
-
-  const mes = Number(partes[1]);
-  const ano = 2000 + Number(partes[2]);
-  const hoje = new Date();
-  const vencido = ano < hoje.getFullYear() || (ano === hoje.getFullYear() && mes < hoje.getMonth() + 1);
-
-  return vencido ? { cartaoVencido: true } : null;
-}
+  | 'pagamentoConfirmado';
 
 @Component({
   selector: 'app-pagar-manuntencao',
-  imports: [RouterLink, CurrencyPipe, DatePipe, ReactiveFormsModule],
+  imports: [RouterLink, CurrencyPipe, DatePipe],
   templateUrl: './PagarManuntencao.html',
   styleUrl: './PagarManuntencao.css',
 })
@@ -46,30 +29,6 @@ export class PagarManuntencao implements OnInit {
   protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
   protected readonly enviandoPagamento = signal(false);
   protected readonly erro = signal('');
-
-  /** Forma de pagamento escolhida. */
-  protected readonly metodo = signal<'cartao' | 'pix'>('cartao');
-
-  /** Formulário do cartão. */
-  protected readonly cartaoForm = new FormGroup({
-    numero: new FormControl('', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{4} \d{4}$/)]),
-    validade: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), validadeCartaoValidator]),
-    cvc: new FormControl('', [Validators.required, Validators.pattern(/^\d{3,4}$/)]),
-    nome: new FormControl('', [Validators.required, Validators.minLength(3)]),
-  });
-
-  /** Código Pix "copia e cola". */
-  protected readonly codigoPix = computed(() => {
-    const s = this.solicitacao();
-    if (!s) {
-      return '';
-    }
-    return (
-      '00020126580014br.gov.bcb.pix0136pix@manutencao.exemplo.com' +
-      `5204000053039865406${(s.valorOrcamento ?? 0).toFixed(2)}5802BR` +
-      `5923MANUTENCAO EQUIPAMENTOS6008CURITIBA62100506SOL${String(s.id).padStart(3, '0')}6304A1B2`
-    );
-  });
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -90,40 +49,7 @@ export class PagarManuntencao implements OnInit {
     });
   }
 
-  protected selecionarMetodo(metodo: 'cartao' | 'pix'): void {
-    this.metodo.set(metodo);
-  }
-
-  // Máscaras dos campos do cartão
-  protected mascararNumero(evento: Event): void {
-    const digitos = (evento.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 16);
-    this.cartaoForm.controls.numero.setValue(digitos.replace(/(\d{4})(?=\d)/g, '$1 '));
-  }
-
-  protected mascararValidade(evento: Event): void {
-    const digitos = (evento.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 4);
-    this.cartaoForm.controls.validade.setValue(
-      digitos.length > 2 ? `${digitos.slice(0, 2)}/${digitos.slice(2)}` : digitos,
-    );
-  }
-
-  protected mascararCvc(evento: Event): void {
-    const digitos = (evento.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 4);
-    this.cartaoForm.controls.cvc.setValue(digitos);
-  }
-
-  /** Mostra o erro do campo só depois que o usuário mexeu nele. */
-  protected campoInvalido(nome: 'numero' | 'validade' | 'cvc' | 'nome'): boolean {
-    const campo = this.cartaoForm.controls[nome];
-    return campo.invalid && campo.touched;
-  }
-
   protected abrirConfirmacaoPagamento(): void {
-    if (this.metodo() === 'cartao' && this.cartaoForm.invalid) {
-      this.cartaoForm.markAllAsTouched();
-      return;
-    }
-
     this.erro.set('');
     this.etapa.set('confirmandoPagamento');
   }
@@ -152,7 +78,7 @@ export class PagarManuntencao implements OnInit {
 
         this.enviandoPagamento.set(false);
         this.solicitacao.set(atualizada);
-        this.etapa.set(this.metodo() === 'pix' ? 'pixGerado' : 'pagamentoConfirmado');
+        this.etapa.set('pagamentoConfirmado');
       },
       error: () => this.mostrarErroPagamento(),
     });
