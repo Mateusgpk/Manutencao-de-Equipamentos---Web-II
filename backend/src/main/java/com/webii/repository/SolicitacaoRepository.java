@@ -1,5 +1,7 @@
 package com.webii.repository;
 
+import com.webii.dto.ReceitaCategoriaDTO;
+import com.webii.dto.ReceitaDiaDTO;
 import com.webii.entity.Solicitacao;
 import com.webii.enums.EstadoSolicitacao;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +30,26 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
         order by s.dataHoraPagamento asc
         """)
     List<Solicitacao> findReceitas(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
+
+    @Query("""
+        select new com.webii.dto.ReceitaDiaDTO(CAST(s.dataHoraPagamento as LocalDate), COUNT(s), SUM(s.valorOrcamento))
+        from Solicitacao s
+        where s.dataHoraPagamento is not null
+            and s.dataHoraPagamento >= :inicio
+            and s.dataHoraPagamento < :fim
+        group by CAST(s.dataHoraPagamento as LocalDate)
+        order by CAST(s.dataHoraPagamento as LocalDate)
+        """)
+    List<ReceitaDiaDTO> receitaPorDia(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
+
+    @Query("""
+        select new com.webii.dto.ReceitaCategoriaDTO(c.name, COUNT(s), SUM(s.valorOrcamento))
+        from Solicitacao s
+        join s.categoriaEquipamento c
+        where s.dataHoraPagamento is not null
+        group by c.name
+        order by c.name
+        """)
+    List<ReceitaCategoriaDTO> receitaPorCategoria();
+
 }

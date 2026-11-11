@@ -1,5 +1,6 @@
 package com.webii.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.webii.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -25,6 +26,7 @@ public class User {
     private String email;
 
     @NotBlank
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private String password;
 
