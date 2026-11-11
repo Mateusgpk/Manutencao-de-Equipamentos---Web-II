@@ -61,12 +61,15 @@ export class Addfuncionario implements OnInit {
       const funcionario = new Employee({...(this.FormCadastro.value as Partial<Employee>),
         user: new User({email: String(this.FormCadastro.value.email), password: String(this.FormCadastro.value.senha), role: "FUNCIONARIO"})
         });
-        if (this.crudfuncionario.addFuncionario(funcionario)) {
-          console.log('Funcionário adicionado com sucesso');
-          this.router.navigate(['/employee/crud-funcionario']);
-        } else {
-          console.log('Erro ao adicionar funcionário');
-        }
+        this.crudfuncionario.addFuncionario(funcionario).subscribe({
+          next: () => {
+            this.router.navigate(['/employee/crud-funcionario']);
+          },
+          error: (err) => {
+            console.error('Erro ao adicionar funcionário:', err);
+            window.alert('Erro ao cadastrar o funcionário: ' + (err.error?.message || 'Erro desconhecido'));
+          }
+        });
     } else{
       let funcionario = new Employee({...(this.FormCadastro.value as Partial<Employee>),
         id: this.id,

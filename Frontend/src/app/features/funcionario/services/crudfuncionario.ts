@@ -22,11 +22,9 @@ export class Crudfuncionario {
   getallFuncionario(): Observable <Employee[]>{
     return this.httpClient.get<Employee[]>(this.BASE_URL+"employee",this.httpOptions)
   }
-  addFuncionario(employee:Employee):boolean | void {
-    this.loginserver.inserirFuncionario(employee).subscribe( (id) => {
-      return id;
-  })
-}
+  addFuncionario(employee:Employee):Observable<boolean> {
+    return this.loginserver.inserirFuncionario(employee);
+  }
   alterarFuncionario(employee:Employee):Observable<boolean> {
      return this.loginserver.alterarFuncionario(employee).pipe(
       map(() => true)
