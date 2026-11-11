@@ -74,9 +74,11 @@ export class FormCadastro implements OnInit {
   executarAcao(texto: string | null): void {
     console.log('O usuário parou de digitar. Texto final:', texto);
 
-    if (texto?.length === 8) {
-      if (this.validacep.test(texto || '')) {
-        this.apicep.obterDados(texto!).subscribe({
+    const cep = (texto ?? '').replace(/\D/g, '');
+
+    if (cep.length === 8) {
+      if (this.validacep.test(cep)) {
+        this.apicep.obterDados(cep).subscribe({
           next: (resposta) => {
             this.dadosCep = resposta;
             this.formCadastro.patchValue({
