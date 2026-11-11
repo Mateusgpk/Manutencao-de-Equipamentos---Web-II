@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Apicep } from '../../services/apicep';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
@@ -42,7 +43,7 @@ export class FormCadastro implements OnInit {
       Validators.required,
       Validators.pattern(/^\(?\d{2}\)?\s?(9\d{4}|[2-8]\d{3})\-?\d{4}$/),
     ]),
-    cep: new FormControl('', [Validators.required, Validators.maxLength(9)]),
+    cep: new FormControl('', [Validators.required, Validators.maxLength(9), Validators.pattern(/^\d{5}-?\d{3}$/)]),
     endereco: new FormControl('', Validators.required),
     numero: new FormControl('', Validators.required),
     complemento: new FormControl(''),
@@ -100,10 +101,14 @@ export class FormCadastro implements OnInit {
 
   corfundo: string = 'bg-blue-800';
   piscar: string = '';
+  readonly enviando = signal(false);
+  readonly erro = signal('');
 
   async aoEnviar() {
     this.piscar = 'piscando';
     if (this.formCadastro.valid) {
+      if (this.enviando()) return;
+
       this.formCadastro.value.cpf = this.formCadastro.value.cpf?.replace(/[.-]/g, '');
       console.log('Dados enviados:', this.formCadastro.value);
       const user = {
@@ -119,13 +124,36 @@ export class FormCadastro implements OnInit {
         cidade:this.formCadastro.value.cidade,
         estado:this.formCadastro.value.estado,
       };
-      this.loginAutenticador.inserirCliente(user).subscribe((sucesso) => {
-        if (sucesso) {
-          alert('usuario salvo');
-        } else {
-          alert('rapaiz deu ruim');
-        }
+      this.erro.set('');
+      this.enviando.set(true);
+
+      this.loginAutenticador.inserirCliente(user).subscribe({
+        next: () => {
+          this.enviando.set(false);
+          alert('Cadastro realizado com sucesso! A senha de acesso foi enviada para o seu e-mail.');
+          this.router.navigate(['/login']);
+        },
+        error: (resposta: HttpErrorResponse) => {
+          this.enviando.set(false);
+          this.erro.set(this.mensagemErro(resposta));
+        },
       });
     }
+  }
+
+  /** Traduz a recusa do backend em mensagem para o usuário. */
+  private mensagemErro(resposta: HttpErrorResponse): string {
+    const corpo = resposta.error;
+    const recusa = [400, 409, 502].includes(resposta.status);
+
+    // Regra de negócio recusada: o motivo vem em "error" (ex.: "CPF já cadastrado.").
+    if (recusa && typeof corpo?.error === 'string' && corpo.error !== 'Bad Request') return corpo.error;
+
+    // Falha no envio da senha por e-mail: o motivo vem em "message".
+    if (recusa && typeof corpo?.message === 'string' && corpo.message) return corpo.message;
+
+    if (resposta.status === 400) return 'Dados inválidos. Confira os campos e tente novamente.';
+
+    return 'Não foi possível concluir o cadastro. Verifique a conexão e tente novamente.';
   }
 }

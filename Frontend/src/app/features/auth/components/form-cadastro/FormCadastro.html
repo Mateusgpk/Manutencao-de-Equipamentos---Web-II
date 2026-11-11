@@ -19,7 +19,7 @@
     <div class="grid grid-cols-10 gap-4 w-full">
 
         <app-input-texto class="form-control col-span-3" label="CEP" id="cep" placeholder="Digite seu CEP"
-            [control]="formCadastro.controls.cep"></app-input-texto>
+            [control]="formCadastro.controls.cep" mascara="cep"></app-input-texto>
 
         <app-input-texto class="form-control col-span-7" label="Endereço" id="endereco"
             placeholder="Digite seu endereço" [control]="formCadastro.controls.endereco"></app-input-texto>
@@ -44,6 +44,10 @@
             placeholder="Digite o complemento" [control]="formCadastro.controls.complemento"></app-input-texto>
 
     </div>
+
+    @if (erro()) {
+        <span class="text-sm text-red-600">{{ erro() }}</span>
+    }
 
     <app-btn-submit (onclick)="aoEnviar()" class="btn-cadastro mt-2" value="Cadastrar"
         type="submit">Cadastrar</app-btn-submit>
