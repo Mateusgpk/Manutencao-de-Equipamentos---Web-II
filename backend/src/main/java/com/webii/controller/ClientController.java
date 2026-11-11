@@ -1,9 +1,11 @@
 package com.webii.controller;
 
+import com.webii.dto.AutoCadastroDTO;
 import com.webii.entity.Client;
 
 import com.webii.repository.ClientRepository;
 
+import com.webii.service.ClientService;
 import jakarta.validation.Valid;
 
 import java.net.URI;
@@ -16,6 +18,7 @@ import java.util.List;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,43 +28,38 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:4200")
 public class ClientController {
 
-    private final ClientRepository clientRepository;
+    @Autowired
 
-    public ClientController(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
+    private final ClientService clientService;
+
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
     }
 
 
     @GetMapping
     public  ResponseEntity<List<Client>> listarTodos(){
-        List<Client> listaClientes = clientRepository.findAll();
+        List<Client> listaClientes = clientService.listarTodos();
         return ResponseEntity.ok(listaClientes);
     }
 
 
     @GetMapping("/{id}")
     public ResponseEntity<Client> buscarCliente(@PathVariable("id") Long id){
-        Optional<Client> cliente = clientRepository.findByUserId(id);
-        if (cliente.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }else {
-            return ResponseEntity.ok(cliente.get());
-        }
+        Client cliente = clientService.buscarPorId(id);
+            return ResponseEntity.ok(cliente);
     }
-    @GetMapping("/usuario/{id}")
-    public ResponseEntity<Client> buscarClientePorUsuario(@PathVariable("id") Long id){
-        Optional<Client> cliente = clientRepository.findByUserId(id);
-        if (cliente.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }else {
-            return ResponseEntity.ok(cliente.get());
-        }
+
+    @GetMapping("usuario/{id}")
+    public ResponseEntity<Client> buscarUserCliente(@PathVariable("id") Long id){
+        Client cliente = clientService.buscarPorUserId(id);
+        return ResponseEntity.ok(cliente);
     }
 
     
     @PostMapping
-    public ResponseEntity<Void> cadastrar(@Valid @RequestBody Client client) {
-        Client salvo = clientRepository.save(client);
-        return ResponseEntity.created(URI.create("/api/clientes/" + salvo.getId())).build();
+    public ResponseEntity<Void> cadastrar(@Valid @RequestBody AutoCadastroDTO client) {
+        Client salvo = clientService.autocadastro(client);
+        return ResponseEntity.created(URI.create("/api/clients/" + salvo.getId())).build();
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,13 +41,14 @@ public class ClientService {
         if (clientRepository.existsByCpf(cpf)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "CPF já cadastrado.");
         }
-
+        System.out.println(dto);
         ViaCepResponseDTO enderecoViaCep = viaCepService.buscarEnderecoPorCep(cep);
         String endereco = preencher(dto.getEndereco(), enderecoViaCep.getLogradouro(), "endereço");
         String bairro = preencher(dto.getBairro(), enderecoViaCep.getBairro(), "bairro");
         String cidade = preencher(dto.getCidade(), enderecoViaCep.getLocalidade(), "cidade");
         String estado = preencher(dto.getEstado(), enderecoViaCep.getUf(), "estado");
         String senhaPlana = userService.gerarSenhaAleatoria();
+        System.out.println(senhaPlana);
         User user;
         try {
             user = userService.criarUsuario(dto.getEmail().trim(), senhaPlana, Role.CLIENTE);
@@ -67,8 +69,9 @@ public class ClientService {
                 .complemento(dto.getComplemento() == null ? null : dto.getComplemento().trim())
                 .user(user)
                 .build();
-
+        System.out.println(cliente);
         Client salvo = clientRepository.save(cliente);
+        System.out.println(salvo);
         emailService.enviarSenhaAutocadastro(dto.getEmail().trim(), senhaPlana);
         return salvo;
     }
@@ -79,6 +82,10 @@ public class ClientService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe o " + campo + " do endereço.");
         }
         return valor.trim();
+    }
+
+    public List<Client> listarTodos(){
+        return clientRepository.findAll();
     }
 
     public Client buscarPorId(Long id) {

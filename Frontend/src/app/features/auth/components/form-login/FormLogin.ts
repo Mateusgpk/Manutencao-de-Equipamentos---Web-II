@@ -54,9 +54,9 @@ ngOnInit(): void {
         if (usu!=null){
           alert('Login realizado com sucesso!');
           this.loginAutenticador.usuarioLogado=usu;
-          if (usu.user.role==='EMPLOYEE'){
+          if (usu.user.role==='FUNCIONARIO'){
             this.router.navigate(['employee/home']);
-          }else if (usu.user.role === 'CLIENT') {
+          }else if (usu.user.role === 'CLIENTE') {
           this.router.navigate(['/home']);
         }else{
           this.router.navigate(['/']);  

@@ -49,18 +49,10 @@ inseriruser(user: User): Observable<User | boolean> {
   )
 }
 
-  inserirCliente(usuario: Client): Observable<boolean> {
-    return this.inseriruser(usuario.user).pipe(
-      switchMap((userFoiInserido) => {
-        if (userFoiInserido) {
-          return this.httpClient
-            .post<Client>(this.BASE_URL + 'clientes/', JSON.stringify(usuario), this.httpOptions)
-            .pipe(map(() => true));
-        } else {
+  inserirCliente(usuario:any): Observable<boolean> {
+
+          return this.httpClient.post<Client>(this.BASE_URL + 'clients', usuario, this.httpOptions).pipe(map(() => true));
           return of(false);
-        }
-      }),
-    );
   }
 
 

@@ -105,14 +105,19 @@ export class FormCadastro implements OnInit {
     if (this.formCadastro.valid) {
       this.formCadastro.value.cpf = this.formCadastro.value.cpf?.replace(/[.-]/g, '');
       console.log('Dados enviados:', this.formCadastro.value);
-      const user = new Client({
-        ...(this.formCadastro.value as Partial<Client>),
-        user: new User({
-          email: String(this.formCadastro.value.email),
-          password: String(this.formCadastro.value.senha),
-          role: 'CLIENT',
-        }),
-      });
+      const user = {
+        name:this.formCadastro.value.nome,
+        cpf:this.formCadastro.value.cpf,
+        email:this.formCadastro.value.email,
+        telefone:this.formCadastro.value.telefone,
+        cep:this.formCadastro.value.cep,
+        numero:this.formCadastro.value.numero,
+        complemento:this.formCadastro.value.complemento,
+        endereco:this.formCadastro.value.endereco,
+        bairro:this.formCadastro.value.bairro,
+        cidade:this.formCadastro.value.cidade,
+        estado:this.formCadastro.value.estado,
+      };
       this.loginAutenticador.inserirCliente(user).subscribe((sucesso) => {
         if (sucesso) {
           alert('usuario salvo');

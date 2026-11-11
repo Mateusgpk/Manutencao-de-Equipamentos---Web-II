@@ -52,7 +52,7 @@ public class EmployeeService
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado."));
         employee.setName(funcionario.getName());
         employee.setDataNascimento(funcionario.getDataNascimento());
-        if (funcionario.getUser().getPassword().isBlank()) {
+        if (!funcionario.getUser().getPassword().isBlank()) {
             employee.getUser().setPassword(
                 userService.hashSenhaComSalt(
                     funcionario.getUser().getPassword()
