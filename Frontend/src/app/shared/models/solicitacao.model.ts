@@ -59,6 +59,7 @@ export interface Solicitacao {
 
   // Preenchido ao entrar no estado REDIRECIONADA (RF015)
   funcionarioDestino?: string;
+  funcionarioDestinoId?: number;
 
   // Preenchido ao entrar no estado FINALIZADA (RF016)
   dataHoraFinalizacao?: Date;
@@ -107,6 +108,8 @@ export interface SolicitacaoApi {
   funcionarioManutencao?: FuncionarioApi | null;
   funcionarioDestino?: FuncionarioApi | null;
   historico?: HistoricoApi[] | null;
+  dataHoraFinalizacao?: unknown;
+  funcionarioFinalizacao?: FuncionarioApi | null;
 }
 
 /** Dados enviados na abertura da solicitação */

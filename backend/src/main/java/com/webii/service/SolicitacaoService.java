@@ -151,6 +151,8 @@ public class SolicitacaoService {
         Solicitacao solicitacao = buscarPorId(id);
         exigirEstado(solicitacao, EstadoSolicitacao.PAGA);
         Employee funcionario = buscarFuncionario(funcionarioId);
+        solicitacao.setDataHoraFinalizacao(LocalDateTime.now());
+        solicitacao.setFuncionarioFinalizacao(funcionario);
         return salvarEstado(solicitacao, EstadoSolicitacao.FINALIZADA,
             "Solicitação finalizada.", funcionario, null);
     }

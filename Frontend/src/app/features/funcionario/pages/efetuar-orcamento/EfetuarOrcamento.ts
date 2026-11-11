@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
+import { Autenticador } from '../../../../shared/services/auth/autenticador';
 
 type Etapa = 'carregando' | 'naoEncontrada' | 'formulario' | 'orcamentoRegistrado';
 
@@ -18,12 +19,11 @@ export class EfetuarOrcamento implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly solicitacaoService = inject(SolicitacaoService);
+  private readonly autenticador = inject(Autenticador);
 
   protected readonly etapa = signal<Etapa>('carregando');
   protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
   protected readonly enviando = signal(false);
-
-  private readonly funcionarioLogado = 'Maria'; // implementar: pegar do login do funcionário logado
 
   protected readonly valorControl = new FormControl<number | null>(null, {
     validators: [Validators.required, Validators.min(0.01)],
@@ -37,7 +37,7 @@ export class EfetuarOrcamento implements OnInit {
       return;
     }
 
-    this.solicitacaoService.getById(id).subscribe((solicitacao) => {
+    this.solicitacaoService.getByIdNoBackend(id).subscribe((solicitacao) => {
       if (!solicitacao || solicitacao.estado !== EstadoSolicitacao.ABERTA) {
         this.etapa.set('naoEncontrada');
         return;
@@ -59,22 +59,25 @@ export class EfetuarOrcamento implements OnInit {
       return;
     }
 
-    const valor = this.valorControl.value!;
+    const funcionario = this.autenticador.usuarioLogado;
+    if (!funcionario || funcionario.user.role !== 'FUNCIONARIO') {
+      alert('Sessão expirada. Faça login novamente.');
+      return;
+    }
+
     this.enviando.set(true);
 
     this.solicitacaoService
-      .efetuarOrcamento(s.id, valor, this.funcionarioLogado)
+      .efetuarOrcamento(s.id, this.valorControl.value!, Number(funcionario.id!))
       .subscribe({
         next: (atualizada) => {
           this.enviando.set(false);
-          if (atualizada) {
-            this.solicitacao.set(atualizada);
-          }
+          this.solicitacao.set(atualizada);
           this.etapa.set('orcamentoRegistrado');
         },
-        error: () => {
+        error: (err) => {
           this.enviando.set(false);
-          alert('Ocorreu um erro ao registrar o orçamento.');
+          alert(err.error?.message ?? 'Ocorreu um erro ao registrar o orçamento.');
         },
       });
   }

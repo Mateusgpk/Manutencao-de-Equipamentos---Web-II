@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
-import { EstadoSolicitacao, NovaSolicitacao, Solicitacao, SolicitacaoApi, } from '../models/solicitacao.model';
+import { EstadoSolicitacao, FuncionarioApi, NovaSolicitacao, Solicitacao, SolicitacaoApi } from '../models/solicitacao.model';
 
 /** Converte a data do backend em Date. */
 function paraData(valor: unknown): Date | undefined {
@@ -230,6 +230,10 @@ export class SolicitacaoService {
       funcionarioManutencao: api.funcionarioManutencao?.name,
 
       funcionarioDestino: api.funcionarioDestino?.name,
+      funcionarioDestinoId: api.funcionarioDestino?.id,
+
+      dataHoraFinalizacao: paraData(api.dataHoraFinalizacao),
+      funcionarioFinalizacao: api.funcionarioFinalizacao?.name,
 
       historico: (api.historico ?? []).map((h) => ({
         dataHora: paraData(h.dataHora) ?? new Date(),
@@ -246,6 +250,18 @@ export class SolicitacaoService {
       map((api) => this.converterDoBackend(api)),
       catchError(() => of(undefined)),
     );
+  }
+
+  listarAbertasNoBackend(): Observable<Solicitacao[]> {
+    return this.http
+      .get<SolicitacaoApi[]>(`${this.apiUrl}/abertas`)
+      .pipe(map((lista) => lista.map((api) => this.converterDoBackend(api))));
+  }
+
+  listarTodasNoBackend(): Observable<Solicitacao[]> {
+    return this.http
+      .get<SolicitacaoApi[]>(this.apiUrl)
+      .pipe(map((lista) => lista.map((api) => this.converterDoBackend(api))));
   }
 
   /** Abre a solicitação no estado ABERTA. */
@@ -303,113 +319,55 @@ export class SolicitacaoService {
     return this.getById(id);
   }
 
-  /** RF012 - Efetuar Orçamento: solicitação ABERTA passa para ORÇADA*/
+  /** RF012 - Efetuar Orçamento: ABERTA passa para ORCADA. */
   efetuarOrcamento(
     id: number,
-    valorOrcamento: number,
-    funcionario: string,
-  ): Observable<Solicitacao | undefined> {
-    const agora = new Date();
-
-    this.solicitacoes.update((lista) =>
-      lista.map((s) =>
-        s.id === id
-          ? {
-              ...s,
-              estado: EstadoSolicitacao.ORCADA,
-              valorOrcamento : valorOrcamento,
-              dataHoraOrcamento: agora,
-              funcionarioOrcamento: funcionario,
-              historico: [
-                ...s.historico,
-                {
-                  dataHora: agora,
-                  estado: EstadoSolicitacao.ORCADA,
-                  funcionario: funcionario
-                },
-              ],
-            }
-          : s,
-      ),
-    );
-
-    return this.getById(id);
+    valor: number,
+    funcionarioId: number,
+  ): Observable<Solicitacao> {
+    return this.http
+      .patch<SolicitacaoApi>(`${this.apiUrl}/${id}/orcamento`, { funcionarioId, valor })
+      .pipe(map((api) => this.converterDoBackend(api)));
   }
 
-    /** RF014 - Efetuar Manutenção: solicitação APROVADA/REDIRECIONADA passa para ARRUMADA. */
-    efetuarManutencao(
+  /** RF014 - Efetuar Manutenção: APROVADA/REDIRECIONADA passa para ARRUMADA (grava no backend). */
+  efetuarManutencao(
     id: number,
     descricaoManutencao: string,
     orientacoesCliente: string,
-    funcionario: string,
-  ): Observable<Solicitacao | undefined> {
-    const agora = new Date();
- 
-    this.solicitacoes.update((lista) =>
-      lista.map((s) =>
-        s.id === id
-          ? {
-              ...s,
-              estado: EstadoSolicitacao.ARRUMADA,
-              descricaoManutencao,
-              orientacoesCliente,
-              dataHoraManutencao: agora,
-              funcionarioManutencao: funcionario,
-              historico: [
-                ...s.historico,
-                {
-                  dataHora: agora,
-                  estado: EstadoSolicitacao.ARRUMADA,
-                  funcionario,
-                },
-              ],
-            }
-          : s,
-      ),
-    );
- 
-    return this.getById(id);
+    funcionarioId: number,
+  ): Observable<Solicitacao> {
+    return this.http
+      .patch<SolicitacaoApi>(`${this.apiUrl}/${id}/manutencao`, {
+        funcionarioId,
+        descricaoManutencao,
+        orientacoesCliente,
+      })
+      .pipe(map((api) => this.converterDoBackend(api)));
   }
 
-  /** RF015 - Redirecionar Manutenção: solicitação passa para REDIRECIONADA. */
-  redirecionarManutencao(id: number, funcionarioOrigem: string, funcionarioDestino: string): Observable<Solicitacao | undefined> {
-    const agora = new Date();
-    this.solicitacoes.update((lista) =>
-      lista.map((s) =>
-        s.id === id
-          ? {
-              ...s,
-              estado: EstadoSolicitacao.REDIRECIONADA,
-              funcionarioDestino,
-              historico: [...s.historico, { dataHora: agora, estado: EstadoSolicitacao.REDIRECIONADA, funcionario: funcionarioOrigem, funcionarioDestino }],
-            }
-          : s,
-      ),
-    );
-    return this.getById(id);
+  /** RF015 - Redirecionar Manutenção: passa para REDIRECIONADA (grava no backend). */
+  redirecionarManutencao(
+    id: number,
+    funcionarioOrigemId: number,
+    funcionarioDestinoId: number,
+  ): Observable<Solicitacao> {
+    return this.http
+      .patch<SolicitacaoApi>(`${this.apiUrl}/${id}/redirecionamento`, {
+        funcionarioOrigemId,
+        funcionarioDestinoId,
+      })
+      .pipe(map((api) => this.converterDoBackend(api)));
   }
 
-  /** RF016 - Finalizar Solicitação: solicitação PAGA passa para FINALIZADA. */
-  finalizarSolicitacao(id: number, funcionario: string): Observable<Solicitacao | undefined> {
-    const agora = new Date();
+  listarFuncionariosAtivos(): Observable<FuncionarioApi[]> {
+    return this.http.get<FuncionarioApi[]>('http://localhost:8080/api/employee');
+  }
 
-    this.solicitacoes.update((lista) =>
-      lista.map((s) =>
-        s.id === id && s.estado === EstadoSolicitacao.PAGA
-          ? {
-              ...s,
-              estado: EstadoSolicitacao.FINALIZADA,
-              dataHoraFinalizacao: agora,
-              funcionarioFinalizacao: funcionario,
-              historico: [
-                ...s.historico,
-                { dataHora: agora, estado: EstadoSolicitacao.FINALIZADA, funcionario },
-              ],
-            }
-          : s,
-      ),
-    );
-
-    return this.getById(id);
+  /** RF016 - Finalizar: PAGA passa para FINALIZADA (grava no backend). */
+  finalizarSolicitacao(id: number, funcionarioId: number): Observable<Solicitacao> {
+    return this.http
+      .patch<SolicitacaoApi>(`${this.apiUrl}/${id}/finalizacao`, {}, { params: { funcionarioId } })
+      .pipe(map((api) => this.converterDoBackend(api)));
   }
 }

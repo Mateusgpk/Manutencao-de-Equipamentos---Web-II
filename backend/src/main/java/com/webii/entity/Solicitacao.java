@@ -75,6 +75,13 @@ public class Solicitacao {
     @JoinColumn(name = "funcionario_destino_id")
     private Employee funcionarioDestino;
 
+    @Column(name = "data_hora_finalizacao")
+    private LocalDateTime dataHoraFinalizacao;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "funcionario_finalizacao_id")
+    private Employee funcionarioFinalizacao;
+
     @OneToMany(mappedBy = "solicitacao", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("dataHora ASC")
     @Builder.Default

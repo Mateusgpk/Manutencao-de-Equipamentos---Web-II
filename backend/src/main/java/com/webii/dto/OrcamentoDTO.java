@@ -13,6 +13,6 @@ public class OrcamentoDTO {
     private Long funcionarioId;
 
     @NotNull
-    @DecimalMin("0.0")
+    @DecimalMin(value = "0.01", message = "O valor do orçamento deve ser maior que zero.")
     private BigDecimal valor;
 }

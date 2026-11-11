@@ -204,6 +204,8 @@ public class DadosIniciais implements CommandLineRunner {
 
         if (finalizou) {
             LocalDateTime quando = LocalDateTime.parse(pagamento).plusDays(1);
+            s.setDataHoraFinalizacao(quando);
+            s.setFuncionarioFinalizacao(func);
             historico(s, FINALIZADA, quando, func, null, "Solicitação finalizada.");
         }
 
