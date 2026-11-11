@@ -58,6 +58,7 @@ export interface Solicitacao {
   funcionarioManutencao?: string;
 
   // Preenchido ao entrar no estado REDIRECIONADA (RF015)
+  funcionarioDestinoId?: number;
   funcionarioDestino?: string;
 
   // Preenchido ao entrar no estado FINALIZADA (RF016)

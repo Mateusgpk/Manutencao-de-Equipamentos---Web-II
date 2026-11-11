@@ -229,6 +229,7 @@ export class SolicitacaoService {
       dataHoraManutencao: paraData(api.dataHoraManutencao),
       funcionarioManutencao: api.funcionarioManutencao?.name,
 
+      funcionarioDestinoId: api.funcionarioDestino?.id,
       funcionarioDestino: api.funcionarioDestino?.name,
 
       historico: (api.historico ?? []).map((h) => ({
@@ -280,7 +281,11 @@ export class SolicitacaoService {
       .pipe(map((api) => this.converterDoBackend(api)));
   }
 
-  listarTodas(): Observable<Solicitacao[]> { return of([...this.solicitacoes()]); }
+  listarTodas(): Observable<Solicitacao[]> {
+    return this.http
+      .get<SolicitacaoApi[]>(this.apiUrl)
+      .pipe(map((lista) => lista.map((api) => this.converterDoBackend(api))));
+  }
 
   /** Busca uma solicitação pelo id (RF005 / RF008). */
   getById(id: number): Observable<Solicitacao | undefined> {
@@ -378,27 +383,10 @@ export class SolicitacaoService {
     return this.getById(id);
   }
 
-  /** RF016 - Finalizar Solicitação: solicitação PAGA passa para FINALIZADA. */
-  finalizarSolicitacao(id: number, funcionario: string): Observable<Solicitacao | undefined> {
-    const agora = new Date();
-
-    this.solicitacoes.update((lista) =>
-      lista.map((s) =>
-        s.id === id && s.estado === EstadoSolicitacao.PAGA
-          ? {
-              ...s,
-              estado: EstadoSolicitacao.FINALIZADA,
-              dataHoraFinalizacao: agora,
-              funcionarioFinalizacao: funcionario,
-              historico: [
-                ...s.historico,
-                { dataHora: agora, estado: EstadoSolicitacao.FINALIZADA, funcionario },
-              ],
-            }
-          : s,
-      ),
-    );
-
-    return this.getById(id);
+  /** Finalizar Solicitação: solicitação PAGA passa para FINALIZADA. */
+  finalizarSolicitacao(id: number, funcionarioId: number): Observable<Solicitacao | undefined> {
+    return this.http
+      .patch<SolicitacaoApi>(`${this.apiUrl}/${id}/finalizacao`, {}, { params: { funcionarioId } })
+      .pipe(map((api) => this.converterDoBackend(api)));
   }
 }
