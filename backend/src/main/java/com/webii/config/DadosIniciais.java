@@ -104,7 +104,7 @@ public class DadosIniciais implements CommandLineRunner {
     private Employee novoFuncionario(String nome, String email, LocalDate nascimento) {
         User user = User.builder()
                 .email(email)
-                .password(PasswordUtil.hashPassword("123456"))
+                .password(PasswordUtil.hashSenhaComSalt("123456"))
                 .role(Role.FUNCIONARIO)
                 .ativo(true)
                 .build();
@@ -119,7 +119,7 @@ public class DadosIniciais implements CommandLineRunner {
     private Client novoCliente(String nome, String cpf, String email, String telefone) {
         User user = User.builder()
                 .email(email)
-                .password(PasswordUtil.hashPassword("123456"))
+                .password(PasswordUtil.hashSenhaComSalt("123456"))
                 .role(Role.CLIENTE)
                 .ativo(true)
                 .build();

@@ -27,6 +27,9 @@ public class UserService {
     public User autenticar(String email, String senha) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário ou senha inválidos."));
+        if (!user.getAtivo()){
+            throw new IllegalArgumentException("Usuário não ativo");
+        }
         System.out.println(hashSenhaComSalt(senha));
         if (!verificarSenha(senha, user.getPassword())) {
             throw new IllegalArgumentException("Usuário ou senha inválidos.");
@@ -74,7 +77,10 @@ public class UserService {
     public boolean verificarSenha(String senhaDigitada, String hashArmazenado) {
         try {
             String[] parts = hashArmazenado.split(":");
-            if (parts.length != 2) return false;
+            if (parts.length != 2) {
+                System.out.println("ERRO: Hash não possui o separador ':'");
+                return false;
+            }
 
             byte[] salt = Base64.getDecoder().decode(parts[0]);
             byte[] hashOriginal = Base64.getDecoder().decode(parts[1]);
@@ -85,6 +91,8 @@ public class UserService {
 
             return MessageDigest.isEqual(hashOriginal, hashCalculado);
         } catch (Exception e) {
+            System.out.println("ERRO ao decodificar a senha:");
+            e.printStackTrace();
             return false;
         }
     }

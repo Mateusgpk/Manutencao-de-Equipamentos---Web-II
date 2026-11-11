@@ -32,7 +32,6 @@ export class FormCadastro implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     /* TODO: de acordo com documentação, a senha seria mandada por email, não cadastrada
     Logo, tirar daqui depois de implementar */
-    senha: new FormControl('', [Validators.required, Validators.minLength(5)]),
     cpf: new FormControl('', [
       Validators.required,
       Validators.maxLength(14),

@@ -72,12 +72,12 @@ public class EmployeeService
     }
 
     @Transactional
-    public void deleteEmployee(Long employeeId, Long loggedUserId)
+    public void deleteEmployee(Long employeeId, Long loggedId)
     {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado."));
 
-        if (employee.getUser().getId().equals(loggedUserId))
+        if (employee.getId().equals(loggedId))
         {
             throw new IllegalStateException("Você não pode remover o seu próprio perfil.");
         }

@@ -20,8 +20,8 @@ export class ClienteHome implements OnInit {
   private loginserver= inject(Autenticador)
 
   get usuarioLogado(): Client|null {
-    if (this.loginserver.usuarioLogado instanceof Client){
-    return this.loginserver.usuarioLogado;}
+    if (this.loginserver.usuarioLogado?.user.role === 'CLIENTE') {
+     return this.loginserver.usuarioLogado as Client;}
     return null
   }
 
