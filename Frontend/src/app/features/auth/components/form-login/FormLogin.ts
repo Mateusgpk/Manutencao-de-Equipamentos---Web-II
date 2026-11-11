@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
@@ -8,8 +8,7 @@ import { User } from '../../../../shared/models/user.model';
 import { Router, RouterModule,ActivatedRoute } from '@angular/router';
 import { OnInit } from '@angular/core';
 import { inject } from '@angular/core';
-import { Client } from '../../../cliente/models/client.model';
-import { Employee } from '../../../funcionario/models/employee.model';
+
 
 @Component({
   selector: 'app-form-login',
@@ -23,7 +22,7 @@ export class FormLogin implements OnInit{
 
 
 
-
+private cdr = inject(ChangeDetectorRef);
 private loginAutenticador=inject(Autenticador)
 private router = inject(Router)
 private route = inject(ActivatedRoute)
@@ -31,10 +30,6 @@ private route = inject(ActivatedRoute)
 
 
 ngOnInit(): void {
-  const funcionario= new Employee({"name":"opa","id":"","dataNascimento":"2007-02-24","user":{"ativo":true,"email":"opa@a","id":1,"password":"123456","role":"FUNCIONARIO"}})
-  if (this.loginAutenticador.inserirFuncionario(funcionario).subscribe((bool)=> {return bool})){
-    console.log("deu boa")
-  }
   this.loginAutenticador.autentica()
 }
 
@@ -44,29 +39,41 @@ ngOnInit(): void {
     senha: new FormControl('', Validators.required),
   });
   corfundo = 'bg-blue-800';
-
+  erroLogin: boolean = false;
   aoEnviar() {
     this.corfundo = 'bg-blue-600';
+    this.erroLogin = false; // Oculta o erro ao tentar submeter novamente
+
     if (this.formCadastro.valid) {
-      console.log('Dados enviados:', this.formCadastro.value);
-      
-      this.loginAutenticador.login(new User({email: String(this.formCadastro.value.email), password: String(this.formCadastro.value.senha)})).subscribe((usu)=>{
-        if (usu!=null){
-          alert('Login realizado com sucesso!');
-          this.loginAutenticador.usuarioLogado=usu;
-          if (usu.user.role==='FUNCIONARIO'){
-            this.router.navigate(['employee/home']);
-          }else if (usu.user.role === 'CLIENTE') {
-          this.router.navigate(['/home']);
-        }else{
-          this.router.navigate(['/']);  
-        }}
-         else {
-        console.log('Email ou senha incorretos.');
-      }
-    });
+      const email = String(this.formCadastro.value.email);
+      const senha = String(this.formCadastro.value.senha);
+
+      this.loginAutenticador.login(new User({ email, password: senha })).subscribe({
+        next: (usu) => {
+          if (usu != null) {
+            alert('Login realizado com sucesso!');
+            this.loginAutenticador.usuarioLogado = usu;
+            
+            if (usu.user.role === 'FUNCIONARIO') {
+              this.router.navigate(['employee/home']);
+            } else if (usu.user.role === 'CLIENTE') {
+              this.router.navigate(['/home']);
+            } else {
+              this.router.navigate(['/']);
+            }
+          } else {
+            this.erroLogin = true;
+            this.cdr.detectChanges(); 
+          }
+        },
+        error: (err) => {
+          console.error('Erro na autenticação:', err);
+          this.erroLogin = true;
+          this.cdr.detectChanges(); 
+        }
+      });
+    }
   }
-}
   logout(){
     this.loginAutenticador.logout();
   }

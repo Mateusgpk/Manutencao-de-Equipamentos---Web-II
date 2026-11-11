@@ -3,5 +3,8 @@
         [control]="formCadastro.controls.email"></app-input-texto>
     <app-input-texto class="forms-control" id="senha" type="password" label="Senha" mascara="senha" placeholder="••••••••" class=""
         [control]="formCadastro.controls.senha"></app-input-texto>
+    <div [hidden]="!erroLogin" class="text-red-500 text-sm font-semibold">
+        E-mail ou senha incorretos.
+    </div>
     <app-btn-submit (onclick)="aoEnviar()" class="mt-2" value="Login" type="submit">Login</app-btn-submit>
 </form>
