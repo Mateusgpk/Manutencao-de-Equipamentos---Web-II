@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Crudfuncionario } from '../../services/crudfuncionario';
 import { Employee } from '../../models/employee.model';
 import { User } from '../../../../shared/models/user.model';
@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { OnInit } from '@angular/core';
 @Component({
   selector: 'app-addfuncionario',
-  imports: [InputTexto],
+  imports: [InputTexto, ReactiveFormsModule],
   templateUrl: './addfuncionario.html',
   styleUrl: './addfuncionario.css',
 })
@@ -44,8 +44,11 @@ export class Addfuncionario implements OnInit {
           senha: "",
           dataNascimento: funcionario.dataNascimento
         });
-        console.log("ID do user do funcionário:", this.usuario());
       });
+    } else {
+      // Senha obrigatória só no cadastro; na edição, em branco mantém a senha atual.
+      this.FormCadastro.controls.senha.addValidators(Validators.required);
+      this.FormCadastro.controls.senha.updateValueAndValidity();
     }
     
   }
@@ -61,31 +64,31 @@ export class Addfuncionario implements OnInit {
       const funcionario = new Employee({...(this.FormCadastro.value as Partial<Employee>),
         user: new User({email: String(this.FormCadastro.value.email), password: String(this.FormCadastro.value.senha), role: "FUNCIONARIO"})
         });
-        if (this.crudfuncionario.addFuncionario(funcionario)) {
-          console.log('Funcionário adicionado com sucesso');
-          this.router.navigate(['/employee/crud-funcionario']);
-        } else {
-          console.log('Erro ao adicionar funcionário');
-        }
+        this.crudfuncionario.addFuncionario(funcionario).subscribe({
+          next: () => {
+            this.router.navigate(['/employee/crud-funcionario']);
+          },
+          error: (err) => {
+            console.error('Erro ao adicionar funcionário:', err);
+            window.alert('Erro ao cadastrar o funcionário: ' + (err.error?.message || 'Erro desconhecido'));
+          }
+        });
     } else{
       let funcionario = new Employee({...(this.FormCadastro.value as Partial<Employee>),
         id: this.id,
         user: new User({id: this.usuario().user.id, email: String(this.FormCadastro.value.email), password: String(this.FormCadastro.value.senha), role: "FUNCIONARIO"}),
 
       });
-      console.log("Funcionário a ser alterado:", funcionario);
       this.crudfuncionario.alterarFuncionario(funcionario).subscribe({
         next: () => {
-          console.log('Funcionário alterado com sucesso');
           this.router.navigate(['/employee/crud-funcionario']);
         },
-        error: () => {
-          console.log('Erro ao alterar funcionário');
+        error: (err) => {
+          console.error('Erro ao alterar funcionário:', err);
+          window.alert('Erro ao alterar o funcionário: ' + (err.error?.message || 'Erro desconhecido'));
         }
       });
     }
-    } else {
-      console.log('Formulário inválido');
     }
   }
 

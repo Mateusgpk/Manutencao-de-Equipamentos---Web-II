@@ -229,8 +229,8 @@ export class SolicitacaoService {
       dataHoraManutencao: paraData(api.dataHoraManutencao),
       funcionarioManutencao: api.funcionarioManutencao?.name,
 
-      funcionarioDestino: api.funcionarioDestino?.name,
       funcionarioDestinoId: api.funcionarioDestino?.id,
+      funcionarioDestino: api.funcionarioDestino?.name,
 
       dataHoraFinalizacao: paraData(api.dataHoraFinalizacao),
       funcionarioFinalizacao: api.funcionarioFinalizacao?.name,
@@ -258,9 +258,9 @@ export class SolicitacaoService {
       .pipe(map((lista) => lista.map((api) => this.converterDoBackend(api))));
   }
 
-  listarTodasNoBackend(): Observable<Solicitacao[]> {
+  listarPorCliente(clienteId: number): Observable<Solicitacao[]> {
     return this.http
-      .get<SolicitacaoApi[]>(this.apiUrl)
+      .get<SolicitacaoApi[]>(`${this.apiUrl}/client/${clienteId}`)
       .pipe(map((lista) => lista.map((api) => this.converterDoBackend(api))));
   }
 
@@ -289,7 +289,11 @@ export class SolicitacaoService {
       .pipe(map((api) => this.converterDoBackend(api)));
   }
 
-  listarTodas(): Observable<Solicitacao[]> { return of([...this.solicitacoes()]); }
+  listarTodas(): Observable<Solicitacao[]> {
+    return this.http
+      .get<SolicitacaoApi[]>(this.apiUrl)
+      .pipe(map((lista) => lista.map((api) => this.converterDoBackend(api))));
+  }
 
   /** Busca uma solicitação pelo id (RF005 / RF008). */
   getById(id: number): Observable<Solicitacao | undefined> {
@@ -298,25 +302,7 @@ export class SolicitacaoService {
 
   /** RF009 - Resgatar Serviço: solicitação REJEITADA volta para APROVADA. */
   resgatarServico(id: number): Observable<Solicitacao | undefined> {
-    this.solicitacoes.update((lista) =>
-      lista.map((s) =>
-        s.id === id && s.estado === EstadoSolicitacao.REJEITADA
-          ? {
-              ...s,
-              estado: EstadoSolicitacao.APROVADA,
-              historico: [
-                ...s.historico,
-                {
-                  dataHora: new Date(),
-                  estado: EstadoSolicitacao.APROVADA,
-                  observacao: 'Serviço resgatado pelo cliente',
-                },
-              ],
-            }
-          : s,
-      ),
-    );
-    return this.getById(id);
+    return this.aprovarServico(id);
   }
 
   /** RF012 - Efetuar Orçamento: ABERTA passa para ORCADA. */
@@ -330,7 +316,7 @@ export class SolicitacaoService {
       .pipe(map((api) => this.converterDoBackend(api)));
   }
 
-  /** RF014 - Efetuar Manutenção: APROVADA/REDIRECIONADA passa para ARRUMADA (grava no backend). */
+  /** RF014 - Efetuar Manutenção: APROVADA/REDIRECIONADA passa para ARRUMADA */
   efetuarManutencao(
     id: number,
     descricaoManutencao: string,
@@ -346,7 +332,7 @@ export class SolicitacaoService {
       .pipe(map((api) => this.converterDoBackend(api)));
   }
 
-  /** RF015 - Redirecionar Manutenção: passa para REDIRECIONADA (grava no backend). */
+  /** RF015 - Redirecionar Manutenção: passa para REDIRECIONADA */
   redirecionarManutencao(
     id: number,
     funcionarioOrigemId: number,
@@ -364,7 +350,7 @@ export class SolicitacaoService {
     return this.http.get<FuncionarioApi[]>('http://localhost:8080/api/employee');
   }
 
-  /** RF016 - Finalizar: PAGA passa para FINALIZADA (grava no backend). */
+  /** RF016 - Finalizar: PAGA passa para FINALIZADA */
   finalizarSolicitacao(id: number, funcionarioId: number): Observable<Solicitacao> {
     return this.http
       .patch<SolicitacaoApi>(`${this.apiUrl}/${id}/finalizacao`, {}, { params: { funcionarioId } })

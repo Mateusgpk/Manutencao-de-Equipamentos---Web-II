@@ -18,6 +18,7 @@ const COR_ESTADO: Record<EstadoSolicitacao, string> = {
   FINALIZADA: 'bg-green-100',
 };
 
+/** yyyy-MM-dd no fuso local (toISOString usaria UTC e deslocaria o dia). */
 function dia(data: Date): string {
   const mes = String(data.getMonth() + 1).padStart(2, '0');
   const d = String(data.getDate()).padStart(2, '0');
@@ -39,6 +40,7 @@ export class FuncionarioHome implements OnInit {
   protected readonly estadoLabel = ESTADO_SOLICITACAO_LABEL;
   protected readonly corEstado = COR_ESTADO;
 
+  /** true = Home (só ABERTAS, RF011); false = Solicitações (todas + filtros, RF013). */
   protected readonly visaoAbertas = signal(true);
   protected readonly filtro = signal<Filtro>('todas');
   protected readonly inicio = signal('');
@@ -48,6 +50,13 @@ export class FuncionarioHome implements OnInit {
   private readonly todas = signal<Solicitacao[]>([]);
   protected readonly solicitacaoSelecionada = signal<Solicitacao | undefined>(undefined);
   protected readonly solicitacaoParaFinalizar = signal<Solicitacao | undefined>(undefined);
+  protected readonly finalizando = signal(false);
+
+  /** Lido na hora do uso porque o localStorage só existe no navegador. */
+  private get funcionarioLogadoId(): number | null {
+    const id = this.autenticador.usuarioLogado?.id;
+    return id == null ? null : Number(id);
+  }
 
   protected readonly solicitacoes = computed(() => {
     const lista = this.todas();
@@ -81,21 +90,22 @@ export class FuncionarioHome implements OnInit {
   }
 
   private carregar(): void {
-    const meuId = this.autenticador.usuarioLogado?.id;
+    const meuId = this.funcionarioLogadoId;
     const origem = this.visaoAbertas()
       ? this.solicitacaoService.listarAbertasNoBackend()
-      : this.solicitacaoService.listarTodasNoBackend();
+      : this.solicitacaoService.listarTodas();
 
     origem.subscribe({
       next: (lista) => {
         this.erro.set('');
         this.todas.set(
           lista
+            // REDIRECIONADA só aparece para o funcionário de destino
             .filter((s) => s.estado !== EstadoSolicitacao.REDIRECIONADA || s.funcionarioDestinoId === meuId)
             .sort((a, b) => a.dataHoraAbertura.getTime() - b.dataHoraAbertura.getTime()),
         );
       },
-      error: () => this.erro.set('Não foi possível carregar as solicitações.'),
+      error: () => this.erro.set('Não foi possível carregar as solicitações. Verifique a conexão e tente novamente.'),
     });
   }
 
@@ -117,18 +127,30 @@ export class FuncionarioHome implements OnInit {
 
   confirmarFinalizacao(): void {
     const s = this.solicitacaoParaFinalizar();
-    const funcionarioId = this.autenticador.usuarioLogado?.id;
-    if (!s || funcionarioId == null) {
-      alert('Sessão expirada. Faça login novamente.');
+    if (!s || this.finalizando()) return;
+
+    const funcionarioId = this.funcionarioLogadoId;
+    if (funcionarioId == null) {
+      this.solicitacaoParaFinalizar.set(undefined);
+      this.erro.set('Sessão expirada. Faça login novamente.');
       return;
     }
 
-    this.solicitacaoService.finalizarSolicitacao(s.id, Number(funcionarioId)).subscribe({
+    this.erro.set('');
+    this.finalizando.set(true);
+
+    this.solicitacaoService.finalizarSolicitacao(s.id, funcionarioId).subscribe({
       next: () => {
+        this.finalizando.set(false);
         this.solicitacaoParaFinalizar.set(undefined);
         this.carregar();
       },
-      error: (err) => alert(err.error?.message ?? 'Ocorreu um erro ao finalizar a solicitação.'),
+      error: (err) => {
+        // Fecha a confirmação para a mensagem de erro ficar visível.
+        this.finalizando.set(false);
+        this.solicitacaoParaFinalizar.set(undefined);
+        this.erro.set(err.error?.message ?? 'Não foi possível finalizar a solicitação. Tente novamente.');
+      },
     });
   }
 }

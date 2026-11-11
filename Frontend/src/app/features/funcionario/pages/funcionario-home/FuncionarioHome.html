@@ -167,7 +167,7 @@
         <p class="mt-2 text-sm text-gray-600">{{ s.descricaoEquipamento }} — {{ s.clienteNome }}</p>
         <div class="mt-6 flex gap-3">
           <button type="button" class="w-full rounded border border-gray-300 px-5 py-2" (click)="cancelarFinalizacao()">Cancelar</button>
-          <button type="button" class="w-full rounded bg-green-600 px-5 py-2 text-white hover:bg-green-700" (click)="confirmarFinalizacao()">Confirmar</button>
+          <button type="button" class="w-full rounded bg-green-600 px-5 py-2 text-white hover:bg-green-700" [disabled]="finalizando()" (click)="confirmarFinalizacao()">Confirmar</button>
         </div>
       </div>
     </div>

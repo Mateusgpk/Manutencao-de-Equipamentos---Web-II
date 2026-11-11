@@ -32,6 +32,35 @@
         MascaraTelefone
       />
     }
+    @case ('cep') {
+      <input
+        [id]="id"
+        [type]="type"
+        [formControl]="control"
+        [placeholder]="placeholder"
+        class="px-4 py-2 border rounded-md {{ class }} {{
+          control.invalid && formDir?.submitted
+            ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50'
+            : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+        }}"
+        MascaraCEP
+      />
+    }
+    @case ('moeda') {
+      <input
+        [id]="id"
+        type="text"
+        inputmode="numeric"
+        [formControl]="control"
+        [placeholder]="placeholder"
+        class="px-4 py-2 border rounded-md {{ class }} {{
+          control.invalid && formDir?.submitted
+            ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50'
+            : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+        }}"
+        MascaraMoeda
+      />
+    }
     @case ('senha') {
       <div class="relative">
         <input
@@ -72,6 +101,9 @@
       }
       @if (control.errors?.['minlength']) {
         <span> Digite ao menos {{ control.errors?.['minlength'].requiredLength }} caracteres. </span>
+      }
+      @if (control.errors?.['maxlength']) {
+        <span> Digite no máximo {{ control.errors?.['maxlength'].requiredLength }} caracteres. </span>
       }
       @if (control.errors?.['pattern']) {
         <span>Formato inválido.</span>
