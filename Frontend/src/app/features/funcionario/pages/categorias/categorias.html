@@ -18,13 +18,13 @@
       <button
         type="button"
         (click)="salvarCategoria()"
-        [disabled]="!formCategoria.form.valid"
+         [disabled]="!formCategoria.form.valid || enviando()"
         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="fa fa-save" aria-hidden="true"></i>
-        {{ emEdicao ? 'Atualizar' : 'Adicionar' }}
+        {{ emEdicao() ? 'Atualizar' : 'Adicionar' }}
       </button>
-      @if (emEdicao) {
+      @if (emEdicao()) {
         <button
           type="button"
           (click)="cancelarEdicao()"
@@ -46,14 +46,14 @@
       </div>
     }
 
-    @if (erroDuplicado) {
+     @if (erro()) {
       <div class="text-sm text-red-600 mb-4">
-        <div>A categoria já existe.</div>
+        <div>{{ erro() }}</div>
       </div>
     }
 
     <ul class="divide-y divide-gray-100 mt-4">
-      @for (cat of categorias; track cat.id) {
+       @for (cat of categorias(); track cat.id) {
         <li class="py-3 flex items-center justify-between">
           <span class="text-gray-900">{{ cat.name }}</span>
           <div class="flex gap-3">

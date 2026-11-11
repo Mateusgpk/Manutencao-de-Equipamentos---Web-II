@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Category } from '../../models/category.model';
 import { CategoryService } from '../../services/category.service';
@@ -16,66 +17,83 @@ export class Categorias implements OnInit {
 
   @ViewChild('formCategoria') formulario!: NgForm;
 
-  categorias: Category[] = [];
+  readonly categorias = signal<Category[]>([]);
+  readonly emEdicao = signal(false);
+  readonly enviando = signal(false);
+  readonly erro = signal('');
   categoria: Category = new Category();
-  emEdicao = false;
-  erroDuplicado = false;
 
   ngOnInit(): void {
     this.listarTodos();
   }
 
   listarTodos(): void {
-    this.categorias = this.categoryService.listarTodos();
+    this.categoryService.listarCategorias().subscribe({
+      next: (categorias) => this.categorias.set(categorias),
+      error: () => this.erro.set('Não foi possível carregar as categorias. Verifique a conexão e tente novamente.'),
+    });
   }
 
   editarCategoria(categoria: Category): void {
     this.categoria = { ...categoria };
-    this.emEdicao = true;
+    this.emEdicao.set(true);
+    this.erro.set('');
   }
 
   salvarCategoria(): void {
-    if (!this.formulario.form.valid) {
+    if (!this.formulario.form.valid || this.enviando()) {
       return;
     }
 
-    const nomeTrim = this.categoria.name.trim();
-    const duplicado = this.categorias.find(
-      (cat) => cat.name.toLowerCase() === nomeTrim.toLowerCase() && cat.id !== this.categoria.id);
+    this.categoria.name = this.categoria.name.trim();
+    this.erro.set('');
+    this.enviando.set(true);
 
-    if (duplicado) {
-      this.erroDuplicado = true;
-      return;
-    }
+    const requisicao = this.emEdicao()
+      ? this.categoryService.atualizar(this.categoria)
+      : this.categoryService.inserir(this.categoria);
 
-    this.erroDuplicado = false;
-    this.categoria.name = nomeTrim;
-
-    if (this.emEdicao) {
-      this.categoryService.atualizar(this.categoria);
-    } else {
-      this.categoryService.inserir(this.categoria);
-    }
-
-    this.cancelarEdicao();
-    this.listarTodos();
+    requisicao.subscribe({
+      next: () => {
+        this.enviando.set(false);
+        this.cancelarEdicao();
+        this.listarTodos();
+      },
+      error: (resposta: HttpErrorResponse) => {
+        this.enviando.set(false); 
+        this.erro.set(
+          resposta.status === 409
+            ? 'A categoria já existe.'
+            : 'Não foi possível salvar a categoria. Verifique a conexão e tente novamente.',
+        );
+      },
+    });
   }
 
+
   get TotalCategorias(): number {
-    return this.categorias.length;
+    return this.categorias().length;
   }
 
   cancelarEdicao(): void {
     this.categoria = new Category();
-    this.emEdicao = false;
+    this.emEdicao.set(false);
     this.formulario.resetForm();
-    this.erroDuplicado = false;
+    this.erro.set('');
   }
 
   removerCategoria(categoria: Category): void {
     if (confirm(`Remover a categoria "${categoria.name}"?`)) {
-      this.categoryService.remover(categoria.id);
-      this.listarTodos();
+      this.categoryService.remover(categoria.id).subscribe({
+        next: () => { 
+          if (this.categoria.id === categoria.id) {
+            this.cancelarEdicao();
+          }
+
+          this.listarTodos();
+        },
+        error: () => this.erro.set('Não foi possível remover a categoria. Verifique a conexão e tente novamente.'),
+      });
     }
   }
 }
