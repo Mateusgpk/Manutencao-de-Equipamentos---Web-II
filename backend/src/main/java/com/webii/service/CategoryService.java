@@ -2,7 +2,9 @@ package com.webii.service;
 
 import com.webii.entity.Category;
 import com.webii.repository.CategoryRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -16,35 +18,37 @@ public class CategoryService {
     }
 
     public Category criar(String name) {
-        if (categoryRepository.existsByName(name)) {
-            throw new IllegalArgumentException("Já existe uma categoria com este nome.");
+        String nomeTratado = name.trim();
+        
+        if (categoryRepository.existsByNameIgnoreCase(nomeTratado)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe uma categoria com este nome.");
         }
-        Category category = Category.builder()
-                .name(name)
-                .ativo(true)
-                .build();
+
+        Category category = new Category();
+        category.setName(nomeTratado);
+        category.setAtivo(true);
+        
         return categoryRepository.save(category);
     }
 
     public List<Category> listarAtivas() {
-        return categoryRepository.findByAtivoTrue();
-    }
-
-    public List<Category> listarTodas() {
-        return categoryRepository.findAll();
+        return categoryRepository.findByAtivoTrueOrderByNameAsc();
     }
 
     public Category buscarPorId(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
+        return categoryRepository.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada."));
     }
 
     public Category atualizar(Long id, String novoNome) {
         Category category = buscarPorId(id);
-        if (!category.getName().equalsIgnoreCase(novoNome) && categoryRepository.existsByName(novoNome)) {
-            throw new IllegalArgumentException("Já existe uma categoria com este nome.");
+        String nomeTratado = novoNome.trim();
+
+        if (categoryRepository.existsByNameIgnoreCaseAndIdNot(nomeTratado, id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe outra categoria com este nome.");
         }
-        category.setName(novoNome);
+
+        category.setName(nomeTratado);
         return categoryRepository.save(category);
     }
 

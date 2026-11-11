@@ -1,18 +1,11 @@
 package com.webii.controller;
 
 import com.webii.entity.Category;
-
-import com.webii.repository.CategoryRepository;
-
+import com.webii.service.CategoryService;
 import jakarta.validation.Valid;
-
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -21,70 +14,36 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
-
 
     @GetMapping
     public List<Category> getAll() {
-        return categoryRepository.findByAtivoTrueOrderByNameAsc();
+        return categoryService.listarAtivas();
     }
-
 
     @GetMapping("/{id}")
     public Category getById(@PathVariable Long id) {
-        return categoryRepository.findByIdAndAtivoTrue(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Categoria não encontrada."));
+        return categoryService.buscarPorId(id);
     }
-
 
     @PostMapping
     public ResponseEntity<Category> create(@Valid @RequestBody Category category) {
-        String name = category.getName().trim();
-
-        if (categoryRepository.existsByNameIgnoreCase(name)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Categoria já cadastrada.");
-        }
-
-        category.setId(null);
-        category.setName(name);
-        category.setAtivo(true);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(categoryRepository.save(category));
+        Category novaCategoria = categoryService.criar(category.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria);
     }
-
     
     @PutMapping("/{id}")
     public Category update(@PathVariable Long id, @Valid @RequestBody Category updated) {
-        Category existing = categoryRepository.findByIdAndAtivoTrue(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Categoria não encontrada."));
-
-        String name = updated.getName().trim();
-
-        if (categoryRepository.existsByNameIgnoreCaseAndIdNot(name, id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Já existe outra categoria com esse nome.");
-        }
-
-        existing.setName(name);
-        return categoryRepository.save(existing);
+        return categoryService.atualizar(id, updated.getName());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Category existing = categoryRepository.findByIdAndAtivoTrue(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Categoria não encontrada."));
-
-        existing.setAtivo(false);
-        categoryRepository.save(existing);
-
+        categoryService.desativar(id);
         return ResponseEntity.noContent().build();
     }
 }
