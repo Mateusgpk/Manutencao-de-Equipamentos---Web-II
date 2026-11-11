@@ -17,11 +17,11 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-100">
-        @for (l of linhas(); track l.chave) {
+        @for (l of linhas(); track l.categoria) {
           <tr>
-            <td class="px-4 py-3 text-slate-900">{{ l.rotulo }}</td>
+            <td class="px-4 py-3 text-slate-900">{{ l.categoria }}</td>
             <td class="px-4 py-3 text-right text-slate-700">{{ l.quantidade }}</td>
-            <td class="px-4 py-3 text-right text-slate-900">{{ moeda(l.total) }}</td>
+            <td class="px-4 py-3 text-right text-slate-900">{{ l.total | currency }}</td>
           </tr>
         } @empty {
           <tr>
@@ -33,7 +33,7 @@
         <tr>
           <td class="px-4 py-3">Total</td>
           <td class="px-4 py-3 text-right">{{ quantidade() }}</td>
-          <td class="px-4 py-3 text-right">{{ moeda(total()) }}</td>
+          <td class="px-4 py-3 text-right">{{ total() | currency }}</td>
         </tr>
       </tfoot>
     </table>

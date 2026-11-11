@@ -1,17 +1,19 @@
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { LinhaReceita, RelatorioService } from '../../../../shared/services/relatorio.service';
+import { ReceitaDia, RelatorioService } from '../../../../shared/services/relatorio.service';
 
 @Component({
   selector: 'app-relatorio-receitas',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe, CurrencyPipe],
   templateUrl: './relatorio-receitas.html',
   styleUrl: './relatorio-receitas.css',
 })
+
 export class RelatorioReceitas implements OnInit {
   private readonly relatorioService = inject(RelatorioService);
 
-  protected readonly linhas = signal<LinhaReceita[]>([]);
+  protected readonly linhas = signal<ReceitaDia[]>([]);
   protected readonly periodoInvalido = signal(false);
   protected readonly total = computed(() => this.linhas().reduce((acc, l) => acc + l.total, 0));
   protected readonly quantidade = computed(() => this.linhas().reduce((acc, l) => acc + l.quantidade, 0));
@@ -43,26 +45,6 @@ export class RelatorioReceitas implements OnInit {
   }
 
   protected gerarPdf(): void {
-    const inicio = this.formatar(this.inicioControl.value);
-    const fim = this.formatar(this.fimControl.value);
-    const periodo = `Período: ${inicio || 'início'} a ${fim || 'hoje'}`;
-
-    this.relatorioService.gerarPdf(
-      'Relatório de Receitas por Dia',
-      periodo,
-      'Data',
-      this.linhas(),
-      'relatorio-receitas.pdf',
-    );
-  }
-
-  protected moeda(valor: number): string {
-    return this.relatorioService.formatarMoeda(valor);
-  }
-
-  private formatar(iso: string): string {
-    if (!iso) return '';
-    const [a, m, d] = iso.split('-');
-    return `${d}/${m}/${a}`;
+    this.relatorioService.baixarPdfReceitas(this.inicioControl.value, this.fimControl.value);
   }
 }
