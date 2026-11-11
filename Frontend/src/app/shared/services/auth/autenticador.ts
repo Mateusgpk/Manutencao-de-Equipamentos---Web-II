@@ -97,13 +97,9 @@ inserirFuncionario(usuario: Employee): Observable<boolean> {
 
   autentica(){
     if (this.usuarioLogado) {
-    console.log(this.usuarioLogado.user.role)
-    console.log("estou logado")
     if (this.usuarioLogado.user.role === "CLIENTE"){
-      console.log("sou cliente")
       this.router.navigate( ["/home"] );
     }else if (this.usuarioLogado.user.role === "FUNCIONARIO"){
-      console.log("sou funcionario")
       this.router.navigate( ["/employee/home"] );
     }
 

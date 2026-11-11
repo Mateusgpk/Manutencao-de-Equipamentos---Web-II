@@ -73,8 +73,6 @@ export class FormCadastro implements OnInit {
 
   validacep = /^[0-9]{8}$/;
   executarAcao(texto: string | null): void {
-    console.log('O usuário parou de digitar. Texto final:', texto);
-
     const cep = (texto ?? '').replace(/\D/g, '');
 
     if (cep.length === 8) {
@@ -110,7 +108,6 @@ export class FormCadastro implements OnInit {
       if (this.enviando()) return;
 
       this.formCadastro.value.cpf = this.formCadastro.value.cpf?.replace(/[.-]/g, '');
-      console.log('Dados enviados:', this.formCadastro.value);
       const user = {
         name:this.formCadastro.value.nome,
         cpf:this.formCadastro.value.cpf,

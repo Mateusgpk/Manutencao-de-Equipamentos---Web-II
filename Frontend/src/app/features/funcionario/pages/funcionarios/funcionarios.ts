@@ -40,7 +40,6 @@ export class Funcionarios implements OnInit {
 
     this.crudfuncionario.desactiveFuncionario(id).subscribe({
       next: () => {
-        console.log('Funcionario desativado com sucesso!');
         this.recarregar$.next(); 
       },
       error: (err) => {

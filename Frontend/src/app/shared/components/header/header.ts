@@ -22,7 +22,6 @@ export class Header {
 
   toggleMenu() {
     this.menuAberto = !this.menuAberto;
-    console.log(this.usuario)
   }
   acao(){
     this.autentica.logout()
