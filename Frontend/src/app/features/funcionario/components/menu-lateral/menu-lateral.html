@@ -1,13 +1,38 @@
 <div class="layout">
-<aside class="sidebar" [class.aberto]="menuAberto">
-  <button class="botao-menu" [class.aberto]="menuAberto" (click)="alternarMenu()">☰</button>
-  <nav >
-    <a class="texto" routerLink="home">Home</a>
-    <a class="texto" routerLink="home" [queryParams]="{ visao: 'todas' }">Solicitações</a>
-    <a class="texto" routerLink="categories">Categorias</a>
-    <a class="texto" routerLink="crud-funcionario">Funcionários</a>
-    <a class="texto" routerLink="relatorios/receitas">Relatório de Receitas</a>
-    <a class="texto" routerLink="relatorios/categorias">Receitas por Categoria</a>
-  </nav>
-</aside>
+  <aside class="sidebar bg-background" [class.aberto]="menuAberto">
+
+    <button
+      class="botao-menu"
+      [class.aberto]="menuAberto"
+      (click)="alternarMenu()">
+      ☰
+    </button>
+
+    <nav>
+      <a class="texto" routerLink="home">
+        <span>⌂</span> Home
+      </a>
+
+      <a class="texto" routerLink="home" [queryParams]="{ visao: 'todas' }">
+        <span>▤</span> Solicitações
+      </a>
+
+      <a class="texto" routerLink="categories">
+        <span>◈</span> Categorias
+      </a>
+
+      <a class="texto" routerLink="crud-funcionario">
+        <span>♙</span> Funcionários
+      </a>
+
+      <a class="texto" routerLink="relatorios/receitas">
+        <span>▥</span> Relatório de Receitas
+      </a>
+
+      <a class="texto" routerLink="relatorios/categorias">
+        <span>◉</span> Receitas por Categoria
+      </a>
+    </nav>
+
+  </aside>
 </div>
