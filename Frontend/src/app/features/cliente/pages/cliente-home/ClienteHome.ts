@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ESTADO_SOLICITACAO_LABEL, EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
@@ -27,20 +27,27 @@ export class ClienteHome implements OnInit {
 
 
   private readonly service = inject(SolicitacaoService);
-  private readonly cpfClienteLogado = '123.456.789-00';
   readonly estadoLabel = ESTADO_SOLICITACAO_LABEL;
   readonly EstadoSolicitacao = EstadoSolicitacao;
-  solicitacoes: Solicitacao[] = [];
-  solicitacaoSelecionada?: Solicitacao;
+  readonly solicitacoes = signal<Solicitacao[]>([]);
+  readonly solicitacaoSelecionada = signal<Solicitacao | undefined>(undefined);
+  readonly erro = signal('');
 
   ngOnInit(): void {
-    this.service.listarTodas().subscribe((lista) => {
-      this.atualizarSolicitacoes(lista.filter((s) => s.clienteCpf === this.cpfClienteLogado));
+    const clienteId = Number(this.usuarioLogado?.id);
+
+    if (!clienteId) {
+      return;
+    }
+
+    this.service.listarPorCliente(clienteId).subscribe({
+      next: (lista) => this.atualizarSolicitacoes(lista),
+      error: () => this.erro.set('Não foi possível carregar as solicitações. Verifique a conexão e tente novamente.'),
     });
   }
 
   private atualizarSolicitacoes(lista: Solicitacao[]): void {
-    this.solicitacoes = [...lista].sort((a, b) => a.dataHoraAbertura.getTime() - b.dataHoraAbertura.getTime());
+    this.solicitacoes.set([...lista].sort((a, b) => a.dataHoraAbertura.getTime() - b.dataHoraAbertura.getTime()));
   }
 
   limitar(descricao: string): string {
@@ -52,11 +59,11 @@ export class ClienteHome implements OnInit {
   }
 
   visualizar(s: Solicitacao): void {
-    this.solicitacaoSelecionada = s;
+    this.solicitacaoSelecionada.set(s);
   }
 
   fecharVisualizacao(): void {
-    this.solicitacaoSelecionada = undefined;
+    this.solicitacaoSelecionada.set(undefined);
   }
 
   resgatar(s: Solicitacao): void {
@@ -66,15 +73,23 @@ export class ClienteHome implements OnInit {
       return;
     }
 
-    this.service.resgatarServico(s.id).subscribe((atualizada) => {
-      if (!atualizada) {
-        return;
-      }
+    this.erro.set('');
 
-      this.atualizarSolicitacoes(
-        this.solicitacoes.map((item) => item.id === atualizada.id ? atualizada : item),
-      );
-      this.solicitacaoSelecionada = atualizada;
+    this.service.resgatarServico(s.id).subscribe({
+      next: (atualizada) => {
+        if (!atualizada) {
+          return;
+        }
+
+        this.atualizarSolicitacoes(
+          this.solicitacoes().map((item) => item.id === atualizada.id ? atualizada : item),
+        );
+        this.solicitacaoSelecionada.set(atualizada);
+      },
+      error: () => { 
+        this.solicitacaoSelecionada.set(undefined);
+        this.erro.set('Não foi possível resgatar o serviço. Verifique a conexão e tente novamente.');
+      },
     });
   }
 
