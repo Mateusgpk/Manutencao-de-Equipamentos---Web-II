@@ -3,11 +3,12 @@ import { FormControl, ReactiveFormsModule, FormGroupDirective } from '@angular/f
 import { MascaraCPFDirective } from '../../directives/mascara-cpf';
 import { MascaraTelefoneDirective } from '../../directives/mascara-telefone';
 import { MascaraCEPDirective } from '../../directives/mascara-cep';
+import { MascaraMoedaDirective } from '../../directives/mascara-moeda';
 
 @Component({
   selector: 'app-input-texto',
   standalone: true,
-  imports: [ReactiveFormsModule, MascaraCPFDirective, MascaraTelefoneDirective, MascaraCEPDirective],
+  imports: [ReactiveFormsModule, MascaraCPFDirective, MascaraTelefoneDirective, MascaraCEPDirective, MascaraMoedaDirective],
   templateUrl: './input-texto.html',
   styleUrl: './input-texto.css',
 })
@@ -19,7 +20,7 @@ export class InputTexto {
   @Input() placeholder: string = '';
   @Input() id: string = '';
   @Input() class: string = '';
-  @Input() mascara: 'cpf' | 'cep' | 'telefone' | 'senha' | 'nenhuma' = 'nenhuma';
+  @Input() mascara: 'cpf' | 'cep' | 'telefone' | 'moeda' | 'senha' | 'nenhuma' = 'nenhuma';
 
   formDir = inject(FormGroupDirective, { optional: true });
 
