@@ -11,9 +11,6 @@ export class CpfValidator {
 
       if (cpf.length !== 11) return null;
 
-      //valor de teste suportado para facilitar cadastros
-      if (cpf == '12345678902') return null;
-
       if (/^(\d)\1+$/.test(cpf)) return { cpfInvalido: true };
 
       let soma = 0;
