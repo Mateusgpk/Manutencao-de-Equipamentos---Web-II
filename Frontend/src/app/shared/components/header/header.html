@@ -11,12 +11,20 @@
 
     <nav class="flex items-center gap-6 text-sm font-bold font-heading text-foreground-muted"
       aria-label="Navegação principal">
-      <a class="transition-colors hover:text-primary" routerLink="/">Início</a>
-
-      <a class="bg-linear-to-b from-primary-subtle to-primary text-on-primary border border-primary px-5 py-1.5 rounded-full shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105"
-        routerLink="/login">
+      @if (logado) { 
+        @if (usuario?.user?.role === 'CLIENTE') { 
+        <a class="bg-linear-to-b from-primary-subtle to-primary text-on-primary border border-primary px-5 py-1.5 rounded-full shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105"
+        routerLink="/home">Home</a>
+        } @else { 
+        <a class="bg-linear-to-b from-primary-subtle to-primary text-on-primary border border-primary px-5 py-1.5 rounded-full shadow-md shadow-primary/30 transition-all hover:brightness-110 hover:scale-105"
+        routerLink="/employee/home">
         Acessar Painel
       </a>
+        }
+       }
+
+
+
       
 
 
