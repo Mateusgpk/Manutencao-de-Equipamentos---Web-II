@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
 import { ModalService } from '../../../../shared/services/modal.service';
@@ -50,7 +51,7 @@ export class EfetuarOrcamento implements OnInit {
     });
   }
 
-  protected confirmarOrcamento(): void {
+  protected async confirmarOrcamento(): Promise<void> {
     if (this.valorControl.invalid) {
       this.valorControl.markAsTouched();
       return;
@@ -69,22 +70,28 @@ export class EfetuarOrcamento implements OnInit {
 
     this.enviando.set(true);
 
-    this.solicitacaoService
-      .efetuarOrcamento(s.id, this.valorControl.value!, Number(funcionario.id!))
-      .subscribe({
-        next: async (atualizada) => {
-          this.enviando.set(false);
-          await this.modalService.sucesso(
-            'Orçamento Registrado',
-            `Orçamento da solicitação #${s.id} foi registrado com sucesso!`
-          );
-          this.router.navigate(['/employee/home']);
-        },
-        error: (err) => {
-          this.enviando.set(false);
-          this.modalService.erro('Erro no Orçamento', err.error?.message ?? 'Ocorreu um erro ao registrar o orçamento.');
-        },
-      });
+    try {
+      await firstValueFrom(
+        this.solicitacaoService.efetuarOrcamento(
+          s.id,
+          this.valorControl.value!,
+          Number(funcionario.id!)
+        )
+      );
+
+      this.enviando.set(false);
+      await this.modalService.sucesso(
+        'Orçamento Registrado',
+        `Orçamento da solicitação #${s.id} foi registrado com sucesso!`
+      );
+      this.router.navigate(['/employee/home']);
+    } catch (err: any) {
+      this.enviando.set(false);
+      this.modalService.erro(
+        'Erro no Orçamento',
+        err.error?.message ?? 'Ocorreu um erro ao registrar o orçamento.'
+      );
+    }
   }
 
   protected voltarParaInicio(): void {

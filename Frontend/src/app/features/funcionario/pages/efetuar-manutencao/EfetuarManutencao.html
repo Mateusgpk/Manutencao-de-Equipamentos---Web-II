@@ -59,16 +59,16 @@
         @if (!mostrarFormularioManutencao()) {
         <div class="mt-6 flex flex-col sm:flex-row justify-end gap-3">
             <button type="button" (click)="abrirRedirecionamento()"
-                class="bg-gray-100 text-gray-700 px-5 py-2 rounded hover:bg-gray-200">
+                class="bg-gray-100 text-gray-700 px-5 py-2 rounded hover:bg-gray-200 cursor-pointer">
                 Redirecionar Manutenção
             </button>
             <button type="button" (click)="abrirFormularioManutencao()"
-                class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600">
+                class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 cursor-pointer">
                 Efetuar Manutenção
             </button>
         </div>
         } @else {
-        <form class="mt-6" (submit)="confirmarManutencao()">
+        <div class="mt-6">
             <div class="mb-4">
                 <label for="descricaoManutencao" class="block text-sm text-gray-700 mb-1">
                     Descrição da Manutenção
@@ -99,23 +99,22 @@
 
             <div class="flex justify-end gap-3">
                 <button type="button" (click)="cancelarManutencao()"
-                    class="bg-gray-100 text-gray-700 px-5 py-2 rounded hover:bg-gray-200">
+                    class="bg-gray-100 text-gray-700 px-5 py-2 rounded hover:bg-gray-200 cursor-pointer">
                     Cancelar
                 </button>
-                <button type="submit"
-                    class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 disabled:opacity-60"
+                <button type="button" (click)="confirmarManutencao()"
+                    class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 disabled:opacity-60 cursor-pointer"
                     [disabled]="enviando()">
                     Confirmar Manutenção
                 </button>
             </div>
-        </form>
+        </div>
         }
 
         @if (mostrarModalRedirecionar()) {
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
             (click)="cancelarRedirecionamento()">
-            <form class="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg m-auto" (click)="$event.stopPropagation()"
-                (submit)="confirmarRedirecionamento()">
+            <div class="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg m-auto" (click)="$event.stopPropagation()">
                 <h2 class="mb-4 text-lg font-bold text-gray-900">Redirecionar Manutenção</h2>
 
                 <label for="funcionarioDestino" class="block text-sm text-gray-700 mb-1">
@@ -139,13 +138,13 @@
 
                 <div class="mt-6 flex gap-3">
                     <button type="button" (click)="cancelarRedirecionamento()"
-                        class="w-full rounded border border-gray-300 px-5 py-2">Cancelar</button>
-                    <button type="submit" [disabled]="enviando()"
-                        class="w-full rounded bg-blue-500 px-5 py-2 text-white hover:bg-blue-600 disabled:opacity-60">
+                        class="w-full rounded border border-gray-300 px-5 py-2 cursor-pointer">Cancelar</button>
+                    <button type="button" (click)="confirmarRedirecionamento()" [disabled]="enviando()"
+                        class="w-full rounded bg-blue-500 px-5 py-2 text-white hover:bg-blue-600 disabled:opacity-60 cursor-pointer">
                         Confirmar
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
         }
     </div>
