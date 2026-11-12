@@ -61,31 +61,34 @@
             </div>
           </dl>
 
-          <form class="mt-6" (submit)="confirmarOrcamento()">
-            <app-input-texto
-              id="valor"
-              label="Valor do Orçamento (R$)"
-              mascara="moeda"
-              placeholder="0,00"
-              [control]="valorControl"
-            ></app-input-texto>
+          <!-- 1. Substitua <form> por <div> -->
+<div class="mt-6">
+  <app-input-texto
+    id="valor"
+    label="Valor do Orçamento (R$)"
+    mascara="moeda"
+    placeholder="0,00"
+    [control]="valorControl"
+  ></app-input-texto>
 
-            @if (valorControl.invalid && valorControl.touched) {
-              <p class="text-sm text-red-600 mt-1">
-                Informe um valor de orçamento maior que zero.
-              </p>
-            }
+  @if (valorControl.invalid && valorControl.touched) {
+    <p class="text-sm text-red-600 mt-1">
+      Informe um valor de orçamento maior que zero.
+    </p>
+  }
 
-            <div class="mt-6 flex justify-end">
-              <button
-                type="submit"
-                class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 disabled:opacity-60"
-                [disabled]="enviando()"
-              >
-                Confirmar Orçamento
-              </button>
-            </div>
-          </form>
+  <div class="mt-6 flex justify-end">
+    <!-- 2. Altere type="submit" para type="button" e chame a função no (click) -->
+    <button
+      type="button"
+      (click)="confirmarOrcamento()"
+      class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 disabled:opacity-60"
+      [disabled]="enviando()"
+    >
+      Confirmar Orçamento
+    </button>
+  </div>
+</div>
         </div>
       }
     }
