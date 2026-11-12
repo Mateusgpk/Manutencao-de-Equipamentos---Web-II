@@ -40,7 +40,7 @@
   }
 }
 
-/* Centralização robusta dos componentes roteados diretamente no main (login, cadastro, cliente) */
+/* Centralização dos componentes roteados diretamente no main (login, cadastro, cliente) */
 main > *:not(router-outlet):not(app-layout):not(app-modal) {
   flex: 1 1 100%;
   width: 100%;
@@ -49,7 +49,6 @@ main > *:not(router-outlet):not(app-layout):not(app-modal) {
   align-items: center;
 }
 
-/* O layout administrativo do funcionário ocupa 100% da tela e gerencia a sidebar e o conteúdo separadamente */
 app-layout {
   display: block;
   flex: 1 1 100%;
