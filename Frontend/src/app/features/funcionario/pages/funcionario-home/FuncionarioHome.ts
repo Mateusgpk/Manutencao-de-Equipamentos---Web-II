@@ -4,18 +4,19 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ESTADO_SOLICITACAO_LABEL, EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
 import { Autenticador } from '../../../../shared/services/auth/autenticador';
+import { PaginacaoComponent } from '../../../../shared/components/paginacao/paginacao';
 
 type Filtro = 'todas' | 'hoje' | 'periodo';
 
 const COR_ESTADO: Record<EstadoSolicitacao, string> = {
-  ABERTA: 'bg-slate-100',
-  ORCADA: 'bg-amber-900/10',
-  REJEITADA: 'bg-red-100',
-  APROVADA: 'bg-yellow-100',
-  REDIRECIONADA: 'bg-purple-100',
-  ARRUMADA: 'bg-blue-100',
-  PAGA: 'bg-orange-100',
-  FINALIZADA: 'bg-green-100',
+  ABERTA:        'bg-slate-100 hover:bg-slate-200',          
+  ORCADA:        'bg-[#ead9c6] hover:bg-[#e0cbb2]',         
+  REJEITADA:     'bg-red-100 hover:bg-red-200',              
+  APROVADA:      'bg-yellow-100 hover:bg-yellow-200',        
+  REDIRECIONADA: 'bg-purple-100 hover:bg-purple-200',      
+  ARRUMADA:      'bg-blue-100 hover:bg-blue-200',         
+  PAGA:          'bg-orange-100 hover:bg-orange-200',    
+  FINALIZADA:    'bg-green-100 hover:bg-green-200',  
 };
 
 /** yyyy-MM-dd no fuso local (toISOString usaria UTC e deslocaria o dia). */
@@ -27,7 +28,7 @@ function dia(data: Date): string {
 
 @Component({
   selector: 'app-funcionario-homepage',
-  imports: [RouterLink, DatePipe, SlicePipe],
+  imports: [RouterLink, DatePipe, SlicePipe, PaginacaoComponent],
   templateUrl: './FuncionarioHome.html',
   styleUrl: './FuncionarioHome.css',
 })
@@ -40,7 +41,6 @@ export class FuncionarioHome implements OnInit {
   protected readonly estadoLabel = ESTADO_SOLICITACAO_LABEL;
   protected readonly corEstado = COR_ESTADO;
 
-  /** true = Home (só ABERTAS, RF011); false = Solicitações (todas + filtros, RF013). */
   protected readonly visaoAbertas = signal(true);
   protected readonly filtro = signal<Filtro>('todas');
   protected readonly inicio = signal('');
@@ -51,6 +51,9 @@ export class FuncionarioHome implements OnInit {
   protected readonly solicitacaoSelecionada = signal<Solicitacao | undefined>(undefined);
   protected readonly solicitacaoParaFinalizar = signal<Solicitacao | undefined>(undefined);
   protected readonly finalizando = signal(false);
+
+  pagina = signal(1);
+  readonly porPagina = 8;
 
   /** Lido na hora do uso porque o localStorage só existe no navegador. */
   private get funcionarioLogadoId(): number | null {

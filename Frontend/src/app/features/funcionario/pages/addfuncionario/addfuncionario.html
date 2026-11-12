@@ -1,24 +1,26 @@
 <section class="max-w-xl mx-auto w-full px-4 py-10">
-  <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
-    <h1 class="text-xl font-bold font-heading text-slate-900 mb-6">
+  <div class="rounded-xl border border-slate-200 bg-white/90 p-6 shadow-sm backdrop-blur-sm">
+    <h1 class="mb-6 text-xl font-bold text-slate-900">
       {{ novoUsuario() ? 'Cadastrar Funcionário' : 'Editar Funcionário' }}
     </h1>
 
     <form [formGroup]="FormCadastro" (ngSubmit)="addEditFuncionario()" class="flex flex-col gap-4">
       <app-input-texto id="nome" label="Nome" placeholder="Ex: Peter Parker"
-          [control]="FormCadastro.controls.name"></app-input-texto>
+        [control]="FormCadastro.controls.name"></app-input-texto>
       <app-input-texto class="forms-control" id="email" label="Email" placeholder="peter.parker@example.com"
-          [control]="FormCadastro.controls.email"></app-input-texto>
+        [control]="FormCadastro.controls.email"></app-input-texto>
       <app-input-texto class="forms-control" id="senha" label="Senha" type="password" placeholder="********"
-          [control]="FormCadastro.controls.senha"></app-input-texto>
+        [control]="FormCadastro.controls.senha"></app-input-texto>
       <app-input-texto class="forms-control" id="dataNascimento" label="Data de Nascimento" type="date"
-          [control]="FormCadastro.controls.dataNascimento"></app-input-texto>
-      
-      <div class="flex gap-3 mt-4">
-        <a routerLink="/employee/crud-funcionario" class="w-1/2 text-center py-2.5 px-4 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer">
+        [control]="FormCadastro.controls.dataNascimento"></app-input-texto>
+
+      <div class="mt-4 flex gap-3">
+        <a routerLink="/employee/crud-funcionario"
+          class="w-1/2 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2 text-center text-slate-700 transition hover:bg-slate-50">
           Cancelar
         </a>
-        <button class="w-1/2 py-2.5 px-4 rounded-xl font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition cursor-pointer" type="submit">
+        <button type="submit"
+          class="w-1/2 cursor-pointer rounded-lg bg-blue-600 px-4 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700">
           {{ novoUsuario() ? 'Cadastrar' : 'Salvar Alterações' }}
         </button>
       </div>

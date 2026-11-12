@@ -7,6 +7,7 @@ import { User } from '../../../../shared/models/user.model';
 import { ModalService } from '../../../../shared/services/modal.service';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { OnInit } from '@angular/core';
+
 @Component({
   selector: 'app-addfuncionario',
   imports: [InputTexto, ReactiveFormsModule, RouterLink],

@@ -1,179 +1,181 @@
 <!-- Tela de Efetuar Manutenção (RF014) com Redirecionar Manutenção (RF015) em modal. -->
 <section class="max-w-3xl mx-auto w-full px-4 py-10">
-    @switch (etapa()) {
+  @switch (etapa()) {
     @case ('carregando') {
-    <p class="text-center text-gray-500">Carregando solicitação...</p>
+      <p class="text-center text-slate-500">Carregando solicitação...</p>
     }
 
     @case ('naoEncontrada') {
-    <div class="border border-yellow-300 bg-yellow-50 p-4 text-center rounded">
+      <div class="rounded-xl border border-yellow-300 bg-yellow-50/90 p-6 text-center shadow-sm">
         <p class="text-yellow-800">
-            Não foi possível encontrar uma solicitação disponível para manutenção com este id.
+          Não foi possível encontrar uma solicitação disponível para manutenção com este id.
         </p>
-
         <a routerLink="/employee/home"
-            class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Voltar para o início
+          class="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700">
+          Voltar para o início
         </a>
-    </div>
+      </div>
     }
 
     @default {
-    @if (solicitacao(); as s) {
-    <div class="border border-gray-200 bg-white p-6 rounded">
-        <h1 class="text-xl font-bold text-gray-900 mb-6">
+      @if (solicitacao(); as s) {
+        <div class="rounded-xl border border-slate-200 bg-white/90 p-6 shadow-sm backdrop-blur-sm">
+          <h1 class="mb-6 text-xl font-bold text-slate-900">
             Efetuar Manutenção da Solicitação #{{ s.id }}
-        </h1>
+          </h1>
 
-        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-gray-100 pb-6">
+          <dl class="grid grid-cols-1 gap-4 border-b border-slate-100 pb-6 sm:grid-cols-2">
             <div>
-                <dt class="text-xs uppercase text-gray-500">Data/Hora da Solicitação</dt>
-                <dd class="text-sm text-gray-900">{{ s.dataHoraAbertura | date:'short' }}</dd>
+              <dt class="text-xs uppercase text-slate-500">Data/Hora da Solicitação</dt>
+              <dd class="text-sm text-slate-900">{{ s.dataHoraAbertura | date:'short' }}</dd>
             </div>
             <div>
-                <dt class="text-xs uppercase text-gray-500">Categoria</dt>
-                <dd class="text-sm text-gray-900">{{ s.categoriaEquipamento }}</dd>
+              <dt class="text-xs uppercase text-slate-500">Categoria</dt>
+              <dd class="text-sm text-slate-900">{{ s.categoriaEquipamento }}</dd>
             </div>
             <div class="sm:col-span-2">
-                <dt class="text-xs uppercase text-gray-500">Equipamento</dt>
-                <dd class="text-sm text-gray-900">{{ s.descricaoEquipamento }}</dd>
+              <dt class="text-xs uppercase text-slate-500">Equipamento</dt>
+              <dd class="text-sm text-slate-900">{{ s.descricaoEquipamento }}</dd>
             </div>
             <div class="sm:col-span-2">
-                <dt class="text-xs uppercase text-gray-500">Descrição do Defeito</dt>
-                <dd class="text-sm text-gray-900">{{ s.descricaoDefeito }}</dd>
+              <dt class="text-xs uppercase text-slate-500">Descrição do Defeito</dt>
+              <dd class="text-sm text-slate-900">{{ s.descricaoDefeito }}</dd>
             </div>
             <div class="sm:col-span-2">
-                <dt class="text-xs uppercase text-gray-500">Cliente</dt>
-                <dd class="text-sm text-gray-900">{{ s.clienteNome }} — CPF: {{ s.clienteCpf }}</dd>
+              <dt class="text-xs uppercase text-slate-500">Cliente</dt>
+              <dd class="text-sm text-slate-900">{{ s.clienteNome }} — CPF: {{ s.clienteCpf }}</dd>
             </div>
             <div>
-                <dt class="text-xs uppercase text-gray-500">Telefone</dt>
-                <dd class="text-sm text-gray-900">{{ s.clienteTelefone }}</dd>
+              <dt class="text-xs uppercase text-slate-500">Telefone</dt>
+              <dd class="text-sm text-slate-900">{{ s.clienteTelefone }}</dd>
             </div>
             <div>
-                <dt class="text-xs uppercase text-gray-500">Endereço</dt>
-                <dd class="text-sm text-gray-900">{{ s.clienteEndereco }}</dd>
+              <dt class="text-xs uppercase text-slate-500">Endereço</dt>
+              <dd class="text-sm text-slate-900">{{ s.clienteEndereco }}</dd>
             </div>
-        </dl>
+          </dl>
 
-        @if (!mostrarFormularioManutencao()) {
-        <div class="mt-6 flex flex-col sm:flex-row justify-end gap-3">
-            <button type="button" (click)="abrirRedirecionamento()"
-                class="bg-gray-100 text-gray-700 px-5 py-2 rounded hover:bg-gray-200">
+          @if (!mostrarFormularioManutencao()) {
+            <div class="mt-6 flex flex-col justify-end gap-3 sm:flex-row">
+              <button type="button" (click)="abrirRedirecionamento()"
+                class="rounded-lg border border-slate-300 bg-white px-5 py-2 text-slate-700 transition hover:bg-slate-50">
                 Redirecionar Manutenção
-            </button>
-            <button type="button" (click)="abrirFormularioManutencao()"
-                class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600">
+              </button>
+              <button type="button" (click)="abrirFormularioManutencao()"
+                class="rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700">
                 Efetuar Manutenção
-            </button>
-        </div>
-        } @else {
-        <form class="mt-6" (submit)="confirmarManutencao()">
-            <div class="mb-4">
-                <label for="descricaoManutencao" class="block text-sm text-gray-700 mb-1">
-                    Descrição da Manutenção
+              </button>
+            </div>
+          } @else {
+            <form class="mt-6" (submit)="confirmarManutencao()">
+              <div class="mb-4">
+                <label for="descricaoManutencao" class="mb-1 block text-sm font-medium text-slate-700">
+                  Descrição da Manutenção
                 </label>
                 <textarea id="descricaoManutencao" rows="3" [formControl]="descricaoManutencaoControl"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md"
-                    placeholder="Descreva o que foi feito no equipamento"></textarea>
+                  class="w-full rounded-md border border-slate-300 bg-white px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Descreva o que foi feito no equipamento"></textarea>
                 @if (descricaoManutencaoControl.invalid && descricaoManutencaoControl.touched) {
-                <p class="text-sm text-red-600 mt-1">
+                  <p class="mt-1 text-sm text-red-600">
                     Informe a descrição da manutenção (mínimo 5 caracteres).
-                </p>
+                  </p>
                 }
-            </div>
+              </div>
 
-            <div class="mb-4">
-                <label for="orientacoesCliente" class="block text-sm text-gray-700 mb-1">
-                    Orientações para o Cliente
+              <div class="mb-4">
+                <label for="orientacoesCliente" class="mb-1 block text-sm font-medium text-slate-700">
+                  Orientações para o Cliente
                 </label>
                 <textarea id="orientacoesCliente" rows="3" [formControl]="orientacoesClienteControl"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md"
-                    placeholder="Ex: cuidados para evitar o mesmo defeito"></textarea>
+                  class="w-full rounded-md border border-slate-300 bg-white px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Ex: cuidados para evitar o mesmo defeito"></textarea>
                 @if (orientacoesClienteControl.invalid && orientacoesClienteControl.touched) {
-                <p class="text-sm text-red-600 mt-1">
+                  <p class="mt-1 text-sm text-red-600">
                     Informe as orientações para o cliente (mínimo 5 caracteres).
-                </p>
+                  </p>
                 }
-            </div>
+              </div>
 
-            <div class="flex justify-end gap-3">
+              <div class="flex justify-end gap-3">
                 <button type="button" (click)="cancelarManutencao()"
-                    class="bg-gray-100 text-gray-700 px-5 py-2 rounded hover:bg-gray-200">
-                    Cancelar
+                  class="rounded-lg border border-slate-300 bg-white px-5 py-2 text-slate-700 transition hover:bg-slate-50">
+                  Cancelar
                 </button>
-                <button type="submit"
-                    class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 disabled:opacity-60"
-                    [disabled]="enviando()">
-                    Confirmar Manutenção
+                <button type="submit" [disabled]="enviando()"
+                  class="rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+                  Confirmar Manutenção
                 </button>
-            </div>
-        </form>
-        }
+              </div>
+            </form>
+          }
 
-        @if (mostrarModalRedirecionar()) {
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-            (click)="cancelarRedirecionamento()">
-            <form class="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg m-auto" (click)="$event.stopPropagation()"
+          @if (mostrarModalRedirecionar()) {
+            <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm"
+              (click)="cancelarRedirecionamento()">
+              <form class="m-auto w-full max-w-sm rounded-xl bg-white p-6 shadow-lg" (click)="$event.stopPropagation()"
                 (submit)="confirmarRedirecionamento()">
-                <h2 class="mb-4 text-lg font-bold text-gray-900">Redirecionar Manutenção</h2>
+                <h2 class="mb-4 text-lg font-bold text-slate-900">Redirecionar Manutenção</h2>
 
-                <label for="funcionarioDestino" class="block text-sm text-gray-700 mb-1">
-                    Redirecionar para o funcionário
+                <label for="funcionarioDestino" class="mb-1 block text-sm font-medium text-slate-700">
+                  Redirecionar para o funcionário
                 </label>
                 <select id="funcionarioDestino" [formControl]="funcionarioDestinoControl"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md bg-white">
-                    <option [ngValue]="null" disabled>Selecione um funcionário</option>
-                    @for (f of funcionariosDisponiveis(); track f.id) {
+                  class="w-full rounded-md border border-slate-300 bg-white px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option [ngValue]="null" disabled>Selecione um funcionário</option>
+                  @for (f of funcionariosDisponiveis(); track f.id) {
                     <option [ngValue]="f.id">{{ f.name }}</option>
-                    }
+                  }
                 </select>
 
                 @if (funcionariosDisponiveis().length === 0) {
-                <p class="text-sm text-red-600 mt-1">Não há outro funcionário ativo disponível.</p>
+                  <p class="mt-1 text-sm text-red-600">Não há outro funcionário ativo disponível.</p>
                 }
 
                 @if (funcionarioDestinoControl.invalid && funcionarioDestinoControl.touched) {
-                <p class="text-sm text-red-600 mt-1">Selecione um funcionário de destino.</p>
+                  <p class="mt-1 text-sm text-red-600">Selecione um funcionário de destino.</p>
                 }
 
                 <div class="mt-6 flex gap-3">
-                    <button type="button" (click)="cancelarRedirecionamento()"
-                        class="w-full rounded border border-gray-300 px-5 py-2">Cancelar</button>
-                    <button type="submit" [disabled]="enviando()"
-                        class="w-full rounded bg-blue-500 px-5 py-2 text-white hover:bg-blue-600 disabled:opacity-60">
-                        Confirmar
-                    </button>
+                  <button type="button" (click)="cancelarRedirecionamento()"
+                    class="w-full rounded-lg border border-slate-300 bg-white px-5 py-2 text-slate-700 transition hover:bg-slate-50">
+                    Cancelar
+                  </button>
+                  <button type="submit" [disabled]="enviando()"
+                    class="w-full rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+                    Confirmar
+                  </button>
                 </div>
-            </form>
+              </form>
+            </div>
+          }
         </div>
-        }
-    </div>
+      }
     }
-    }
-    }
+  }
 
-    @if (etapa() === 'manutencaoRegistrada') {
-    <div class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
-        <div class="bg-white max-w-sm w-full p-6 rounded-xl text-center m-auto shadow-lg">
-            <p class="text-gray-900 font-semibold">Manutenção registrada com sucesso!</p>
-            <button type="button" class="mt-6 w-full bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600"
-                (click)="voltarParaInicio()">
-                OK
-            </button>
-        </div>
+  @if (etapa() === 'manutencaoRegistrada') {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
+      <div class="m-auto w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-lg">
+        <p class="font-semibold text-slate-900">Manutenção registrada com sucesso!</p>
+        <button type="button"
+          class="mt-6 w-full rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700"
+          (click)="voltarParaInicio()">
+          OK
+        </button>
+      </div>
     </div>
-    }
+  }
 
-    @if (etapa() === 'redirecionada') {
-    <div class="fixed inset-0 bg-black/50 flex items-center justify-center px-4">
-        <div class="bg-white max-w-sm w-full p-6 rounded text-center">
-            <p class="text-gray-900 font-semibold">Serviço redirecionado com sucesso!</p>
-            <button type="button" class="mt-6 w-full bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600"
-                (click)="voltarParaInicio()">
-                OK
-            </button>
-        </div>
+  @if (etapa() === 'redirecionada') {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
+      <div class="m-auto w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-lg">
+        <p class="font-semibold text-slate-900">Serviço redirecionado com sucesso!</p>
+        <button type="button"
+          class="mt-6 w-full rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700"
+          (click)="voltarParaInicio()">
+          OK
+        </button>
+      </div>
     </div>
-    }
+  }
 </section>

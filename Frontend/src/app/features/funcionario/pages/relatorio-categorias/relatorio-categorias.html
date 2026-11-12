@@ -1,41 +1,46 @@
-<section class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-  <header class="mb-6 flex flex-wrap items-center justify-between gap-4">
-    <h1 class="text-2xl font-bold text-slate-900">Receitas por Categoria</h1>
-    <button type="button" (click)="gerarPdf()" [disabled]="linhas().length === 0"
-      class="rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700 disabled:opacity-60">
-      Gerar PDF
-    </button>
-  </header>
+<section class="mx-auto max-w-6xl w-full px-4 py-10 sm:px-6 lg:px-8">
+  <div class="rounded-xl border border-slate-200 bg-white/90 p-6 shadow-sm backdrop-blur-sm">
+    <header class="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <h1 class="text-xl font-bold text-slate-900">Receitas por Categoria</h1>
+      <button type="button" (click)="gerarPdf()" [disabled]="linhas().length === 0"
+        class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+        Gerar PDF
+      </button>
+    </header>
 
-  <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
-    <table class="min-w-full divide-y divide-slate-200 text-sm">
-      <thead class="bg-slate-100 text-left text-xs font-semibold uppercase text-slate-600">
-        <tr>
-          <th class="px-4 py-3">Categoria</th>
-          <th class="px-4 py-3 text-right">Qtd. de serviços</th>
-          <th class="px-4 py-3 text-right">Receita</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-100">
-        @for (l of linhas(); track l.categoria) {
+    <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+      <table class="min-w-full divide-y divide-slate-200 text-sm">
+        <thead class="bg-blue-50 text-left text-xs font-semibold uppercase text-blue-900">
           <tr>
-            <td class="px-4 py-3 text-slate-900">{{ l.categoria }}</td>
-            <td class="px-4 py-3 text-right text-slate-700">{{ l.quantidade }}</td>
-            <td class="px-4 py-3 text-right text-slate-900">{{ l.total | currency }}</td>
+            <th class="px-6 py-3">Categoria</th>
+            <th class="px-6 py-3 text-right">Qtd. de serviços</th>
+            <th class="px-6 py-3 text-right">Receita</th>
           </tr>
-        } @empty {
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (l of linhas() | slice: (pagina() - 1) * porPagina : pagina() * porPagina; track l.categoria) {
+            <tr class="transition hover:bg-slate-50">
+              <td class="px-6 py-3 text-slate-900">{{ l.categoria }}</td>
+              <td class="px-6 py-3 text-right text-slate-700">{{ l.quantidade }}</td>
+              <td class="px-6 py-3 text-right text-slate-900">{{ l.total | currency }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td class="px-6 py-6 text-center text-slate-500" colspan="3">Nenhuma receita registrada.</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot class="bg-blue-50/60 font-semibold text-slate-900">
           <tr>
-            <td class="px-4 py-6 text-center text-slate-500" colspan="3">Nenhuma receita registrada.</td>
+            <td class="px-6 py-3">Total</td>
+            <td class="px-6 py-3 text-right">{{ quantidade() }}</td>
+            <td class="px-6 py-3 text-right">{{ total() | currency }}</td>
           </tr>
-        }
-      </tbody>
-      <tfoot class="bg-slate-50 font-semibold text-slate-900">
-        <tr>
-          <td class="px-4 py-3">Total</td>
-          <td class="px-4 py-3 text-right">{{ quantidade() }}</td>
-          <td class="px-4 py-3 text-right">{{ total() | currency }}</td>
-        </tr>
-      </tfoot>
-    </table>
+        </tfoot>
+      </table>
+    </div>
+
+    <app-paginacao [total]="linhas().length" [pagina]="pagina()" [porPagina]="porPagina"
+      (paginaChange)="pagina.set($event)"></app-paginacao>
   </div>
 </section>

@@ -1,8 +1,8 @@
 <section class="max-w-2xl mx-auto w-full px-4 py-10">
-  <div class="border border-gray-200 bg-white p-6 rounded">
-    <h1 class="text-xl font-bold text-gray-900 mb-6">Categorias de Equipamento</h1>
+  <div class="rounded-xl border border-slate-200 bg-white/90 p-6 shadow-sm backdrop-blur-sm">
+    <h1 class="mb-6 text-xl font-bold text-slate-900">Categorias de Equipamento</h1>
 
-    <form #formCategoria="ngForm" class="flex gap-2 mb-2">
+    <form #formCategoria="ngForm" class="mb-2 flex gap-2">
       <div class="flex-1">
         <input
           type="text"
@@ -12,14 +12,14 @@
           minlength="2"
           required
           placeholder="Nome da categoria"
-          class="w-full px-4 py-2 border border-gray-300 rounded-md"
+          class="w-full rounded-md border border-slate-300 bg-white px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
       <button
         type="button"
         (click)="salvarCategoria()"
-         [disabled]="!formCategoria.form.valid || enviando()"
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="!formCategoria.form.valid || enviando()"
+        class="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <i class="fa fa-save" aria-hidden="true"></i>
         {{ emEdicao() ? 'Atualizar' : 'Adicionar' }}
@@ -28,7 +28,7 @@
         <button
           type="button"
           (click)="cancelarEdicao()"
-          class="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200"
+          class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-slate-700 transition hover:bg-slate-50"
         >
           <i class="fa fa-arrow-left" aria-hidden="true"></i>
         </button>
@@ -36,7 +36,7 @@
     </form>
 
     @if (nome.errors && (nome.dirty || nome.touched)) {
-      <div class="text-sm text-red-600 mb-4">
+      <div class="mb-4 text-sm text-red-600">
         @if (nome.errors['required']) {
           <div>Digite o nome da categoria.</div>
         }
@@ -46,28 +46,31 @@
       </div>
     }
 
-     @if (erro()) {
-      <div class="text-sm text-red-600 mb-4">
+    @if (erro()) {
+      <div class="mb-4 text-sm text-red-600">
         <div>{{ erro() }}</div>
       </div>
     }
 
-    <ul class="divide-y divide-gray-100 mt-4">
-       @for (cat of categorias(); track cat.id) {
-        <li class="py-3 flex items-center justify-between">
-          <span class="text-gray-900">{{ cat.name }}</span>
+    <ul class="mt-4 divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white">
+      @for (cat of categorias() | slice: (pagina() - 1) * porPagina : pagina() * porPagina; track cat.id) {
+        <li class="flex items-center justify-between px-4 py-3 transition hover:bg-slate-50">
+          <span class="text-slate-900">{{ cat.name }}</span>
           <div class="flex gap-3">
-            <button (click)="editarCategoria(cat)" class="text-sm text-blue-600 hover:underline">
-              <i class="fa fa-edit" aria-hidden="true"></i> 
+            <button (click)="editarCategoria(cat)" title="Editar" class="text-sm text-blue-600 transition hover:text-blue-800">
+              <i class="fa fa-edit" aria-hidden="true"></i>
             </button>
-            <button (click)="removerCategoria(cat)" class="text-sm text-red-600 hover:underline">
-              <i class="fa fa-times" aria-hidden="true"></i> 
+            <button (click)="removerCategoria(cat)" title="Remover" class="text-sm text-red-600 transition hover:text-red-800">
+              <i class="fa fa-times" aria-hidden="true"></i>
             </button>
           </div>
         </li>
       } @empty {
-        <li class="py-3 text-gray-500 text-sm">Nenhuma categoria cadastrada.</li>
+        <li class="px-4 py-3 text-sm text-slate-500">Nenhuma categoria cadastrada.</li>
       }
     </ul>
+
+    <app-paginacao [total]="categorias().length" [pagina]="pagina()" [porPagina]="porPagina"
+      (paginaChange)="pagina.set($event)"></app-paginacao>
   </div>
 </section>

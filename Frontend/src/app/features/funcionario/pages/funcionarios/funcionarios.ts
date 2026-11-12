@@ -1,16 +1,17 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Crudfuncionario } from '../../services/crudfuncionario';
 import { ModalService } from '../../../../shared/services/modal.service';
 import { Employee } from '../../models/employee.model';
 import { RouterLink } from '@angular/router';
 import { BehaviorSubject, switchMap, Observable } from 'rxjs';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, SlicePipe } from '@angular/common';
+import { PaginacaoComponent } from '../../../../shared/components/paginacao/paginacao';
 
 @Component({
   selector: 'app-funcionarios',
 
   standalone: true, 
-  imports: [RouterLink, AsyncPipe, DatePipe],
+  imports: [RouterLink, AsyncPipe, DatePipe, PaginacaoComponent, SlicePipe],
   templateUrl: './funcionarios.html',
   styleUrl: './funcionarios.css',
 })
@@ -20,6 +21,9 @@ export class Funcionarios implements OnInit {
   private modalService = inject(ModalService);
 
   private recarregar$ = new BehaviorSubject<void>(undefined);
+
+  pagina = signal(1);
+  readonly porPagina = 8;
   
   funcionarios$: Observable<Employee[]> = this.recarregar$.pipe(
     switchMap(() => this.crudfuncionario.getallFuncionario())

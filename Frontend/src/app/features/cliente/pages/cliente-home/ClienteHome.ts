@@ -8,11 +8,13 @@ import { Autenticador } from '../../../../shared/services/auth/autenticador';
 import { ModalService } from '../../../../shared/services/modal.service';
 import { Client } from '../../models/client.model';
 import { RouterOutlet } from '@angular/router';
+import { PaginacaoComponent } from '../../../../shared/components/paginacao/paginacao';
+import { SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'app-cliente-home',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe,RouterOutlet],
+  imports: [RouterLink, CurrencyPipe,RouterOutlet,PaginacaoComponent,SlicePipe],
   templateUrl: './ClienteHome.html',
   styleUrl: './ClienteHome.css',
 })
@@ -34,6 +36,9 @@ export class ClienteHome implements OnInit {
   readonly solicitacoes = signal<Solicitacao[]>([]);
   readonly solicitacaoSelecionada = signal<Solicitacao | undefined>(undefined);
   readonly erro = signal('');
+
+  pagina = signal(1);
+  readonly porPagina = 8;
 
   ngOnInit(): void {
     const clienteId = Number(this.usuarioLogado?.id);

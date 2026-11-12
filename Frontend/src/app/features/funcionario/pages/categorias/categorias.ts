@@ -5,17 +5,20 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Category } from '../../models/category.model';
 import { CategoryService } from '../../services/category.service';
 import { ModalService } from '../../../../shared/services/modal.service';
+import { PaginacaoComponent } from '../../../../shared/components/paginacao/paginacao';
 
 @Component({
   selector: 'app-categorias',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaginacaoComponent],
   templateUrl: './categorias.html',
   styleUrl: './categorias.css',
 })
 export class Categorias implements OnInit {
   private readonly categoryService = inject(CategoryService);
   private readonly modalService = inject(ModalService);
+  pagina = signal(1);
+  readonly porPagina = 8;
 
   @ViewChild('formCategoria') formulario!: NgForm;
 

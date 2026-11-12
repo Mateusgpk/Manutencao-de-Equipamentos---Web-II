@@ -1,11 +1,12 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, SlicePipe } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ReceitaDia, RelatorioService } from '../../../../shared/services/relatorio.service';
+import { PaginacaoComponent } from '../../../../shared/components/paginacao/paginacao';
 
 @Component({
   selector: 'app-relatorio-receitas',
-  imports: [ReactiveFormsModule, DatePipe, CurrencyPipe],
+  imports: [ReactiveFormsModule, DatePipe, CurrencyPipe, PaginacaoComponent, SlicePipe],
   templateUrl: './relatorio-receitas.html',
   styleUrl: './relatorio-receitas.css',
 })
@@ -20,6 +21,9 @@ export class RelatorioReceitas implements OnInit {
 
   protected readonly inicioControl = new FormControl<string>('', { nonNullable: true });
   protected readonly fimControl = new FormControl<string>('', { nonNullable: true });
+
+  pagina = signal(1);
+  readonly porPagina = 8;
 
   ngOnInit(): void {
     this.filtrar();
