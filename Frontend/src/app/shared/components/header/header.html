@@ -28,15 +28,35 @@
       
 
 
-      <div class="dropdown">
-        @if (logado) { <button class="fa fa-user" (click)="toggleMenu()"></button>
+      <div class="relative">
+        @if (logado) {
+          <button
+            type="button"
+            class="flex items-center justify-center w-9 h-9 rounded-full bg-surface-muted border border-border text-foreground hover:border-primary hover:text-primary transition cursor-pointer"
+            (click)="toggleMenu()"
+            title="Perfil do usuário"
+          >
+            <i class="fa fa-user"></i>
+          </button>
         
-        @if (menuAberto) {
-        <ul class="menu-opcoes">
-          <li class="font-semibold">{{this.usuario?.name}}</li>
-          <li class="font-semibold">{{this.usuario?.user?.role}}</li>
-          <li><button class="cursor-pointer" (click)="acao()">Sair</button></li>
-        </ul>}}
+          @if (menuAberto) {
+            <ul class="absolute right-0 mt-2 w-48 rounded-xl bg-surface border border-border shadow-lg p-2 z-50 text-sm list-none">
+              <li class="px-3 py-1.5 font-bold font-heading text-foreground truncate">{{ usuario?.name }}</li>
+              <li class="px-3 py-0.5 text-xs font-semibold text-primary mb-2">
+                {{ usuario?.user?.role === 'CLIENTE' ? 'Cliente' : 'Funcionário' }}
+              </li>
+              <li class="border-t border-border/60 pt-1">
+                <button
+                  type="button"
+                  class="w-full text-left px-3 py-1.5 rounded-lg text-danger hover:bg-danger/10 font-medium transition cursor-pointer flex items-center gap-2"
+                  (click)="acao()"
+                >
+                  <i class="fa fa-sign-out"></i> Sair
+                </button>
+              </li>
+            </ul>
+          }
+        }
       </div>
     </nav>
 
