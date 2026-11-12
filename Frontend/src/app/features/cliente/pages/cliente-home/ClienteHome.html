@@ -60,21 +60,12 @@
               </button>
             </td>
             <td class="whitespace-nowrap px-4 py-3.5 text-right">
-              <button
-                class="rounded-full border border-border bg-linear-to-b from-surface to-surface-muted px-3.5 py-1 text-xs font-heading font-semibold text-foreground shadow-2xs transition-all hover:border-primary/60 hover:from-white hover:to-primary-subtle/60 hover:text-primary-hover active:scale-95 cursor-pointer"
-                type="button"
-                (click)="visualizar(s)"
-              >
-                Visualizar Serviço
-              </button>
-            </td>
-            <td class="whitespace-nowrap px-4 py-3.5 text-right">
               @if (s.estado === EstadoSolicitacao.ORCADA) {
                 <a
                   class="inline-block rounded-full border border-primary bg-linear-to-b from-primary-subtle to-primary px-3.5 py-1 text-xs font-heading font-bold text-on-primary shadow-sm shadow-primary/30 transition-all hover:brightness-110 hover:scale-105 active:scale-95"
                   [routerLink]="['/orcamento', s.id]"
                 >
-                  Aprovar/Rejeitar Serviço
+                  Aprovar/Rejeitar Manutenção
                 </a>
               } @else if (s.estado === EstadoSolicitacao.REJEITADA) {
                 <button
@@ -91,6 +82,8 @@
                 >
                   Pagar Serviço
                 </a>
+              } @else {
+                <span class="text-xs text-foreground-muted">-</span>
               }
             </td>
           </tr>
