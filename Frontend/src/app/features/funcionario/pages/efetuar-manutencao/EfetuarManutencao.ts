@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { EstadoSolicitacao, FuncionarioApi, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
 import { ModalService } from '../../../../shared/services/modal.service';
@@ -94,7 +95,7 @@ export class EfetuarManutencao implements OnInit {
     this.orientacoesClienteControl.reset('');
   }
 
-  protected confirmarManutencao(): void {
+  protected async confirmarManutencao(): Promise<void> {
     if (this.descricaoManutencaoControl.invalid || this.orientacoesClienteControl.invalid) {
       this.descricaoManutencaoControl.markAsTouched();
       this.orientacoesClienteControl.markAsTouched();
@@ -114,24 +115,29 @@ export class EfetuarManutencao implements OnInit {
 
     this.enviando.set(true);
 
-    this.solicitacaoService
-      .efetuarManutencao(
-        s.id,
-        this.descricaoManutencaoControl.value.trim(),
-        this.orientacoesClienteControl.value.trim(),
-        meuId,
-      )
-      .subscribe({
-        next: (atualizada) => {
-          this.enviando.set(false);
-          this.solicitacao.set(atualizada);
-          this.etapa.set('manutencaoRegistrada');
-        },
-        error: (err) => {
-          this.enviando.set(false);
-          this.modalService.erro('Erro na Manutenção', err.error?.message ?? 'Ocorreu um erro ao registrar a manutenção.');
-        },
-      });
+    try {
+      await firstValueFrom(
+        this.solicitacaoService.efetuarManutencao(
+          s.id,
+          this.descricaoManutencaoControl.value.trim(),
+          this.orientacoesClienteControl.value.trim(),
+          meuId,
+        )
+      );
+
+      this.enviando.set(false);
+      await this.modalService.sucesso(
+        'Manutenção Registrada',
+        `Manutenção da solicitação #${s.id} registrada com sucesso!\nO equipamento foi marcado como arrumado.`
+      );
+      this.router.navigate(['/employee/home']);
+    } catch (err: any) {
+      this.enviando.set(false);
+      this.modalService.erro(
+        'Erro na Manutenção',
+        err.error?.message ?? 'Ocorreu um erro ao registrar a manutenção.'
+      );
+    }
   }
 
   protected abrirRedirecionamento(): void {
@@ -155,7 +161,7 @@ export class EfetuarManutencao implements OnInit {
     this.funcionarioDestinoControl.reset(null);
   }
 
-  protected confirmarRedirecionamento(): void {
+  protected async confirmarRedirecionamento(): Promise<void> {
     if (this.funcionarioDestinoControl.invalid) {
       this.funcionarioDestinoControl.markAsTouched();
       return;
@@ -174,19 +180,29 @@ export class EfetuarManutencao implements OnInit {
 
     this.enviando.set(true);
 
-    this.solicitacaoService
-      .redirecionarManutencao(s.id, meuId, this.funcionarioDestinoControl.value!)
-      .subscribe({
-        next: () => {
-          this.enviando.set(false);
-          this.mostrarModalRedirecionar.set(false);
-          this.etapa.set('redirecionada');
-        },
-        error: (err) => {
-          this.enviando.set(false);
-          this.modalService.erro('Erro no Redirecionamento', err.error?.message ?? 'Ocorreu um erro ao redirecionar a manutenção.');
-        },
-      });
+    try {
+      await firstValueFrom(
+        this.solicitacaoService.redirecionarManutencao(
+          s.id,
+          meuId,
+          this.funcionarioDestinoControl.value!
+        )
+      );
+
+      this.enviando.set(false);
+      this.mostrarModalRedirecionar.set(false);
+      await this.modalService.sucesso(
+        'Manutenção Redirecionada',
+        `A solicitação #${s.id} foi redirecionada com sucesso!`
+      );
+      this.router.navigate(['/employee/home']);
+    } catch (err: any) {
+      this.enviando.set(false);
+      this.modalService.erro(
+        'Erro no Redirecionamento',
+        err.error?.message ?? 'Ocorreu um erro ao redirecionar a manutenção.'
+      );
+    }
   }
 
   protected voltarParaInicio(): void {

@@ -7,7 +7,7 @@ import { Optional,Self } from '@angular/core';
 })
 export class MascaraCPFDirective {
 
-  constructor(@Optional() @Self() private ngControl: NgControl) {}
+  constructor(@Optional() @Self() private ngControl?: NgControl | null) {}
 
   @HostListener('input', ['$event'])
   onInput(event: Event): void {
@@ -30,6 +30,6 @@ export class MascaraCPFDirective {
 
     input.value = valor;    
 
-    this.ngControl.control?.setValue(valor, { emitEvent: false });
+    this.ngControl?.control?.setValue(valor, { emitEvent: false });
   }
 }

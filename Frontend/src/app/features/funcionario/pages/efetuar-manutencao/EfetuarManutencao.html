@@ -58,16 +58,16 @@
           @if (!mostrarFormularioManutencao()) {
             <div class="mt-6 flex flex-col justify-end gap-3 sm:flex-row">
               <button type="button" (click)="abrirRedirecionamento()"
-                class="rounded-lg border border-slate-300 bg-white px-5 py-2 text-slate-700 transition hover:bg-slate-50">
+                class="cursor-pointer rounded-lg border border-slate-300 bg-white px-5 py-2 text-slate-700 transition hover:bg-slate-50">
                 Redirecionar Manutenção
               </button>
               <button type="button" (click)="abrirFormularioManutencao()"
-                class="rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700">
+                class="cursor-pointer rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700">
                 Efetuar Manutenção
               </button>
             </div>
           } @else {
-            <form class="mt-6" (submit)="confirmarManutencao()">
+            <div class="mt-6">
               <div class="mb-4">
                 <label for="descricaoManutencao" class="mb-1 block text-sm font-medium text-slate-700">
                   Descrição da Manutenção
@@ -98,22 +98,21 @@
 
               <div class="flex justify-end gap-3">
                 <button type="button" (click)="cancelarManutencao()"
-                  class="rounded-lg border border-slate-300 bg-white px-5 py-2 text-slate-700 transition hover:bg-slate-50">
+                  class="cursor-pointer rounded-lg border border-slate-300 bg-white px-5 py-2 text-slate-700 transition hover:bg-slate-50">
                   Cancelar
                 </button>
-                <button type="submit" [disabled]="enviando()"
-                  class="rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+                <button type="button" (click)="confirmarManutencao()" [disabled]="enviando()"
+                  class="cursor-pointer rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
                   Confirmar Manutenção
                 </button>
               </div>
-            </form>
+            </div>
           }
 
           @if (mostrarModalRedirecionar()) {
             <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm"
               (click)="cancelarRedirecionamento()">
-              <form class="m-auto w-full max-w-sm rounded-xl bg-white p-6 shadow-lg" (click)="$event.stopPropagation()"
-                (submit)="confirmarRedirecionamento()">
+              <div class="m-auto w-full max-w-sm rounded-xl bg-white p-6 shadow-lg" (click)="$event.stopPropagation()">
                 <h2 class="mb-4 text-lg font-bold text-slate-900">Redirecionar Manutenção</h2>
 
                 <label for="funcionarioDestino" class="mb-1 block text-sm font-medium text-slate-700">
@@ -137,15 +136,15 @@
 
                 <div class="mt-6 flex gap-3">
                   <button type="button" (click)="cancelarRedirecionamento()"
-                    class="w-full rounded-lg border border-slate-300 bg-white px-5 py-2 text-slate-700 transition hover:bg-slate-50">
+                    class="w-full cursor-pointer rounded-lg border border-slate-300 bg-white px-5 py-2 text-slate-700 transition hover:bg-slate-50">
                     Cancelar
                   </button>
-                  <button type="submit" [disabled]="enviando()"
-                    class="w-full rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+                  <button type="button" (click)="confirmarRedirecionamento()" [disabled]="enviando()"
+                    class="w-full cursor-pointer rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
                     Confirmar
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
           }
         </div>
@@ -158,7 +157,7 @@
       <div class="m-auto w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-lg">
         <p class="font-semibold text-slate-900">Manutenção registrada com sucesso!</p>
         <button type="button"
-          class="mt-6 w-full rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700"
+          class="mt-6 w-full cursor-pointer rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700"
           (click)="voltarParaInicio()">
           OK
         </button>
@@ -171,7 +170,7 @@
       <div class="m-auto w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-lg">
         <p class="font-semibold text-slate-900">Serviço redirecionado com sucesso!</p>
         <button type="button"
-          class="mt-6 w-full rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700"
+          class="mt-6 w-full cursor-pointer rounded-lg bg-blue-600 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-blue-700"
           (click)="voltarParaInicio()">
           OK
         </button>

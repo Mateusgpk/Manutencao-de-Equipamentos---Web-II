@@ -1,10 +1,12 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe, SlicePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { ESTADO_SOLICITACAO_LABEL, EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
 import { Autenticador } from '../../../../shared/services/auth/autenticador';
 import { PaginacaoComponent } from '../../../../shared/components/paginacao/paginacao';
+import { ModalService } from '../../../../shared/services/modal.service';
 
 type Filtro = 'todas' | 'hoje' | 'periodo';
 
@@ -35,6 +37,7 @@ function dia(data: Date): string {
 export class FuncionarioHome implements OnInit {
   private readonly solicitacaoService = inject(SolicitacaoService);
   private readonly autenticador = inject(Autenticador);
+  private readonly modalService = inject(ModalService);
   private readonly route = inject(ActivatedRoute);
 
   protected readonly EstadoSolicitacao = EstadoSolicitacao;
@@ -128,7 +131,7 @@ export class FuncionarioHome implements OnInit {
     this.solicitacaoParaFinalizar.set(undefined);
   }
 
-  confirmarFinalizacao(): void {
+  async confirmarFinalizacao(): Promise<void> {
     const s = this.solicitacaoParaFinalizar();
     if (!s || this.finalizando()) return;
 
@@ -142,18 +145,24 @@ export class FuncionarioHome implements OnInit {
     this.erro.set('');
     this.finalizando.set(true);
 
-    this.solicitacaoService.finalizarSolicitacao(s.id, funcionarioId).subscribe({
-      next: () => {
-        this.finalizando.set(false);
-        this.solicitacaoParaFinalizar.set(undefined);
-        this.carregar();
-      },
-      error: (err) => {
-        // Fecha a confirmação para a mensagem de erro ficar visível.
-        this.finalizando.set(false);
-        this.solicitacaoParaFinalizar.set(undefined);
-        this.erro.set(err.error?.message ?? 'Não foi possível finalizar a solicitação. Tente novamente.');
-      },
-    });
+    try {
+      await firstValueFrom(
+        this.solicitacaoService.finalizarSolicitacao(s.id, funcionarioId)
+      );
+      this.finalizando.set(false);
+      this.solicitacaoParaFinalizar.set(undefined);
+      await this.modalService.sucesso(
+        'Solicitação Finalizada',
+        `A solicitação #${s.id} foi finalizada com sucesso!`
+      );
+      this.carregar();
+    } catch (err: any) {
+      this.finalizando.set(false);
+      this.solicitacaoParaFinalizar.set(undefined);
+      this.modalService.erro(
+        'Erro ao Finalizar',
+        err.error?.message ?? 'Não foi possível finalizar a solicitação. Tente novamente.'
+      );
+    }
   }
 }
