@@ -4,6 +4,7 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 import { Crudfuncionario } from '../../services/crudfuncionario';
 import { Employee } from '../../models/employee.model';
 import { User } from '../../../../shared/models/user.model';
+import { ModalService } from '../../../../shared/services/modal.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OnInit } from '@angular/core';
 @Component({
@@ -19,8 +20,9 @@ export class Addfuncionario implements OnInit {
   loading = signal(false);
   senhaAntiga: string = "";
 
-  private route = inject(ActivatedRoute)
-  private router = inject(Router)
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private modalService = inject(ModalService);
   FormCadastro = new FormGroup({
     name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required,]),
@@ -70,7 +72,7 @@ export class Addfuncionario implements OnInit {
           },
           error: (err) => {
             console.error('Erro ao adicionar funcionário:', err);
-            window.alert('Erro ao cadastrar o funcionário: ' + (err.error?.message || 'Erro desconhecido'));
+            this.modalService.erro('Erro ao cadastrar', 'Erro ao cadastrar o funcionário: ' + (err.error?.message || 'Erro desconhecido'));
           }
         });
     } else{
@@ -85,7 +87,7 @@ export class Addfuncionario implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao alterar funcionário:', err);
-          window.alert('Erro ao alterar o funcionário: ' + (err.error?.message || 'Erro desconhecido'));
+          this.modalService.erro('Erro ao alterar', 'Erro ao alterar o funcionário: ' + (err.error?.message || 'Erro desconhecido'));
         }
       });
     }

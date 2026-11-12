@@ -4,6 +4,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EstadoSolicitacao, FuncionarioApi, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
+import { ModalService } from '../../../../shared/services/modal.service';
 import { Autenticador } from '../../../../shared/services/auth/autenticador';
 
 type Etapa = 'carregando' | 'naoEncontrada' | 'formulario' | 'manutencaoRegistrada' | 'redirecionada';
@@ -21,6 +22,7 @@ export class EfetuarManutencao implements OnInit {
   private readonly router = inject(Router);
   private readonly solicitacaoService = inject(SolicitacaoService);
   private readonly autenticador = inject(Autenticador);
+  private readonly modalService = inject(ModalService);
 
   protected readonly etapa = signal<Etapa>('carregando');
   protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
@@ -106,7 +108,7 @@ export class EfetuarManutencao implements OnInit {
 
     const meuId = this.funcionarioLogadoId();
     if (meuId == null) {
-      alert('Sessão expirada. Faça login novamente.');
+      this.modalService.aviso('Sessão Expirada', 'Sessão expirada. Faça login novamente.');
       return;
     }
 
@@ -127,7 +129,7 @@ export class EfetuarManutencao implements OnInit {
         },
         error: (err) => {
           this.enviando.set(false);
-          alert(err.error?.message ?? 'Ocorreu um erro ao registrar a manutenção.');
+          this.modalService.erro('Erro na Manutenção', err.error?.message ?? 'Ocorreu um erro ao registrar a manutenção.');
         },
       });
   }
@@ -135,7 +137,7 @@ export class EfetuarManutencao implements OnInit {
   protected abrirRedirecionamento(): void {
     const meuId = this.funcionarioLogadoId();
     if (meuId == null) {
-      alert('Sessão expirada. Faça login novamente.');
+      this.modalService.aviso('Sessão Expirada', 'Sessão expirada. Faça login novamente.');
       return;
     }
 
@@ -144,7 +146,7 @@ export class EfetuarManutencao implements OnInit {
         this.funcionariosDisponiveis.set(lista.filter((f) => f.id !== meuId));
         this.mostrarModalRedirecionar.set(true);
       },
-      error: () => alert('Não foi possível carregar a lista de funcionários.'),
+      error: () => this.modalService.erro('Erro ao Carregar', 'Não foi possível carregar a lista de funcionários.'),
     });
   }
 
@@ -166,7 +168,7 @@ export class EfetuarManutencao implements OnInit {
 
     const meuId = this.funcionarioLogadoId();
     if (meuId == null) {
-      alert('Sessão expirada. Faça login novamente.');
+      this.modalService.aviso('Sessão Expirada', 'Sessão expirada. Faça login novamente.');
       return;
     }
 
@@ -182,7 +184,7 @@ export class EfetuarManutencao implements OnInit {
         },
         error: (err) => {
           this.enviando.set(false);
-          alert(err.error?.message ?? 'Ocorreu um erro ao redirecionar a manutenção.');
+          this.modalService.erro('Erro no Redirecionamento', err.error?.message ?? 'Ocorreu um erro ao redirecionar a manutenção.');
         },
       });
   }

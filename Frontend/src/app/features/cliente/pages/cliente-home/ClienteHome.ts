@@ -5,6 +5,7 @@ import { ESTADO_SOLICITACAO_LABEL, EstadoSolicitacao, Solicitacao } from '../../
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
 import { Router } from '@angular/router';
 import { Autenticador } from '../../../../shared/services/auth/autenticador';
+import { ModalService } from '../../../../shared/services/modal.service';
 import { Client } from '../../models/client.model';
 import { RouterOutlet } from '@angular/router';
 
@@ -17,7 +18,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class ClienteHome implements OnInit {
   private router = inject(Router);
-  private loginserver= inject(Autenticador)
+  private loginserver= inject(Autenticador);
+  private readonly modalService = inject(ModalService);
 
   get usuarioLogado(): Client|null {
     if (this.loginserver.usuarioLogado?.user.role === 'CLIENTE') {
@@ -66,8 +68,13 @@ export class ClienteHome implements OnInit {
     this.solicitacaoSelecionada.set(undefined);
   }
 
-  resgatar(s: Solicitacao): void {
-    const confirmou = confirm(`Resgatar a solicitação #${s.id} e aprovar o serviço novamente?`);
+  async resgatar(s: Solicitacao): Promise<void> {
+    const confirmou = await this.modalService.confirmar(
+      'Resgatar Serviço',
+      `Deseja resgatar a solicitação #${s.id} e aprovar o serviço novamente?`,
+      'Resgatar',
+      'Cancelar'
+    );
 
     if (!confirmou) {
       return;

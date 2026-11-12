@@ -1,0 +1,67 @@
+@if (modalService.modalAtivo(); as modal) {
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in"
+  (click)="modalService.cancelarAcao()"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="'modal-title'"
+>
+  <div
+    class="w-full max-w-md bg-surface text-foreground rounded-2xl shadow-2xl border border-border overflow-hidden transition-all transform scale-100"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Cabeçalho -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-border/60" [ngClass]="getHeaderBg(modal.opcoes.tipo)">
+      <div class="flex items-center gap-3">
+        <i class="text-2xl" [ngClass]="modal.opcoes.icone || getIconClass(modal.opcoes.tipo)"></i>
+        <h3 id="modal-title" class="text-lg font-bold font-heading">
+          {{ modal.opcoes.titulo }}
+        </h3>
+      </div>
+      <button
+        type="button"
+        (click)="modalService.cancelarAcao()"
+        class="text-foreground-muted hover:text-foreground p-1.5 rounded-lg hover:bg-black/5 transition cursor-pointer"
+        aria-label="Fechar modal"
+      >
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Corpo -->
+    <div class="px-6 py-5">
+      <p class="text-sm sm:text-base text-foreground/90 leading-relaxed whitespace-pre-line">
+        {{ modal.opcoes.mensagem }}
+      </p>
+    </div>
+
+    <!-- Rodapé com ações -->
+    <div class="flex items-center justify-end gap-3 px-6 py-4 bg-surface-muted/40 border-t border-border/60">
+      @if (modal.opcoes.tipo === 'confirmacao') {
+      <button
+        type="button"
+        (click)="modalService.cancelarAcao()"
+        class="px-4 py-2 text-sm font-semibold text-foreground-muted hover:text-foreground bg-surface hover:bg-surface-muted border border-border rounded-xl transition cursor-pointer"
+      >
+        {{ modal.opcoes.textoCancelar }}
+      </button>
+      <button
+        type="button"
+        (click)="modalService.confirmarAcao()"
+        class="px-5 py-2 text-sm font-semibold text-on-primary bg-primary hover:bg-primary-hover rounded-xl shadow-md shadow-primary/20 transition cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+      >
+        {{ modal.opcoes.textoConfirmar }}
+      </button>
+      } @else {
+      <button
+        type="button"
+        (click)="modalService.confirmarAcao()"
+        class="px-6 py-2 text-sm font-semibold text-on-primary bg-primary hover:bg-primary-hover rounded-xl shadow-md shadow-primary/20 transition cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+      >
+        {{ modal.opcoes.textoConfirmar }}
+      </button>
+      }
+    </div>
+  </div>
+</div>
+}

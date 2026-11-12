@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Crudfuncionario } from '../../services/crudfuncionario';
+import { ModalService } from '../../../../shared/services/modal.service';
 import { Employee } from '../../models/employee.model';
 import { RouterLink } from '@angular/router';
 import { BehaviorSubject, switchMap, Observable } from 'rxjs';
@@ -15,6 +16,8 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 })
 export class Funcionarios implements OnInit {
 
+  private crudfuncionario = inject(Crudfuncionario);
+  private modalService = inject(ModalService);
 
   private recarregar$ = new BehaviorSubject<void>(undefined);
   
@@ -22,18 +25,21 @@ export class Funcionarios implements OnInit {
     switchMap(() => this.crudfuncionario.getallFuncionario())
   );
 
-  constructor(private crudfuncionario: Crudfuncionario) {}
-
   ngOnInit(): void {
 
 
   }
 
-  desativar(id: string | undefined): void {
+  async desativar(id: string | undefined): Promise<void> {
 
     if (!id) return; 
 
-    const temCerteza = window.confirm('Tem certeza que deseja desativar este funcionário?');
+    const temCerteza = await this.modalService.confirmar(
+      'Desativar Funcionário',
+      'Tem certeza que deseja desativar este funcionário?',
+      'Desativar',
+      'Cancelar'
+    );
     if (!temCerteza) {
       return;
     }
@@ -44,7 +50,10 @@ export class Funcionarios implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao desativar:', err);
-        window.alert('Erro ao desativar o funcionário: ' + (err.error?.message || 'Erro desconhecido'));
+        this.modalService.erro(
+          'Erro ao desativar',
+          'Erro ao desativar o funcionário: ' + (err.error?.message || 'Erro desconhecido')
+        );
       },
     });
   }

@@ -14,6 +14,7 @@ import { User } from '../../../../shared/models/user.model';
 
 import { CpfValidator } from '../../../../shared/validators/cpf.validator';
 import { Autenticador } from '../../../../shared/services/auth/autenticador';
+import { ModalService } from '../../../../shared/services/modal.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -24,6 +25,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class FormCadastro implements OnInit {
   private loginAutenticador = inject(Autenticador);
+  private modalService = inject(ModalService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   message!: string;
@@ -125,9 +127,12 @@ export class FormCadastro implements OnInit {
       this.enviando.set(true);
 
       this.loginAutenticador.inserirCliente(user).subscribe({
-        next: () => {
+        next: async () => {
           this.enviando.set(false);
-          alert('Cadastro realizado com sucesso! A senha de acesso foi enviada para o seu e-mail.');
+          await this.modalService.sucesso(
+            'Cadastro realizado!',
+            'Cadastro realizado com sucesso! A senha de acesso foi enviada para o seu e-mail.'
+          );
           this.router.navigate(['/login']);
         },
         error: (resposta: HttpErrorResponse) => {

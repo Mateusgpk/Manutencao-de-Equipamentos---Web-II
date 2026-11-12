@@ -4,6 +4,7 @@ import { BtnSubmit } from '../../../../shared/components/btn-submit/btn-submit';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { CommonModule } from '@angular/common';
 import { Autenticador } from '../../../../shared/services/auth/autenticador'
+import { ModalService } from '../../../../shared/services/modal.service';
 import { User } from '../../../../shared/models/user.model';
 import { Router, RouterModule,ActivatedRoute } from '@angular/router';
 import { OnInit } from '@angular/core';
@@ -24,6 +25,7 @@ export class FormLogin implements OnInit{
 
 private cdr = inject(ChangeDetectorRef);
 private loginAutenticador=inject(Autenticador)
+private modalService = inject(ModalService);
 private router = inject(Router)
 private route = inject(ActivatedRoute)
 
@@ -49,10 +51,10 @@ ngOnInit(): void {
       const senha = String(this.formCadastro.value.senha);
 
       this.loginAutenticador.login(new User({ email, password: senha })).subscribe({
-        next: (usu) => {
+        next: async (usu) => {
           if (usu != null) {
-            alert('Login realizado com sucesso!');
             this.loginAutenticador.usuarioLogado = usu;
+            await this.modalService.sucesso('Bem-vindo!', 'Login realizado com sucesso!');
             
             if (usu.user.role === 'FUNCIONARIO') {
               this.router.navigate(['employee/home']);

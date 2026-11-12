@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Category } from '../../models/category.model';
 import { CategoryService } from '../../services/category.service';
+import { ModalService } from '../../../../shared/services/modal.service';
 
 @Component({
   selector: 'app-categorias',
@@ -14,6 +15,7 @@ import { CategoryService } from '../../services/category.service';
 })
 export class Categorias implements OnInit {
   private readonly categoryService = inject(CategoryService);
+  private readonly modalService = inject(ModalService);
 
   @ViewChild('formCategoria') formulario!: NgForm;
 
@@ -82,18 +84,26 @@ export class Categorias implements OnInit {
     this.erro.set('');
   }
 
-  removerCategoria(categoria: Category): void {
-    if (confirm(`Remover a categoria "${categoria.name}"?`)) {
-      this.categoryService.remover(categoria.id).subscribe({
-        next: () => { 
-          if (this.categoria.id === categoria.id) {
-            this.cancelarEdicao();
-          }
-
-          this.listarTodos();
-        },
-        error: () => this.erro.set('Não foi possível remover a categoria. Verifique a conexão e tente novamente.'),
-      });
+  async removerCategoria(categoria: Category): Promise<void> {
+    const confirmou = await this.modalService.confirmar(
+      'Remover Categoria',
+      `Deseja realmente remover a categoria "${categoria.name}"?`,
+      'Remover',
+      'Cancelar'
+    );
+    if (!confirmou) {
+      return;
     }
+
+    this.categoryService.remover(categoria.id).subscribe({
+      next: () => { 
+        if (this.categoria.id === categoria.id) {
+          this.cancelarEdicao();
+        }
+
+        this.listarTodos();
+      },
+      error: () => this.erro.set('Não foi possível remover a categoria. Verifique a conexão e tente novamente.'),
+    });
   }
 }

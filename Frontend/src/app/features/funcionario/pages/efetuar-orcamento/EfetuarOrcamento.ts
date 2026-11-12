@@ -4,6 +4,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EstadoSolicitacao, Solicitacao } from '../../../../shared/models/solicitacao.model';
 import { SolicitacaoService } from '../../../../shared/services/solicitacao.service';
+import { ModalService } from '../../../../shared/services/modal.service';
 import { InputTexto } from '../../../../shared/components/input-texto/input-texto';
 import { Autenticador } from '../../../../shared/services/auth/autenticador';
 
@@ -20,6 +21,7 @@ export class EfetuarOrcamento implements OnInit {
   private readonly router = inject(Router);
   private readonly solicitacaoService = inject(SolicitacaoService);
   private readonly autenticador = inject(Autenticador);
+  private readonly modalService = inject(ModalService);
 
   protected readonly etapa = signal<Etapa>('carregando');
   protected readonly solicitacao = signal<Solicitacao | undefined>(undefined);
@@ -61,7 +63,7 @@ export class EfetuarOrcamento implements OnInit {
 
     const funcionario = this.autenticador.usuarioLogado;
     if (!funcionario || funcionario.user.role !== 'FUNCIONARIO') {
-      alert('Sessão expirada. Faça login novamente.');
+      this.modalService.aviso('Sessão Expirada', 'Sessão expirada. Faça login novamente.');
       return;
     }
 
@@ -77,7 +79,7 @@ export class EfetuarOrcamento implements OnInit {
         },
         error: (err) => {
           this.enviando.set(false);
-          alert(err.error?.message ?? 'Ocorreu um erro ao registrar o orçamento.');
+          this.modalService.erro('Erro no Orçamento', err.error?.message ?? 'Ocorreu um erro ao registrar o orçamento.');
         },
       });
   }
