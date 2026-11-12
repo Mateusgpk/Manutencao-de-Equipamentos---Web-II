@@ -72,10 +72,13 @@ export class EfetuarOrcamento implements OnInit {
     this.solicitacaoService
       .efetuarOrcamento(s.id, this.valorControl.value!, Number(funcionario.id!))
       .subscribe({
-        next: (atualizada) => {
+        next: async (atualizada) => {
           this.enviando.set(false);
-          this.solicitacao.set(atualizada);
-          this.etapa.set('orcamentoRegistrado');
+          await this.modalService.sucesso(
+            'Orçamento Registrado',
+            `Orçamento da solicitação #${s.id} foi registrado com sucesso!`
+          );
+          this.router.navigate(['/employee/home']);
         },
         error: (err) => {
           this.enviando.set(false);
