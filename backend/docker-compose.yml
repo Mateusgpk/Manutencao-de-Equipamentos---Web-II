@@ -28,6 +28,10 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/${DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USER=${MAIL_USERNAME}
+      - MAIL_PASS=${MAIL_PASSWORD}
+      - MAIL_FROM=${MAIL_USERNAME}
 volumes:
   mysql_data:
