@@ -5,11 +5,11 @@ import { Crudfuncionario } from '../../services/crudfuncionario';
 import { Employee } from '../../models/employee.model';
 import { User } from '../../../../shared/models/user.model';
 import { ModalService } from '../../../../shared/services/modal.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { OnInit } from '@angular/core';
 @Component({
   selector: 'app-addfuncionario',
-  imports: [InputTexto, ReactiveFormsModule],
+  imports: [InputTexto, ReactiveFormsModule, RouterLink],
   templateUrl: './addfuncionario.html',
   styleUrl: './addfuncionario.css',
 })

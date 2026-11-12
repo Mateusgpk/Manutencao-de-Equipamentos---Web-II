@@ -1,4 +1,10 @@
 
+:host {
+  display: block;
+  flex-shrink: 0;
+  z-index: 20;
+}
+
 .layout {
   display: flex;
   min-height: 100vh;

@@ -1,49 +1,56 @@
-<div><button routerLink="/employee/add-funcionario" class="mb-4 bg-blue-600 text-white px-4 py-2 rounded">Cadastrar Funcionario</button></div>
+<section class="mx-auto max-w-6xl w-full px-4 py-8 sm:px-6 lg:px-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold font-heading text-slate-900">Funcionários</h1>
+    <button routerLink="/employee/add-funcionario" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-sm transition">
+      Cadastrar Funcionário
+    </button>
+  </div>
 
-<div class="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
-  <table class="min-w-full divide-y divide-slate-200 text-sm">
-    <thead class="bg-slate-100 text-left text-xs font-semibold uppercase text-slate-600">
-      <tr>
-        <th class="px-5 py-3">ID</th>
-        <th class="px-5 py-3">Funcionario</th>
-        <th class="px-5 py-3">Email</th>
-        <th class="px-5 py-3">Data de nascimento</th>
-        <th class="px-5 py-3 text-center">Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (funcionarios$ | async; as funcionarios) {
-        @for (funcionario of funcionarios; track funcionario.user.id) {
+  <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
+    <table class="min-w-full divide-y divide-slate-200 text-sm">
+      <thead class="bg-slate-100 text-left text-xs font-semibold uppercase text-slate-600">
+        <tr>
+          <th class="px-5 py-3">ID</th>
+          <th class="px-5 py-3">Funcionário</th>
+          <th class="px-5 py-3">Email</th>
+          <th class="px-5 py-3">Data de nascimento</th>
+          <th class="px-5 py-3 text-center">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (funcionarios$ | async; as funcionarios) {
+          @for (funcionario of funcionarios; track funcionario.user.id) {
+            <tr>
+              <td class="whitespace-nowrap px-4 py-3">{{funcionario.id}}</td>
+              <td class="whitespace-nowrap px-4 py-3">{{funcionario.name}}</td>
+              <td class="whitespace-nowrap px-4 py-3">{{funcionario.user.email}}</td>
+              
+              <!-- Adicionado 'UTC' para garantir o dia exato do banco de dados -->
+              <td class="whitespace-nowrap px-4 py-3">{{funcionario.dataNascimento | date:'dd/MM/yyyy':'UTC'}}</td>
+              
+              <td class="whitespace-nowrap px-4 py-3 flex items-center justify-center gap-3">
+                <button class="bg-yellow-500 cursor-pointer rounded-sm p-1" (click)="desativar(funcionario.id)">
+                  Desativar
+                </button> 
+                <a [routerLink]="['/employee/edit-funcionario', funcionario.id]" 
+                   title="Editar" 
+                   class="btn btn-xs btn-warning bg-blue-500 text-white p-1 rounded-sm">
+                  <i class="fa fa-edit" aria-hidden="true"></i> Editar
+                </a>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="text-center py-4 text-slate-500">Nenhum funcionário ativo encontrado.</td>
+            </tr>
+          }
+        } @else {
+       
           <tr>
-            <td class="whitespace-nowrap px-4 py-3">{{funcionario.id}}</td>
-            <td class="whitespace-nowrap px-4 py-3">{{funcionario.name}}</td>
-            <td class="whitespace-nowrap px-4 py-3">{{funcionario.user.email}}</td>
-            
-            <!-- Adicionado 'UTC' para garantir o dia exato do banco de dados -->
-            <td class="whitespace-nowrap px-4 py-3">{{funcionario.dataNascimento | date:'dd/MM/yyyy':'UTC'}}</td>
-            
-            <td class="whitespace-nowrap px-4 py-3 flex items-center justify-center gap-3">
-              <button class="bg-yellow-500 cursor-pointer rounded-sm p-1" (click)="desativar(funcionario.id)">
-                Desativar
-              </button> 
-              <a [routerLink]="['/employee/edit-funcionario', funcionario.id]" 
-                 title="Editar" 
-                 class="btn btn-xs btn-warning bg-blue-500 text-white p-1 rounded-sm">
-                <i class="fa fa-edit" aria-hidden="true"></i> Editar
-              </a>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="5" class="text-center py-4 text-slate-500">Nenhum funcionário ativo encontrado.</td>
+            <td colspan="5" class="text-center py-4 text-slate-500">Carregando funcionários...</td>
           </tr>
         }
-      } @else {
-     
-        <tr>
-          <td colspan="5" class="text-center py-4 text-slate-500">Carregando funcionários...</td>
-        </tr>
-      }
-    </tbody>
-  </table>
-</div>
+      </tbody>
+    </table>
+  </div>
+</section>
