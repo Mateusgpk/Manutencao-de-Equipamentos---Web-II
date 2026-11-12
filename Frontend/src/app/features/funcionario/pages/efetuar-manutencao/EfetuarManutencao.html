@@ -152,28 +152,4 @@
     }
     }
     }
-
-    @if (etapa() === 'manutencaoRegistrada') {
-    <div class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
-        <div class="bg-white max-w-sm w-full p-6 rounded-xl text-center m-auto shadow-lg">
-            <p class="text-gray-900 font-semibold">Manutenção registrada com sucesso!</p>
-            <button type="button" class="mt-6 w-full bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600"
-                (click)="voltarParaInicio()">
-                OK
-            </button>
-        </div>
-    </div>
-    }
-
-    @if (etapa() === 'redirecionada') {
-    <div class="fixed inset-0 bg-black/50 flex items-center justify-center px-4">
-        <div class="bg-white max-w-sm w-full p-6 rounded text-center">
-            <p class="text-gray-900 font-semibold">Serviço redirecionado com sucesso!</p>
-            <button type="button" class="mt-6 w-full bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600"
-                (click)="voltarParaInicio()">
-                OK
-            </button>
-        </div>
-    </div>
-    }
 </section>

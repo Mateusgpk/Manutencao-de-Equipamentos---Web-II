@@ -122,10 +122,13 @@ export class EfetuarManutencao implements OnInit {
         meuId,
       )
       .subscribe({
-        next: (atualizada) => {
+        next: async (atualizada) => {
           this.enviando.set(false);
-          this.solicitacao.set(atualizada);
-          this.etapa.set('manutencaoRegistrada');
+          await this.modalService.sucesso(
+            'Manutenção Registrada',
+            `Manutenção da solicitação #${s.id} registrada com sucesso!\nO equipamento foi marcado como arrumado.`
+          );
+          this.router.navigate(['/employee/home']);
         },
         error: (err) => {
           this.enviando.set(false);
@@ -177,10 +180,14 @@ export class EfetuarManutencao implements OnInit {
     this.solicitacaoService
       .redirecionarManutencao(s.id, meuId, this.funcionarioDestinoControl.value!)
       .subscribe({
-        next: () => {
+        next: async () => {
           this.enviando.set(false);
           this.mostrarModalRedirecionar.set(false);
-          this.etapa.set('redirecionada');
+          await this.modalService.sucesso(
+            'Manutenção Redirecionada',
+            `A solicitação #${s.id} foi redirecionada com sucesso!`
+          );
+          this.router.navigate(['/employee/home']);
         },
         error: (err) => {
           this.enviando.set(false);
